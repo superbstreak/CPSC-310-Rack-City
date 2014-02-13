@@ -19,5 +19,7 @@
 		<p>Tasks for each user story in Sprint One Milestone</p>
 		<p>Time estimates for each task</p>
 		<p>Sprint Goal (short one-two sentence of what we plan to achieve during the sprint) on wiki-page</p>
+		<br>
+		<p><b>A5 UML Design:</b> https://www.lucidchart.com/documents/edit/4d3c-8094-52fd34ab-ac55-745b0a008c55</p>
 	</body>
 </html>
