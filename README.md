@@ -18,5 +18,6 @@
     <p><u>Remote Procedure Calls</u>: http://www.youtube.com/watch?v=Hd5vnHNylB8</p>
 		<br>
 		<p><b>A5 UML Design:</b></p> <p>https://www.lucidchart.com/documents/edit/4d3c-8094-52fd34ab-ac55-745b0a008c55</p>
+		<p>http://www.lucidchart.com/invitations/accept/52fe8a5e-0544-45dc-bb97-0a150a008b92</p>
 	</body>
 </html>
