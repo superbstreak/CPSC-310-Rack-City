@@ -1,0 +1,2 @@
+serviceClass: superbstreak.rackfinder.client.GreetingService
+path: B936143521BB028DA8102943C69BAC33.gwt.rpc
