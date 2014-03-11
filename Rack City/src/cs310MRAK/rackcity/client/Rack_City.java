@@ -115,7 +115,7 @@ public class Rack_City implements EntryPoint {
 				googleMap.setVisible(false);
 				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 				
-				//INSERT CODE HERE to add the fetched list from the filter class
+				//TODO INSERT CODE HERE to add the fetched list from the filter class
 				final ListBox rackList = new ListBox();
 				rackList.addChangeHandler(new ChangeHandler() {
 					public void onChange(ChangeEvent event) {
@@ -144,7 +144,7 @@ public class Rack_City implements EntryPoint {
 		mapViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
-				//INSERT CODE HERE to handle when user wants to see the map view of the bike racks
+				//TODO INSERT CODE HERE to handle when user wants to see the map view of the bike racks
 				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 				
 				final DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
@@ -309,7 +309,7 @@ public class Rack_City implements EntryPoint {
 					googleMap.setZoomLevel(14);
 					displayRadius(point, radius);
 					
-					//INSERT CODE HERE to call the parser with the LatLng point to get filtered bike racks
+					//TODO INSERT CODE HERE to call the parser with the LatLng point to get filtered bike racks
 					Marker p = addMarker(point, 2);  //position of me
 					googleMap.addOverlay(p);
 		        }
@@ -329,7 +329,13 @@ public class Rack_City implements EntryPoint {
 		Button reportCrimeButton = new Button("reportCrimeButton");
 		reportCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//INSERT CODE HERE to handle when user wants to report a crime
+				//TODO INSERT CODE HERE to handle when user wants to report a crime
+				
+				// pesudo
+				// Get value from server with request (LatLng)
+				// add one (value += 1)
+				// update server update (LatLng, value)
+				
 				Window.alert("Report Crime Pressed!");
 			}
 		});
@@ -405,12 +411,11 @@ public class Rack_City implements EntryPoint {
 	        googleMap.addOverlay(circle);
 	}
 	
-	
+	// google icon file from here: https://sites.google.com/site/gmapicons/
 	// add markers onto the map. Add marker overlay for each latlng within a list, center at address
 		public Marker addMarker(LatLng pos, int type)
 		{
 			Marker mark = new Marker(pos);
-			// google icon file from here: https://sites.google.com/site/gmapicons/
 				if (type == 1)		// search address: ME
 				{
 					mark.setImage("http://labs.google.com/ridefinder/images/mm_20_blue.png");

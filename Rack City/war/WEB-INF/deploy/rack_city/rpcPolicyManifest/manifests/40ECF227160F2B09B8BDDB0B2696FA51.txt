@@ -1,0 +1,2 @@
+serviceClass: cs310MRAK.rackcity.client.GreetingService
+path: 0BEC9EA458E144FF83755D9B1260E74E.gwt.rpc
