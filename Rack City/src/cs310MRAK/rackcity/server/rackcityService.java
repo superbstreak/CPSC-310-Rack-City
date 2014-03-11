@@ -17,9 +17,11 @@ public class rackcityService extends HttpServlet {
 		e.setProperty("Address", "400 N 23RD AVE");
 		e.setProperty("LatLng", "49.27417,-123.13098");
 		e.setProperty("NumberofRack", 3);
+		// entiy with attrs
 		
 		result.setContentType("text/plain");
 		result.getWriter().println("Test Print Values");
+		
 
 	}
 	
