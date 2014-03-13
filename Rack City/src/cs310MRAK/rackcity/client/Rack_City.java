@@ -3,7 +3,6 @@ package cs310MRAK.rackcity.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.appengine.api.search.GeoPoint;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -298,53 +297,54 @@ public class Rack_City implements EntryPoint {
 	 * @param rating - Only display racks that have > input rating
 	 */
 	private void addMapOverlay(String address, final double radius, final int crimeScore, final double rating){
-
-		//Geocodes the address that the user inputs and creates a latlong opbject
-		Geocoder latLongAddress = new Geocoder();
-		latLongAddress.getLatLng(address, new LatLngCallback() {
-			@Override
-			public void onFailure() {
-				Window.alert("Sorry, we were unable to find that address");
-			}
-
-			@Override
-			public void onSuccess(LatLng point) {
-				googleMap.setCenter(point);
-				googleMap.setZoomLevel(14);
-				displayRadius(point, radius);
-
-				Marker p = addMarker(point, 2);  //position of me
-				googleMap.addOverlay(p);
-				
-				/*
-				 * The following code should get the appropriate list based on all the preconditions.
-				 */
-				List<BikeRack> ratingFilteredList =
-						new ArrayList<BikeRack>(filters.filteredRatingList(rating,
-								filters.unfilteredList()));
-				List<BikeRack> crimeScoreFilteredList =
-						new ArrayList<BikeRack>(filters.filteredCrimeScoreList(crimeScore,
-								ratingFilteredList));
-
-				/*
-				 * The following code should plot the position of each rack within the given 
-				 * radius. This needs to be tested once the parser is functional.
-				 */
-				GeoPoint myLocation = new GeoPoint(point.getLatitude(), point.getLongitude());
-				List<BikeRack> rackFilters =
-						new ArrayList<BikeRack>(filters.filteredDistanceList(radius, myLocation,
-								crimeScoreFilteredList));
-				for (BikeRack rack : rackFilters) {
-					GeoPoint coord = rack.getCoordinate();
-					double lat = coord.getLatitude();
-					double lon = coord.getLongitude();
-
-					LatLng rackPoint = point.newInstance(lat, lon);
-					Marker q = addMarker(rackPoint, 2); // position of rack
-					googleMap.addOverlay(q);
-				}
-			}
-		});
+//
+//		//Geocodes the address that the user inputs and creates a latlong opbject
+//		Geocoder latLongAddress = new Geocoder();
+//		latLongAddress.getLatLng(address, new LatLngCallback() {
+//			@Override
+//			public void onFailure() {
+//				Window.alert("Sorry, we were unable to find that address");
+//			}
+//
+//			@Override
+//			public void onSuccess(LatLng point) {
+//				googleMap.setCenter(point);
+//				googleMap.setZoomLevel(14);
+//				displayRadius(point, radius);
+//
+//				Marker p = addMarker(point, 2);  //position of me
+//				googleMap.addOverlay(p);
+//				
+//				/*
+//				 * The following code should get the appropriate list based on all the preconditions.
+//				 */
+//				List<BikeRack> ratingFilteredList =
+//						new ArrayList<BikeRack>(filters.filteredRatingList(rating,
+//								filters.unfilteredList()));
+//				List<BikeRack> crimeScoreFilteredList =
+//						new ArrayList<BikeRack>(filters.filteredCrimeScoreList(crimeScore,
+//								ratingFilteredList));
+//
+//				/*
+//				 * The following code should plot the position of each rack within the given 
+//				 * radius. This needs to be tested once the parser is functional.
+//				 */
+//				GeoPoint myLocation = new GeoPoint(point.getLatitude(), point.getLongitude());
+//				List<BikeRack> rackFilters =
+//						new ArrayList<BikeRack>(filters.filteredDistanceList(radius, myLocation,
+//								crimeScoreFilteredList));
+//				for (BikeRack rack : rackFilters) {
+//					GeoPoint coord = rack.getCoordinate();
+//					double lat = coord.getLatitude();
+//					double lon = coord.getLongitude();
+//
+//					LatLng rackPoint = point.newInstance(lat, lon);
+//					Marker q = addMarker(rackPoint, 2); // position of rack
+//					googleMap.addOverlay(q);
+//				}
+//			}
+//		});
+		return;
 	}
 
 	/**
