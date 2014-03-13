@@ -1,6 +1,5 @@
 package cs310MRAK.rackcity.server;
 
-import com.google.appengine.api.search.GeoPoint;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import java.util.logging.Level;
@@ -26,21 +25,20 @@ public class StolenBikesServiceImpl extends RemoteServiceServlet implements Stol
 	
 	// later we would add a checkLoggedIn(); [ where I put the [*&$] symbol ]
 	// and add the NotLoggedInException 
-	@Override
-	public void addStolenBike(String rackID, GeoPoint coordinate) {
-		// [*&$]
-		PersistenceManager pm = getPersistenceManager();
-		
-	    pm.makePersistent(new Crime(rackID, coordinate));
-		
-		pm.close();
-	}
+//	public void addStolenBike(String rackID, GeoPoint coordinate) {
+//		// [*&$]
+//		PersistenceManager pm = getPersistenceManager();
+//		
+//	    pm.makePersistent(new Crime(rackID, coordinate));
+//		
+//		pm.close();
+//	}
 
 	
 	// because singleton. 
-	private PersistenceManager getPersistenceManager() {
-		// TODO Auto-generated method stub
-		return PMF.getPersistenceManager();
-	}
+//	private PersistenceManager getPersistenceManager() {
+//		// TODO Auto-generated method stub
+//		return PMF.getPersistenceManager();
+//	}
 
 }
