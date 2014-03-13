@@ -1,24 +1,26 @@
 package cs310MRAK.rackcity.client;
 
+import com.google.gwt.maps.client.geom.LatLng;
+
 
 public class Crime {
-	
+
 	public String address;
-	//public GeoPoint coordinate;
-	
+	public LatLng coordinate;
+
 	// TODO: will need to add User object to the constructor as well
 	// TODO: make @persistent
-	public Crime(String address	){//, GeoPoint coordinate) {
+	public Crime(String address, LatLng coordinate){
 		this.address = address;
-//		this.coordinate = coordinate;
+		this.coordinate = coordinate;
 	}
-	
+
 	public String getAddress() {
 		return this.address;
 	}
-	
-//	public GeoPoint getCoordinate() {
-//		return this.coordinate;
-//	}
+
+	public LatLng getCoordinate() {
+		return this.coordinate;
+	}
 
 }
