@@ -11,7 +11,6 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
 public class rackcityService extends HttpServlet {
 
@@ -24,7 +23,6 @@ public class rackcityService extends HttpServlet {
 	// But switching to JDO wouldn't mean we've wasted our time watching the youtube video: http://www.youtube.com/watch?v=_P1wcF_XBlE
 	// I think it was good to watch because it mainly described the concept of the Datastore, which is still useful to know.
 public Key rackKEY;
-public Key crimeKEY;
 	
 	public void doGet (HttpServletRequest request, HttpServletResponse result) throws IOException
 	{
@@ -36,8 +34,7 @@ public Key crimeKEY;
 		//================================ UPLOAD ===================================
 		
 		// loop this for entry
-		newRack("400 N 24th AVEujkm ", "49.27417,-123.13098", 5, ds); //create new entry]
-		System.out.println(rackKEY);
+		newRack("400 N 24th AVEujkm ", "49.27417,-123.13098", 5, ds); //create new entry
 		
 		//------- DRAFT ---------
 		// entiy with attrs, group these
@@ -48,7 +45,6 @@ public Key crimeKEY;
 		
 		//upload entity
 		//ds.put(e);
-		
 		
 		//=============================== DOWNLOAD ==================================
 		Key k = rackKEY;
@@ -70,19 +66,6 @@ public Key crimeKEY;
 		result.getWriter().println("Test Print Values");
 	}
 	
-	
-	//push new Crime data onto server
-	public void newCrime (String address, String LL, int numCrime, DatastoreService db)
-	{
-		Entity e = new Entity("Crime");
-		crimeKEY = e.getKey();
-		e.setProperty("Address", address);
-		e.setProperty("LatLng", LL);
-		e.setProperty("NoC", numCrime);
-		db.put(e);
-	}
-	
-	//push new bikeData onto server
 	public void newRack (String address, String LL, int Racknum, DatastoreService db)
 	{
 		Entity e = new Entity("Rack");
