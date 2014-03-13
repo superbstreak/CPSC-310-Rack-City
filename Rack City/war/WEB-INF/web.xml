@@ -30,6 +30,18 @@
   </servlet-mapping>
   
   
+    <!-- Servlets !! change to Google+ After Sprint -->
+  <servlet>
+    <servlet-name>loginService</servlet-name>
+    <servlet-class>cs310MRAK.rackcity.server.LoginServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>loginService</servlet-name>
+    <url-pattern>/User/login</url-pattern>
+  </servlet-mapping>
+  
+  
   
   <!-- Default page to serve -->
   <welcome-file-list>
