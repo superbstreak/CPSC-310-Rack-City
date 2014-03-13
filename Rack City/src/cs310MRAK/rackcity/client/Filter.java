@@ -3,6 +3,8 @@ package cs310MRAK.rackcity.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.maps.client.geom.LatLng;
+
 
 public class Filter {
 
@@ -29,24 +31,24 @@ public class Filter {
 	 * @param myLocation
 	 * @return
 	 */
-//	public List<BikeRack> filteredDistanceList(double radius, GeoPoint myLocation,
-//			List<BikeRack> list) {
-//		
-//		for(BikeRack rack : list) {
-//			double distanceX = (rack.getCoordinate().getLongitude()
-//					- myLocation.getLongitude());
-//			double distanceY = (rack.getCoordinate().getLatitude()
-//					- myLocation.getLatitude());
-//			double distance = Math.sqrt((distanceX)*(distanceX)
-//					+ (distanceY)*(distanceY));
-//
-//			if (distance <= radius) {
-//				this.filteredList.add(rack);
-//			}
-//		}
-//
-//		return this.filteredList;
-//	}
+	public List<BikeRack> filteredDistanceList(double radius, LatLng myLocation,
+			List<BikeRack> list) {
+
+		for(BikeRack rack : list) {
+			double distanceX = (rack.getCoordinate().getLongitude()
+					- myLocation.getLongitude());
+			double distanceY = (rack.getCoordinate().getLatitude()
+					- myLocation.getLatitude());
+			double distance = Math.sqrt((distanceX)*(distanceX)
+					+ (distanceY)*(distanceY));
+
+			if (distance <= radius) {
+				this.filteredList.add(rack);
+			}
+		}
+
+		return this.filteredList;
+	}
 
 	/**
 	 * 
