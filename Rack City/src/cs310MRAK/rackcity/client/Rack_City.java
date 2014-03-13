@@ -245,6 +245,8 @@ public class Rack_City implements EntryPoint {
 	}
 
 	private void loadGoogleMap(){
+		
+		//MAP API KEY: AIzaSyDaxfDkKyFywp7WKW1Bv07mrH9QNBup-04 (Might not work)
 		Maps.loadMapsApi("", "2", false, new Runnable() { public void run() {
 			// This code is used to create lat/long data points
 			LatLng def = LatLng.newInstance(49.249697, -123.139098); //set default
