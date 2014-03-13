@@ -30,10 +30,10 @@ public class Filter {
 	 * @param myLocation
 	 * @return
 	 */
-	public List<BikeRack> filteredDistanceList(double radius, GeoPoint myLocation) {
-		unfilteredList();
-
-		for(BikeRack rack : this.unfilteredList) {
+	public List<BikeRack> filteredDistanceList(double radius, GeoPoint myLocation,
+			List<BikeRack> list) {
+		
+		for(BikeRack rack : list) {
 			double distanceX = (rack.getCoordinate().getLongitude()
 					- myLocation.getLongitude());
 			double distanceY = (rack.getCoordinate().getLatitude()
@@ -57,10 +57,10 @@ public class Filter {
 	 * @param rating
 	 * @return
 	 */
-	public List<BikeRack> filteredRatingList(double rating) {
-		unfilteredList();
+	public List<BikeRack> filteredRatingList(double rating,
+			List<BikeRack> list) {
 
-		for(BikeRack rack : this.unfilteredList) {			
+		for(BikeRack rack : list) {			
 			if (rack.getRating() >= rating) {
 				this.filteredList.add(rack);
 			}
@@ -79,10 +79,10 @@ public class Filter {
 	 * @param crimeScore
 	 * @return
 	 */
-	public List<BikeRack> fileredCrimeScoreList(int crimeScore) {
-		unfilteredList();
+	public List<BikeRack> filteredCrimeScoreList(int crimeScore,
+			List<BikeRack> list) {
 
-		for(BikeRack rack : this.unfilteredList) {
+		for(BikeRack rack : list) {
 			if (rack.getCrimeScore() <= crimeScore) {
 				this.filteredList.add(rack);
 			}
