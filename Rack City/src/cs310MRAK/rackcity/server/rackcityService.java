@@ -14,6 +14,14 @@ import com.google.appengine.api.datastore.Key;
 
 public class rackcityService extends HttpServlet {
 
+	// Okay wait, this method is accessing the datastore using the low-level Datastore API. 
+	// I think using the JDO is simpler in the long-run.
+	// 1. have the StockWatcher Tutorial to reference as guidance with a JDO implementation
+	// 2. it's higher level stuff. Look at how easily we can view the Datastore this way:
+		// http://appengine.google.com   -> Datastore Viewer
+	
+	// But switching to JDO wouldn't mean we've wasted our time watching the youtube video: http://www.youtube.com/watch?v=_P1wcF_XBlE
+	// I think it was good to watch because it mainly described the concept of the Datastore, which is still useful to know.
 public Key rackKEY;
 	
 	public void doGet (HttpServletRequest request, HttpServletResponse result) throws IOException

@@ -361,7 +361,7 @@ public class Rack_City implements EntryPoint {
 		reportCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO INSERT CODE HERE to handle when user wants to report a crime
-				// stolenBikesServiceAsync !!!
+				// TODO: stolenBikesServiceAsync !!!
 				// pesudo
 				// Get value from server with request (LatLng)
 				// add one (value += 1)

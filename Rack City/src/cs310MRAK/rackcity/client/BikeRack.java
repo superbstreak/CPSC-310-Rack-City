@@ -9,6 +9,8 @@ import com.google.appengine.api.search.GeoPoint;
  * BikeRack object class
  *
  */
+
+
 public class BikeRack {
 	
 	public String address;
@@ -17,6 +19,8 @@ public class BikeRack {
 	public int rackCount;
 	public int crimeScore;
 	
+	// TODO: will need to add User object to the constructor as well
+	// TODO: make @persistent
 	public BikeRack(String address, GeoPoint coordinate,
 			double rating, int rackCount, int crimeScore) {
 		this.address = address;
