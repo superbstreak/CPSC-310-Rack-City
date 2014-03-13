@@ -31,7 +31,7 @@ public class Filter {
 	 * @param myLocation
 	 * @return
 	 */
-	public List<BikeRack> filteredDistanceList(double radius, LatLng myLocation,
+	private List<BikeRack> filteredDistanceList(double radius, LatLng myLocation,
 			List<BikeRack> list) {
 
 		for(BikeRack rack : list) {
@@ -58,7 +58,7 @@ public class Filter {
 	 * @param rating
 	 * @return
 	 */
-	public List<BikeRack> filteredRatingList(double rating,
+	private List<BikeRack> filteredRatingList(double rating,
 			List<BikeRack> list) {
 
 		for(BikeRack rack : list) {			
@@ -80,7 +80,7 @@ public class Filter {
 	 * @param crimeScore
 	 * @return
 	 */
-	public List<BikeRack> filteredCrimeScoreList(int crimeScore,
+	private List<BikeRack> filteredCrimeScoreList(int crimeScore,
 			List<BikeRack> list) {
 
 		for(BikeRack rack : list) {
