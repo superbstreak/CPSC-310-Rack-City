@@ -91,6 +91,19 @@ public class Filter {
 
 		return this.filteredList;
 	}
+	
+	public List<BikeRack> completeFilteredList(int radius, LatLng myLocation, double rating,
+			int crimeScore) {
+		
+		this.filteredList = this.filteredDistanceList(radius, myLocation, this.unfilteredList());
+		
+		this.filteredList = this.filteredRatingList(rating, this.filteredList);
+		
+		this.filteredList = this.filteredCrimeScoreList(crimeScore, this.filteredList);
+		
+		return this.filteredList;
+		
+	}
 
 	/**
 	 * 
