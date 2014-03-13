@@ -7,6 +7,28 @@
 
   <!-- Servlets -->
   
+    <servlet>
+    <servlet-name>RackFavouritesService</servlet-name>
+    <servlet-class>cs310MRAK.rackcity.server.RackFavouritesServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>RackFavouritesService</servlet-name>
+    <url-pattern>/rackcity/rackfavouritesservice</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+    <servlet>
+    <servlet-name>StolenBikesService</servlet-name>
+    <servlet-class>cs310MRAK.rackcity.server.StolenBikesServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>StolenBikesService</servlet-name>
+    <url-pattern>/rackcity/stolenbikesservice</url-pattern>
+  </servlet-mapping>
+  
   
   
   <!-- Default page to serve -->
