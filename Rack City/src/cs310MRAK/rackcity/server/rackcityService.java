@@ -36,7 +36,7 @@ public Key crimeKEY;
 		//================================ UPLOAD ===================================
 		
 		// loop this for entry
-		newRack("400 N 24th AVEujkm ", "49.27417,-123.13098", 5, 0 , 0, ds); //create new entry]
+		newRack("400 N 24th AVEujkm ", "49.27417,-123.13098", 5, ds); //create new entry]
 		System.out.println(rackKEY);
 		
 		//------- DRAFT ---------
@@ -52,8 +52,6 @@ public Key crimeKEY;
 		
 		//=============================== DOWNLOAD ==================================
 		Key k = rackKEY;
-		
-		/*
 		try 													// try to get entity with this key from server
 		{
 			Entity e = ds.get(k);
@@ -63,7 +61,7 @@ public Key crimeKEY;
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		
 		
 		//===========================================================================
@@ -72,48 +70,6 @@ public Key crimeKEY;
 		result.getWriter().println("Test Print Values");
 	}
 	
-	
-	//====================== NOT SURE
-	// Retrieve racks from server
-	public void getRacks (Key k, DatastoreService db)
-	{
-		
-		try 
-		{
-			Entity e = db.get(k);
-			String addr = (String) e.getProperty("Address");
-			String LL = (String) e.getProperty("LatLng");
-			int nR = (int) e.getProperty("NoR");
-			int avgR = (int) e.getProperty("Rating");
-			int avgC = (int) e.getProperty("CrimeScore");
-			
-		} 
-		catch (EntityNotFoundException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public void getCrime (Key k, DatastoreService db)
-	{
-		
-		try 
-		{
-			Entity e = db.get(k);
-			String addr = (String) e.getProperty("Address");
-			String LL = (String) e.getProperty("LatLng");
-			int nR = (int) e.getProperty("NoC");
-			
-		} 
-		catch (EntityNotFoundException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 	
 	//push new Crime data onto server
 	public void newCrime (String address, String LL, int numCrime, DatastoreService db)
@@ -127,15 +83,13 @@ public Key crimeKEY;
 	}
 	
 	//push new bikeData onto server
-	public void newRack (String address, String LL, int Racknum, int AvgRating, int AvgCrime, DatastoreService db)
+	public void newRack (String address, String LL, int Racknum, DatastoreService db)
 	{
 		Entity e = new Entity("Rack");
 		rackKEY = e.getKey();
 		e.setProperty("Address", address);
 		e.setProperty("LatLng", LL);
 		e.setProperty("NoR", Racknum);
-		e.setProperty("Rating", AvgRating);
-		e.setProperty("CrimeScore", AvgCrime);
 		db.put(e);
 	}
 	

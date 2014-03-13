@@ -442,7 +442,7 @@ public class Rack_City implements EntryPoint {
 		googleMap.addOverlay(circle);
 	}
 
-	// google icon file from here: https://sites.google.com/site/gmapicons/  	<<< More icon here, check it out
+	// google icon file from here: https://sites.google.com/site/gmapicons/
 	// add markers onto the map. Add marker overlay for each latlng within a list, center at address
 	public Marker addMarker(LatLng pos, int type)
 	{
