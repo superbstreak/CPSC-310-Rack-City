@@ -1,6 +1,5 @@
 package cs310MRAK.rackcity.client;
 
-import com.google.appengine.api.search.GeoPoint;
 
 /**
  * 
@@ -14,29 +13,22 @@ import com.google.appengine.api.search.GeoPoint;
 public class BikeRack {
 	
 	public String address;
-	public GeoPoint coordinate;
 	public double rating;
 	public int rackCount;
 	public int crimeScore;
 	
 	// TODO: will need to add User object to the constructor as well
 	// TODO: make @persistent
-	public BikeRack(String address, GeoPoint coordinate,
-			double rating, int rackCount, int crimeScore) {
+	public BikeRack(String address){//, GeoPoint coordinate,
 		this.address = address;
-		this.coordinate = coordinate;
-		this.rating = rating;
-		this.rackCount = rackCount;
-		this.crimeScore = crimeScore;
+	
 	}
 	
 	public String getAddress() {
 		return this.address;
 	}
 	
-	public GeoPoint getCoordinate() {
-		return this.coordinate;
-	}
+
 	
 	public double getRating() {
 		return this.rating;
