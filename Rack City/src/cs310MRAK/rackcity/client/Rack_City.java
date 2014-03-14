@@ -1002,6 +1002,14 @@ public class Rack_City implements EntryPoint {
 			        {
 			        	LatLng incident = currentMarker.getLatLng();
 			        	
+			        	// Adds to numberStolenBike of the rack in question
+			        	for (int i = 0; i < currentRackList.size(); i++) {
+			        		BikeRack currentRack = currentRackList.get(i);
+			        		if (currentRack.getCoordinate() == incident) {
+			        			currentRack.addStolenBike();
+			        		}
+			        	}
+			        	
 			        	Window.alert("Crime Reported!");
 			        } 
 			        else 
