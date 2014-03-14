@@ -39,7 +39,9 @@ import com.google.gwt.maps.client.geocode.LatLngCallback;
 import com.google.gwt.maps.client.geocode.LocationCallback;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.overlay.Icon;
 import com.google.gwt.maps.client.overlay.Marker;
+import com.google.gwt.maps.client.overlay.MarkerOptions;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.maps.client.Maps;
@@ -1102,20 +1104,25 @@ public class Rack_City implements EntryPoint {
 	// add markers onto the map. Add marker overlay for each latlng within a list, center at address
 	private void addMarker(LatLng pos, int type)
 	{
-		Marker mark = new Marker(pos);
-		if (type == 1)		// search address: ME
+		if (type == 1)		// search address: ME (blue)
 		{
-			mark.setImage("http://www.google.com/mapfiles/dd-start.png");
+			MarkerOptions markerOptions = MarkerOptions.newInstance();
+			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));
+			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 2)		// bike racks: GREEN, !!!!! SHOULD HAVE DIFFERENT COLOR BASED ON RACK#
 		{
-			mark.setImage("http://maps.google.com/mapfiles/arrow.png");
+			MarkerOptions markerOptions = MarkerOptions.newInstance();
+			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_green.png"));
+			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 3)		// crime place: RED
 		{
-			mark.setImage("http://www.google.com/mapfiles/dd-end.png");
+			MarkerOptions markerOptions = MarkerOptions.newInstance();
+			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_red.png"));
+			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
 		}
 		/* set listener if the marker is pressed (single)
