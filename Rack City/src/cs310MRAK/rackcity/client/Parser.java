@@ -52,22 +52,24 @@ public class Parser {
 		
 		// crimesList.add(new Crime("", LatLng.newInstance(49.262509, -123.094469)));
 		// crimesList.add(new Crime("", LatLng.newInstance(49.263049, -123.106903)));
-		rackList = Rack_City.getRackData();
-		crimesList = Rack_City.getCrimeData();
+		// rackList = Rack_City.getRackData();
+		// crimesList = Rack_City.getCrimeData();
 	}
 	
 	
 	
 	public List<BikeRack> getRackList() {
 		
-		this.parseBikeRacks();
+		// this.parseBikeRacks();
+		this.rackList = Rack_City.getRackData();
 		
 		return this.rackList;
 	}
 	
 	public List<Crime> getCrimesList() {
 		
-		this.parseCrimes();
+		// this.parseCrimes();
+		this.crimesList = Rack_City.getCrimeData();
 		
 		return this.crimesList;
 	}
