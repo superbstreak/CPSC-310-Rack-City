@@ -53,6 +53,16 @@ public class Filter {
 		return this.filteredList;
 	}
 	
+	/**
+	 * Filters the list of crime locations based on distance from a given location
+	 * and a user-defined radius
+	 * 	- if there has been a crime within the given radius, this method will add
+	 * 	  that crime's attributes to a filtered list
+	 * @param radius
+	 * @param myLocation
+	 * @param list
+	 * @return
+	 */
 	private List<Crime> filteredCrimeDistanceList(double radius, LatLng myLocation,
 			List<Crime> list) {
 		
@@ -115,7 +125,8 @@ public class Filter {
 	}
 	
 	/**
-	 * 
+	 * Takes an unfiltered rack list and provides a single filtered list after running
+	 * through several filters including distance, rating, and crimeScore
 	 * @param myLocation
 	 * @param radius
 	 * @param rating
@@ -136,7 +147,8 @@ public class Filter {
 	}
 	
 	/**
-	 * 
+	 * Takes an unfiltered crimes list from the parser and provides a single
+	 * filtered list based on radius from a bike rack's location
 	 * @param myLocation
 	 * @param radius
 	 * @return
@@ -161,6 +173,10 @@ public class Filter {
 		return this.unfilteredList;
 	}
 	
+	/**
+	 * Returns an unfiltered crime list from the parser.
+	 * @return
+	 */
 	private List<Crime> unfilteredCrimeList() {
 		this.unfilteredCrimeList = parser.getCrimesList();
 		return this.unfilteredCrimeList;
