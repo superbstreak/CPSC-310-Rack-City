@@ -574,6 +574,29 @@ public class Rack_City implements EntryPoint {
 		 
 		final Button loginButton = new Button("loginButton");
 		loginButton.setText("Login");
+		
+		//set text correctly
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+	      public void onFailure(Throwable error) {
+	    	  Window.alert("Error loading loginService!");
+	    	  handleError(error);
+	      }
+
+	      public void onSuccess(LoginInfo result) {
+	        loginInfo = result;
+	        if(loginInfo.isLoggedIn()) 
+	        {
+	        	// if logged in, set text to sign out
+	        	loginButton.setText("Sign Out");			        	
+	        } 
+	        else 
+	        {
+	        	loginButton.setText("Sign In");
+	        }
+	      }
+	    });
+	    
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
