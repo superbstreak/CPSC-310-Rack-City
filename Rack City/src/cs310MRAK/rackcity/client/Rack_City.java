@@ -61,6 +61,8 @@ public class Rack_City implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 
+		
+		
 		// later we would add a checkLoggedIn(); [ where I put the [*&$] symbol ]
 		// and add the NotLoggedInException 
 			// [*&$]
