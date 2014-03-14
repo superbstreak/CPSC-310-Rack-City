@@ -317,12 +317,14 @@ public class Rack_City implements EntryPoint {
 				 * The following code should get the appropriate list based on all the preconditions.
 				 */
 				currentSearchList = filters.completeFilteredList(radius, crimeScore, rating);
-
+				currentSearchList = filters.completeFilteredList(radius, crimeScore, rating);
+				//Commented code
 				/*
 				 * The following code should plot the position of each rack within the given 
 				 * radius. This needs to be tested once the parser is functional.
 				 */
 				for (BikeRack rack : currentSearchList) {
+					Marker a = null;
 					googleMap.addOverlay(addMarker(rack.getCoordinate(), 2));
 				}
 			}
