@@ -44,7 +44,7 @@ public class Rack_City implements EntryPoint {
 	private Marker currentMarker = null;
 	private Filter filters;
 	private List<BikeRack> currentRackList = null;
-	private List<BikeRack> currentCrimeList = null;
+	private List<Crime> currentCrimeList = null;
 	private LatLng currentAddress = null;
 
 	/**
@@ -315,17 +315,25 @@ public class Rack_City implements EntryPoint {
 			@Override
 			public void onSuccess(LatLng point) {
 				currentAddress = point;
-				googleMap.setCenter(point);
+				googleMap.setCenter(currentAddress);
 				googleMap.setZoomLevel(14);
-				displayRadius(point, radius);
+				displayRadius(currentAddress, radius);
 
 				googleMap.addOverlay(addMarker(point, 2));
 
 				/*
 				 * The following code should get the appropriate list based on all the preconditions.
 				 */
+				
+				currentCrimeList = filters.getFilteredCrimeList(currentAddress, radius);
+				currentRackList = filters.getFilteredRackList(currentAddress, radius, rating, crimeScore);
+				
 				for (BikeRack rack : currentRackList) {
 					googleMap.addOverlay(addMarker(rack.getCoordinate(), 2));
+				}
+				
+				for (Crime crime : currentCrimeList) {
+					googleMap.addOverlay(addMarker(crime.getCoordinate(), 3));
 				}
 			}
 		});
@@ -337,7 +345,7 @@ public class Rack_City implements EntryPoint {
 	 * Displays the 'Report Crime' button and title of rack in a panel on the right of the page
 	 */
 	private void clickRackDisplayPanel(LatLng rack){
-
+		
 		final AbsolutePanel rackClickPanel = new AbsolutePanel();
 		((HorizontalPanel) dockPanel.getWidget(3)).add(rackClickPanel);
 		rackClickPanel.setSize("250px", "500px");
@@ -455,6 +463,12 @@ public class Rack_City implements EntryPoint {
 		return mark;
 	}
 	
+	/**
+	 * Code adapted from http://stackoverflow.com/questions/837872/calculate-distance-in-meters-when-you-know-longitude-and-latitude-in-java
+	 * Takes in a LatLng point and calculates the distance away from the current searched location
+	 * @param rackPoint
+	 * @return
+	 */
 	private double calcLatLngDistance(LatLng rackPoint){
 		
 		double lat1, lng1, lat2, lng2;

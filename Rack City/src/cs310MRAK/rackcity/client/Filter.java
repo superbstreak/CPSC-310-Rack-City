@@ -114,7 +114,15 @@ public class Filter {
 		return this.filteredList;
 	}
 	
-	public List<BikeRack> completeFilteredList(LatLng myLocation, double radius,
+	/**
+	 * 
+	 * @param myLocation
+	 * @param radius
+	 * @param rating
+	 * @param crimeScore
+	 * @return
+	 */
+	public List<BikeRack> getFilteredRackList(LatLng myLocation, double radius,
 			double rating, int crimeScore) {
 		
 		this.filteredList = this.filteredDistanceList(radius, myLocation, this.unfilteredList());
@@ -127,7 +135,13 @@ public class Filter {
 		
 	}
 	
-	public List<Crime> completeCrimeFilteredList(LatLng myLocation, double radius) {
+	/**
+	 * 
+	 * @param myLocation
+	 * @param radius
+	 * @return
+	 */
+	public List<Crime> getFilteredCrimeList(LatLng myLocation, double radius) {
 		
 		this.filteredCrimeList = this.filteredCrimeDistanceList(radius, myLocation,
 				this.unfilteredCrimeList);
