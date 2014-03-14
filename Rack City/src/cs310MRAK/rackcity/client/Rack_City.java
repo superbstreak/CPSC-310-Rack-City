@@ -39,11 +39,13 @@ import com.google.gwt.maps.client.event.MapClickHandler;
  */
 public class Rack_City implements EntryPoint {
 
-	private static MapWidget googleMap = null;
-	private static DockPanel dockPanel = null;
-	private static Marker currentRack = null;
+	private MapWidget googleMap = null;
+	private DockPanel dockPanel = null;
+	private Marker currentMarker = null;
 	private Filter filters;
-	private List<BikeRack> currentSearchList = null;
+	private List<BikeRack> currentRackList = null;
+	private List<BikeRack> currentCrimeList = null;
+	private LatLng currentAddress = null;
 
 	/**
 	 * This is the entry point method.
@@ -109,9 +111,9 @@ public class Rack_City implements EntryPoint {
 		datasheetViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
-				if(currentRack != null){
+				if(currentMarker != null){
 					((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-					currentRack = null;
+					currentMarker = null;
 				}
 
 				googleMap.setVisible(false);
@@ -121,19 +123,22 @@ public class Rack_City implements EntryPoint {
 				final ListBox rackList = new ListBox();
 				rackList.addChangeHandler(new ChangeHandler() {
 					public void onChange(ChangeEvent event) {
-						rackList.getValue((rackList.getSelectedIndex())); //gets selected value from listbox
+						String temp = rackList.getValue((rackList.getSelectedIndex())); //gets selected value from listbox
+						int lat = Integer.parseInt(temp.substring(1, temp.indexOf(",")));
+						int lng = Integer.parseInt(temp.substring(temp.indexOf(",")+1,temp.length()));
+						
+						
 					}
 				});
 				rackList.setSize("700px", "500px");
 				rackList.setVisibleItemCount(10);
 
-				//Test Data
-				rackList.addItem(LatLng.newInstance(49.249698, -123.139099).toString());
-				rackList.addItem(LatLng.newInstance(49.249700, -123.139100).toString());
-				rackList.addItem(LatLng.newInstance(49.249702, -123.139102).toString());
-				rackList.addItem(LatLng.newInstance(49.249704, -123.139104).toString());
-				rackList.addItem(LatLng.newInstance(49.249706, -123.139106).toString());
-
+				for (BikeRack rack : currentRackList){
+					rackList.addItem("(" + rack.getCoordinate().getLatitude() + ", " + 
+							rack.getCoordinate().getLongitude() + ") " + "Distance from you: " + 
+							calcLatLngDistance(rack.getCoordinate()));
+				}
+				
 				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackList);
 			}
 		});
@@ -258,19 +263,19 @@ public class Rack_City implements EntryPoint {
 				public void onClick(MapClickEvent event) {
 					Marker tmpRack = ((Marker) event.getOverlay());
 
-					if(tmpRack != null && currentRack != null && !tmpRack.equals(currentRack)){
+					if(tmpRack != null && currentMarker != null && !tmpRack.equals(currentMarker)){
 						((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-						currentRack = tmpRack;
-						clickRackDisplayPanel(currentRack.getLatLng());
+						currentMarker = tmpRack;
+						clickRackDisplayPanel(currentMarker.getLatLng());
 
-					}else if (tmpRack != null && currentRack == null){
-						currentRack = tmpRack;
-						clickRackDisplayPanel(currentRack.getLatLng());
+					}else if (tmpRack != null && currentMarker == null){
+						currentMarker = tmpRack;
+						clickRackDisplayPanel(currentMarker.getLatLng());
 
-					}else if(tmpRack != null && tmpRack.equals(currentRack)){
+					}else if(tmpRack != null && tmpRack.equals(currentMarker)){
 
 					}else{
-						currentRack = null;
+						currentMarker = null;
 						((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 						((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
 					}
@@ -309,6 +314,7 @@ public class Rack_City implements EntryPoint {
 
 			@Override
 			public void onSuccess(LatLng point) {
+				currentAddress = point;
 				googleMap.setCenter(point);
 				googleMap.setZoomLevel(14);
 				displayRadius(point, radius);
@@ -318,14 +324,13 @@ public class Rack_City implements EntryPoint {
 				/*
 				 * The following code should get the appropriate list based on all the preconditions.
 				 */
-				currentSearchList = filters.completeFilteredList(point, radius, rating, crimeScore);
+				currentRackList = filters.completeFilteredList(point, radius, rating, crimeScore);
 				
 				/*
 				 * The following code should plot the position of each rack within the given 
 				 * radius. This needs to be tested once the parser is functional.
 				 */
-				for (BikeRack rack : currentSearchList) {
-					Marker a = null;
+				for (BikeRack rack : currentRackList) {
 					googleMap.addOverlay(addMarker(rack.getCoordinate(), 2));
 				}
 			}
@@ -430,7 +435,7 @@ public class Rack_City implements EntryPoint {
 
 	// google icon file from here: https://sites.google.com/site/gmapicons/
 	// add markers onto the map. Add marker overlay for each latlng within a list, center at address
-	public Marker addMarker(LatLng pos, int type)
+	private Marker addMarker(LatLng pos, int type)
 	{
 		Marker mark = new Marker(pos);
 		if (type == 1)		// search address: ME
@@ -454,5 +459,28 @@ public class Rack_City implements EntryPoint {
 				});
 		 */
 		return mark;
+	}
+	
+	private double calcLatLngDistance(LatLng rackPoint){
+		
+		double lat1, lng1, lat2, lng2;
+		lat1 = currentAddress.getLatitude();
+		lng1 = currentAddress.getLongitude();
+		lat2 = rackPoint.getLatitude();
+		lng2 = rackPoint.getLongitude();
+		
+		
+		double earthRadius = 3958.75;
+	    double dLat = Math.toRadians(lat2-lat1);
+	    double dLng = Math.toRadians(lng2-lng1);
+	    double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+	               Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+	               Math.sin(dLng/2) * Math.sin(dLng/2);
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	    double dist = earthRadius * c;
+
+	    int meterConversion = 1609;
+
+	    return (double) (dist * meterConversion);
 	}
 }

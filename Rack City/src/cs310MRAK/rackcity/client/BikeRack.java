@@ -57,5 +57,6 @@ public class BikeRack {
 	public void setCrimeScore(int newCrimeScore) {
 		this.crimeScore = newCrimeScore;
 	}
+	
 
 }
