@@ -10,19 +10,31 @@ import com.google.gwt.maps.client.geom.LatLng;
  * BikeRack object class
  *
  */
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
+import com.google.appengine.api.users.User;
 
-
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class BikeRack {
-	
-	private String address;
-	private LatLng coordinate;
-	private double rating;
-	private int rackCount;
-	private int crimeScore;
+	@Persistent
+	public String address;
+	@PrimaryKey
+	public LatLng coordinate;
+	@Persistent
+	public double rating;
+	@Persistent
+	public int rackCount;
+	@Persistent
+	public int crimeScore;
 	private int numberStolenBikes;
+
 	
 	// TODO: will need to add User object to the constructor as well
 	// TODO: make @persistent
+	
 	public BikeRack(String address, LatLng coordinate, double rating,
 			int rackCount, int crimeScore, int numberStolenBikes){
 		this.address = address;
@@ -68,4 +80,6 @@ public class BikeRack {
 	public void addStolenBike() {
 		this.numberStolenBikes++;
 	}
+	
+
 }
