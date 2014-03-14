@@ -975,6 +975,7 @@ public class Rack_City implements EntryPoint {
 		}
 		
 		final AbsolutePanel rackClickPanel = new AbsolutePanel();
+		((HorizontalPanel) dockPanel.getWidget(3)).clear();
 		((HorizontalPanel) dockPanel.getWidget(3)).add(rackClickPanel);
 		rackClickPanel.setSize("250px", "500px");
 
