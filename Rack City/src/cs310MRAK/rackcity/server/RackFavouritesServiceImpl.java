@@ -25,8 +25,8 @@ public class RackFavouritesServiceImpl extends RemoteServiceServlet implements R
 		
 				
 		 	@Override
-		 	public void addFavourite(String rackID, LatLng coordinate,
-		 			double rating, int rackCount, int crimeScore) {
+		 	public void addFavourite(String rackID, LatLng coordinate, 	double rating, int rackCount, int crimeScore)
+		 	{
 		 		// TODO JDO !!!
 		 		
 		 	}

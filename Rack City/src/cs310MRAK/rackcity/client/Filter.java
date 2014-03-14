@@ -13,6 +13,9 @@ public class Filter {
 	List<BikeRack> unfilteredList;
 	List<BikeRack> filteredList;
 
+	List<Crime> unfilteredCrimeList;
+	List<Crime> filteredCrimeList;
+
 	public Filter() {
 		this.parser = new Parser();
 		this.unfilteredList = new ArrayList<BikeRack>();
@@ -48,6 +51,25 @@ public class Filter {
 		}
 
 		return this.filteredList;
+	}
+	
+	private List<Crime> filteredCrimeDistanceList(double radius, LatLng myLocation,
+			List<Crime> list) {
+		
+		for (Crime crime : list) {
+			double distanceX = (crime.getCoordinate().getLongitude()
+					- myLocation.getLongitude());
+			double distanceY = (crime.getCoordinate().getLatitude()
+					- myLocation.getLatitude());
+			double distance = Math.sqrt((distanceX)*(distanceX)
+					+ (distanceY)*(distanceY));
+			
+			if (distance <= radius) {
+				this.filteredCrimeList.add(crime);
+			}
+		}
+		
+		return this.filteredCrimeList;
 	}
 
 	/**
@@ -92,7 +114,8 @@ public class Filter {
 		return this.filteredList;
 	}
 	
-	public List<BikeRack> completeFilteredList(LatLng myLocation, double radius, double rating, int crimeScore) {
+	public List<BikeRack> completeFilteredList(LatLng myLocation, double radius,
+			double rating, int crimeScore) {
 		
 		this.filteredList = this.filteredDistanceList(radius, myLocation, this.unfilteredList());
 		
@@ -102,6 +125,14 @@ public class Filter {
 		
 		return this.filteredList;
 		
+	}
+	
+	public List<Crime> completeCrimeFilteredList(LatLng myLocation, double radius) {
+		
+		this.filteredCrimeList = this.filteredCrimeDistanceList(radius, myLocation,
+				this.unfilteredCrimeList);
+		
+		return this.filteredCrimeList;
 	}
 
 	/**
@@ -114,6 +145,11 @@ public class Filter {
 	private List<BikeRack> unfilteredList() {
 		this.unfilteredList = parser.getRackList();
 		return this.unfilteredList;
+	}
+	
+	private List<Crime> unfilteredCrimeList() {
+		this.unfilteredCrimeList = parser.getCrimesList();
+		return this.unfilteredCrimeList;
 	}
 
 }
