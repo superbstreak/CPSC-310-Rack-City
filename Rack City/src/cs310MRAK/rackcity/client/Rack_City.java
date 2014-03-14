@@ -1007,6 +1007,7 @@ public class Rack_City implements EntryPoint {
 			        		BikeRack currentRack = currentRackList.get(i);
 			        		if (currentRack.getCoordinate() == incident) {
 			        			currentRack.addStolenBike();
+			        			clickRackDisplayPanel(currentRack);
 			        		}
 			        	}
 			        	
