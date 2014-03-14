@@ -512,13 +512,38 @@ public class Rack_City implements EntryPoint {
 		
 		 //* Adding UI elements to each panel
 		 
-		Button loginButton = new Button("loginButton");
+		final Button loginButton = new Button("loginButton");
+		loginButton.setText("Login");
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
+				LoginServiceAsync loginService = GWT.create(LoginService.class);
+			    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			      public void onFailure(Throwable error) {
+			    	  Window.alert("Error loading loginService!");
+			      }
+
+			      public void onSuccess(LoginInfo result) {
+			        loginInfo = result;
+			        if(loginInfo.isLoggedIn()) 
+			        {
+			        	// if logged in, set text to sign out
+			        	loginButton.setText("Sign Out");
+			        	
+			        } 
+			        else 
+			        {
+			        	// otherwise, continue login procedure
+			        	loginButton.setText("Login");
+			        	
+			        }
+			      }
+			    });
+				
+				
+				
 			}
 		});
-		loginButton.setText("Login");
 		titleViewPanel.add(loginButton, 500, 0);
 		
 		
@@ -791,7 +816,7 @@ public class Rack_City implements EntryPoint {
 	
 	private void loadLogin() {
 	    // Assemble login panel.
-		Window.alert("Please login to use this feature.");
+		//Window.alert("Please login to use this feature.");
 	    signInLink.setHref(loginInfo.getLoginUrl());
 	    loginPanel.add(loginLabel);
 	    loginPanel.add(signInLink);
