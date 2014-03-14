@@ -135,8 +135,9 @@ public class Filter {
 			double distanceX = (rack.getCoordinate().getLongitude() - myLocation.getLongitude());
 			double distanceY = (rack.getCoordinate().getLatitude() - myLocation.getLatitude());
 			double distance = Math.sqrt((distanceX)*(distanceX) + (distanceY)*(distanceY));
-
+			System.out.println("Distance: " + distance);
 			if (distance <= radius && rack.getRating() >= rating && rack.getCrimeScore() <= crimeScore) {
+				System.out.println(rack.getCoordinate());
 				filteredRackList.add(rack);
 			}
 		}

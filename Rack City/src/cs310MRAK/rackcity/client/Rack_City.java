@@ -737,7 +737,7 @@ public class Rack_City implements EntryPoint {
 				public void onClick(MapClickEvent event) {
 					Marker tmpRack = ((Marker) event.getOverlay());
 					
-					if(!currentMarker.getLatLng().equals(currentAddress)){
+					if(!latlngCompare(tmpRack.getLatLng(), currentAddress)){
 						if(tmpRack != null && currentMarker != null && !tmpRack.equals(currentMarker)){
 							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 							currentMarker = tmpRack;
@@ -807,8 +807,6 @@ public class Rack_City implements EntryPoint {
 				}
 				currentCrimeList = filters.getFilteredCrimeList(currentAddress, radius);
 				currentRackList = filters.getFilteredRackList(currentAddress, radius, rating, crimeScore);
-				
-				
 				
 				if(!currentRackList.isEmpty()){
 					for (BikeRack rack : currentRackList) {
@@ -1035,6 +1033,26 @@ public class Rack_City implements EntryPoint {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Returns true if A=B and false if otherwise
+	 * @param A
+	 * @param B
+	 * @return
+	 */
+	private boolean latlngCompare(LatLng A, LatLng B){
+		double latA = A.getLatitude();
+		double lngA = A.getLongitude();
+		double latB = B.getLatitude();
+		double lngB = B.getLongitude();
+		
+		if (latA == latB && lngA == lngB){
+			return true;
+		}
+		
+		return false;
+		
 	}
 	
 //	// because singleton. 
