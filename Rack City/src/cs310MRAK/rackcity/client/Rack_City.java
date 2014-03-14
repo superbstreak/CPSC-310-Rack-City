@@ -244,7 +244,7 @@ public class Rack_City implements EntryPoint {
 	}
 
 	private void loadGoogleMap(){
-		
+
 		//MAP API KEY: AIzaSyDaxfDkKyFywp7WKW1Bv07mrH9QNBup-04 (Might not work)
 		Maps.loadMapsApi("", "2", false, new Runnable() { public void run() {
 			// This code is used to create lat/long data points
@@ -314,18 +314,17 @@ public class Rack_City implements EntryPoint {
 				displayRadius(point, radius);
 
 				googleMap.addOverlay(addMarker(point, 2));
-				
+
 				/*
 				 * The following code should get the appropriate list based on all the preconditions.
 				 */
 				currentSearchList = filters.completeFilteredList(point, radius, rating, crimeScore);
-				
+
 				/*
 				 * The following code should plot the position of each rack within the given 
 				 * radius. This needs to be tested once the parser is functional.
 				 */
 				for (BikeRack rack : currentSearchList) {
-					Marker a = null;
 					googleMap.addOverlay(addMarker(rack.getCoordinate(), 2));
 				}
 			}
