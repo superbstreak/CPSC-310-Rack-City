@@ -44,6 +44,7 @@ public class Parser {
 
 	
 	public Parser() {
+		
 		this.rackList = new ArrayList<BikeRack>();
 		this.crimesList = new ArrayList<Crime>();
 		// rackList.add(new BikeRack("", LatLng.newInstance(49.264453, -123.100939), 1.0, 2, 0, 1));
@@ -51,7 +52,11 @@ public class Parser {
 		
 		// crimesList.add(new Crime("", LatLng.newInstance(49.262509, -123.094469)));
 		// crimesList.add(new Crime("", LatLng.newInstance(49.263049, -123.106903)));
+		rackList = Rack_City.getRackData();
+		crimesList = Rack_City.getCrimeData();
 	}
+	
+	
 	
 	public List<BikeRack> getRackList() {
 		
@@ -86,7 +91,7 @@ public class Parser {
 	    rackList.add(rack6);
 	    rackList.add(rack7);
 	    rackList.add(rack8);
-		
+	    
 	}
 	
 	public void parseCrimes() {
@@ -96,6 +101,7 @@ public class Parser {
 		
 	    crimesList.add(crime1);
 	    crimesList.add(crime2);
+	    
 	}
 
 }

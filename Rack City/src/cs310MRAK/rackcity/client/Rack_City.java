@@ -56,8 +56,8 @@ public class Rack_City implements EntryPoint {
 	private List<BikeRack> currentRackList = null;
 	private List<Crime> currentCrimeList = null;
 	private LatLng currentAddress = null;
-	private ArrayList<BikeRack> listofracks = null;
-	private ArrayList<Crime> listofcrimes = null;
+	private static ArrayList<BikeRack> listofracks = null;
+	private static ArrayList<Crime> listofcrimes = null;
 	//private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 //	private static final Logger LOG = Logger.getLogger(Rack_City.class.getName());
 	//=============================
@@ -624,8 +624,7 @@ public class Rack_City implements EntryPoint {
 			    addRacker("5687 West Yew St, Vancouver, BC", LatLng.newInstance(49.234777,-123.157842), 2, 1, 5, 1, 2);
 			    addRacker("5692 East Yew St, Vancouver, BC", LatLng.newInstance(49.234918,-123.157611), 5, 2, 2, 1, 2);
 			    addRacker("2490 East Yukon St, Vancouver, BC", LatLng.newInstance(49.263255,-123.112883), 3, 1, 4, 1, 2);
-			    Window.alert("DEBUG: BRDone");
-			    addRacker("crime", LatLng.newInstance(49.03026,-122.79582), 0, 0, 0, 0, 3);
+				addRacker("crime", LatLng.newInstance(49.03026,-122.79582), 0, 0, 0, 0, 3);
 			    addRacker("crime", LatLng.newInstance(49.16268,-123.14441), 0, 0, 0, 0, 3);
 			    addRacker("crime", LatLng.newInstance(49.18967,-123.14418), 0, 0, 0, 0, 3);
 			    addRacker("crime", LatLng.newInstance(49.203193,-122.910916), 0, 0, 0, 0, 3);
@@ -2112,6 +2111,14 @@ public class Rack_City implements EntryPoint {
 		
 	}
 	
+	public static ArrayList<Crime> getCrimeData()
+	{
+		return listofcrimes;
+	}
+	public static ArrayList<BikeRack> getRackData()
+	{
+		return listofracks;
+	}
 //	// because singleton. 
 //	private PersistenceManager getPersistenceManager() {
 //		// TODO Auto-generated method stub
