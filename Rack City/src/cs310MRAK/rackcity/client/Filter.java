@@ -34,8 +34,6 @@ public class Filter {
 		
 		for(BikeRack rack : unfilteredRackList) {
 			if (calcLatLngDistance(rack.getCoordinate(), myLocation) <= radius && rack.getRating() >= rating && rack.getCrimeScore() <= crimeScore) {
-				System.out.println("Rack Coordinate: "  + rack.getCoordinate());
-				System.out.println("Distance: "  + calcLatLngDistance(rack.getCoordinate(), myLocation));
 				filteredRackList.add(rack);
 			}
 		}

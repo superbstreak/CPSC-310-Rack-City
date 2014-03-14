@@ -576,6 +576,11 @@ public class Rack_City implements EntryPoint {
 		Button datasheetViewButton = new Button("datasheetViewButton");
 		datasheetViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				
+				if(currentAddress == null){
+					Window.alert("No Address searched! Please search an address first before entering DataSheet view.");
+					return;
+				}
 
 				if(currentMarker != null){
 					((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
@@ -591,15 +596,23 @@ public class Rack_City implements EntryPoint {
 				rackList.addChangeHandler(new ChangeHandler() {
 					public void onChange(ChangeEvent event) {
 						String temp = rackList.getValue((rackList.getSelectedIndex())); //gets selected value from listbox
-						int lat = Integer.parseInt(temp.substring(1, temp.indexOf(",")));
-						int lng = Integer.parseInt(temp.substring(temp.indexOf(",")+1,temp.length()));
+						String tmpLat = temp.substring(1, temp.indexOf(","));
+						String tmpLng = temp.substring(temp.indexOf(",")+2,temp.length());
 						
-						if(!currentDatasheetItem.equals(temp)){
+						double lat,lng;
+						
+						lat = Double.parseDouble(tmpLat);
+						lng = Double.parseDouble(tmpLng);
+						
+						if(currentDatasheetItem != null && !currentDatasheetItem.equals(temp)){
+							currentDatasheetItem = temp;
 							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 							clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
 						}else if (currentDatasheetItem.equals(temp)){
+							//do nothing
 						}
 						else{
+							currentDatasheetItem = temp;
 							clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
 						}
 					}
@@ -607,10 +620,12 @@ public class Rack_City implements EntryPoint {
 				rackList.setSize("700px", "500px");
 				rackList.setVisibleItemCount(10);
 
-				for (BikeRack rack : currentRackList){
-					rackList.addItem("(" + rack.getCoordinate().getLatitude() + ", " + 
-							rack.getCoordinate().getLongitude() + ") " + "Distance from you: " + 
-							calcLatLngDistance(rack.getCoordinate()));
+				if(currentRackList != null || !currentRackList.isEmpty()){
+					for (BikeRack rack : currentRackList){
+						rackList.addItem("(" + rack.getCoordinate().getLatitude() + ", " + 
+								rack.getCoordinate().getLongitude() + ") " + "Distance from you (km): " + 
+								calcLatLngDistance(rack.getCoordinate()));
+					}
 				}
 				
 				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackList);
@@ -820,9 +835,6 @@ public class Rack_City implements EntryPoint {
 
 			@Override
 			public void onSuccess(LatLng point) {
-				
-				System.out.println("Address: " + address);
-				System.out.println("LatLng: " + point);
 				
 				currentAddress = point;
 				googleMap.setCenter(currentAddress);
