@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("rack")
 public interface rackService extends RemoteService {
 	
+	// latlng are not serialized, all latlng convert to string
 	public void addRack(String addr, String p, int rnum, int stolen, double cs, double rate);
 	public void updateCS(String p, double score);
 	public void updateStolen(String p, int steal);

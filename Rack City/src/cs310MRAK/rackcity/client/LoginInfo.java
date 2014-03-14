@@ -42,7 +42,7 @@ public class LoginInfo implements Serializable {
     this.emailAddress = emailAddress;
   }
 
-  public String getNickname() {
+  public String getNickname() {		// call user at parts
     return nickname;
   }
 

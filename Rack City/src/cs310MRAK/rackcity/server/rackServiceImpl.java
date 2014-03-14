@@ -18,7 +18,7 @@ import cs310MRAK.rackcity.client.rackService;
 public class rackServiceImpl extends RemoteServiceServlet implements rackService{
 	
 	/**
-	 * 
+	 *  make sure pm is singleton
 	 */
 	private static final long serialVersionUID = 1205162297094536429L;
 

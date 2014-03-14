@@ -3,6 +3,8 @@ package cs310MRAK.rackcity.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface rackServiceAsync {
+	
+	// latlng are not serialized, all to string
 	void addRack(String addr, String p, int rnum, int stolen, double cs, double rate, AsyncCallback<Void> callback);
 	void updateCS(String p, double score, AsyncCallback<Void> callback);
 	void updateStolen(String p, int steal, AsyncCallback<Void> callback);
