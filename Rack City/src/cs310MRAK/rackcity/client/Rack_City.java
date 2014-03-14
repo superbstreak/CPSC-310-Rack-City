@@ -43,7 +43,7 @@ public class Rack_City implements EntryPoint {
 	private DockPanel dockPanel = null;
 	private Marker currentMarker = null;
 	private String currentDatasheetItem = null;
-	private Filter filters;
+	private Filter filters = null;
 	private List<BikeRack> currentRackList = null;
 	private List<Crime> currentCrimeList = null;
 	private LatLng currentAddress = null;
@@ -52,7 +52,7 @@ public class Rack_City implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-
+		
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize("1160px", "637px");
 		dockPanel = new DockPanel();
@@ -83,11 +83,11 @@ public class Rack_City implements EntryPoint {
 
 		VerticalPanel titlePanel = new VerticalPanel();
 		dockPanel.add(titlePanel, DockPanel.NORTH);
-		titlePanel.setSize("696px", "20px");
+		titlePanel.setSize("696px", "40px");
 		
 		final AbsolutePanel titleViewPanel = new AbsolutePanel();
 		titlePanel.add(titleViewPanel);
-		titleViewPanel.setSize("696px","20px");
+		titleViewPanel.setSize("696px","40px");
 
 		HorizontalPanel rightRackClickPanel = new HorizontalPanel();
 		dockPanel.add(rightRackClickPanel, DockPanel.EAST);
@@ -106,7 +106,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loginButton.setText("Login");
-		titleViewPanel.add(loginButton, 500, 0);
+		titleViewPanel.add(loginButton, 500, 5);
 		
 		
 		Button adminButton = new Button("adminButton");
@@ -116,7 +116,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		adminButton.setText("Admin");
-		titleViewPanel.add(adminButton, 575, 0);
+		titleViewPanel.add(adminButton, 575, 5);
 		
 		final TextBox txtbxAddress = new TextBox();
 		txtbxAddress.addClickHandler(new ClickHandler() {
@@ -298,22 +298,24 @@ public class Rack_City implements EntryPoint {
 			googleMap.addMapClickHandler(new MapClickHandler() {
 				public void onClick(MapClickEvent event) {
 					Marker tmpRack = ((Marker) event.getOverlay());
+					
+					if(!currentMarker.getLatLng().equals(currentAddress)){
+						if(tmpRack != null && currentMarker != null && !tmpRack.equals(currentMarker)){
+							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+							currentMarker = tmpRack;
+							clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
 
-					if(tmpRack != null && currentMarker != null && !tmpRack.equals(currentMarker)){
-						((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-						currentMarker = tmpRack;
-						clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
+						}else if (tmpRack != null && currentMarker == null){
+							currentMarker = tmpRack;
+							clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
 
-					}else if (tmpRack != null && currentMarker == null){
-						currentMarker = tmpRack;
-						clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
+						}else if(tmpRack != null && tmpRack.equals(currentMarker)){
 
-					}else if(tmpRack != null && tmpRack.equals(currentMarker)){
-
-					}else{
-						currentMarker = null;
-						((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-						((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
+						}else{
+							currentMarker = null;
+							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+							((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
+						}
 					}
 				}
 			});
@@ -330,6 +332,8 @@ public class Rack_City implements EntryPoint {
 
 		}});
 	}
+	
+	
 
 	/**
 	 * Generates markers for all bike racks based on specified user inputs
@@ -355,21 +359,29 @@ public class Rack_City implements EntryPoint {
 				googleMap.setZoomLevel(14);
 				displayRadius(currentAddress, radius);
 
-				googleMap.addOverlay(addMarker(point, 2));
+				addMarker(point, 1);
 
 				/*
 				 * The following code should get the appropriate list based on all the preconditions.
 				 */
-				
+				if(filters == null){
+					filters = new Filter();
+				}
 				currentCrimeList = filters.getFilteredCrimeList(currentAddress, radius);
 				currentRackList = filters.getFilteredRackList(currentAddress, radius, rating, crimeScore);
 				
-				for (BikeRack rack : currentRackList) {
-					googleMap.addOverlay(addMarker(rack.getCoordinate(), 2));
+				
+				
+				if(!currentRackList.isEmpty()){
+					for (BikeRack rack : currentRackList) {
+						addMarker(rack.getCoordinate(), 2);
+					}
 				}
 				
-				for (Crime crime : currentCrimeList) {
-					googleMap.addOverlay(addMarker(crime.getCoordinate(), 3));
+				if(!currentCrimeList.isEmpty()){
+					for (Crime crime : currentCrimeList) {
+						addMarker(crime.getCoordinate(), 3);
+					}
 				}
 			}
 		});
@@ -483,20 +495,23 @@ public class Rack_City implements EntryPoint {
 
 	// google icon file from here: https://sites.google.com/site/gmapicons/
 	// add markers onto the map. Add marker overlay for each latlng within a list, center at address
-	private Marker addMarker(LatLng pos, int type)
+	private void addMarker(LatLng pos, int type)
 	{
 		Marker mark = new Marker(pos);
 		if (type == 1)		// search address: ME
 		{
 			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_blue.png");
+			googleMap.addOverlay(mark);
 		}
 		else if (type == 2)		// bike racks: GREEN, !!!!! SHOULD HAVE DIFFERENT COLOR BASED ON RACK#
 		{
 			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_green.png");
+			googleMap.addOverlay(mark);
 		}
 		else if (type == 3)		// crime place: RED
 		{
 			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_red.png");
+			googleMap.addOverlay(mark);
 		}
 		/* set listener if the marker is pressed (single)
 				mark.addMarkerClickHandler(new MarkerClickHandler() {
@@ -506,7 +521,6 @@ public class Rack_City implements EntryPoint {
 					}
 				});
 		 */
-		return mark;
 	}
 	
 	/**

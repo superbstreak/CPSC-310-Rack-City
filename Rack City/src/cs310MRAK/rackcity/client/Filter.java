@@ -10,17 +10,18 @@ public class Filter {
 
 	private Parser parser;
 
-	List<BikeRack> unfilteredList;
-	List<BikeRack> filteredList;
+	List<BikeRack> unfilteredRackList;
+	List<BikeRack> filteredRackList;
 
 	List<Crime> unfilteredCrimeList;
 	List<Crime> filteredCrimeList;
 
 	public Filter() {
 		this.parser = new Parser();
-		this.unfilteredList = new ArrayList<BikeRack>();
-		this.filteredList = new ArrayList<BikeRack>();
-
+		filteredRackList = new ArrayList<BikeRack>();
+		filteredCrimeList = new ArrayList<Crime>();
+		unfilteredRackList = parser.getRackList();
+		unfilteredCrimeList = parser.getCrimesList();
 	}
 
 	/**
@@ -34,8 +35,7 @@ public class Filter {
 	 * @param myLocation
 	 * @return
 	 */
-	private List<BikeRack> filteredDistanceList(double radius, LatLng myLocation,
-			List<BikeRack> list) {
+	private List<BikeRack> filteredDistanceList(double radius, LatLng myLocation, List<BikeRack> list) {
 
 		for(BikeRack rack : list) {
 			double distanceX = (rack.getCoordinate().getLongitude()
@@ -46,11 +46,11 @@ public class Filter {
 					+ (distanceY)*(distanceY));
 
 			if (distance <= radius) {
-				this.filteredList.add(rack);
+				this.filteredRackList.add(rack);
 			}
 		}
 
-		return this.filteredList;
+		return this.filteredRackList;
 	}
 	
 	/**
@@ -63,19 +63,15 @@ public class Filter {
 	 * @param list
 	 * @return
 	 */
-	private List<Crime> filteredCrimeDistanceList(double radius, LatLng myLocation,
-			List<Crime> list) {
+	private List<Crime> filteredCrimeDistanceList(double radius, LatLng myLocation) {
 		
-		for (Crime crime : list) {
-			double distanceX = (crime.getCoordinate().getLongitude()
-					- myLocation.getLongitude());
-			double distanceY = (crime.getCoordinate().getLatitude()
-					- myLocation.getLatitude());
-			double distance = Math.sqrt((distanceX)*(distanceX)
-					+ (distanceY)*(distanceY));
+		for (Crime crime : unfilteredCrimeList) {
+			double distanceX = (crime.getCoordinate().getLongitude() - myLocation.getLongitude());
+			double distanceY = (crime.getCoordinate().getLatitude() - myLocation.getLatitude());
+			double distance = Math.sqrt((distanceX)*(distanceX) + (distanceY)*(distanceY));
 			
 			if (distance <= radius) {
-				this.filteredCrimeList.add(crime);
+				filteredCrimeList.add(crime);
 			}
 		}
 		
@@ -95,11 +91,11 @@ public class Filter {
 
 		for(BikeRack rack : list) {			
 			if (rack.getRating() >= rating) {
-				this.filteredList.add(rack);
+				this.filteredRackList.add(rack);
 			}
 		}
 
-		return this.filteredList;
+		return this.filteredRackList;
 	}
 
 	/**
@@ -117,11 +113,11 @@ public class Filter {
 
 		for(BikeRack rack : list) {
 			if (rack.getCrimeScore() <= crimeScore) {
-				this.filteredList.add(rack);
+				this.filteredRackList.add(rack);
 			}
 		}
 
-		return this.filteredList;
+		return this.filteredRackList;
 	}
 	
 	/**
@@ -133,16 +129,19 @@ public class Filter {
 	 * @param crimeScore
 	 * @return
 	 */
-	public List<BikeRack> getFilteredRackList(LatLng myLocation, double radius,
-			double rating, int crimeScore) {
+	public List<BikeRack> getFilteredRackList(LatLng myLocation, double radius, double rating, int crimeScore) {
 		
-		this.filteredList = this.filteredDistanceList(radius, myLocation, this.unfilteredList());
+		for(BikeRack rack : unfilteredRackList) {
+			double distanceX = (rack.getCoordinate().getLongitude() - myLocation.getLongitude());
+			double distanceY = (rack.getCoordinate().getLatitude() - myLocation.getLatitude());
+			double distance = Math.sqrt((distanceX)*(distanceX) + (distanceY)*(distanceY));
+
+			if (distance <= radius && rack.getRating() >= rating && rack.getCrimeScore() <= crimeScore) {
+				filteredRackList.add(rack);
+			}
+		}
 		
-		this.filteredList = this.filteredRatingList(rating, this.filteredList);
-		
-		this.filteredList = this.filteredCrimeScoreList(crimeScore, this.filteredList);
-		
-		return this.filteredList;
+		return filteredRackList;
 		
 	}
 	
@@ -155,31 +154,9 @@ public class Filter {
 	 */
 	public List<Crime> getFilteredCrimeList(LatLng myLocation, double radius) {
 		
-		this.filteredCrimeList = this.filteredCrimeDistanceList(radius, myLocation,
-				this.unfilteredCrimeList);
+		filteredCrimeList = filteredCrimeDistanceList(radius, myLocation);
 		
-		return this.filteredCrimeList;
-	}
-
-	/**
-	 * 
-	 * Returns an unfiltered list from the parse. The
-	 * purpose of this method is to eliminate the dependency
-	 * between the RackCity class and the Parser class
-	 * @return
-	 */
-	private List<BikeRack> unfilteredList() {
-		this.unfilteredList = parser.getRackList();
-		return this.unfilteredList;
-	}
-	
-	/**
-	 * Returns an unfiltered crime list from the parser.
-	 * @return
-	 */
-	private List<Crime> unfilteredCrimeList() {
-		this.unfilteredCrimeList = parser.getCrimesList();
-		return this.unfilteredCrimeList;
+		return filteredCrimeList;
 	}
 
 }
