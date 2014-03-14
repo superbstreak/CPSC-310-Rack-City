@@ -318,7 +318,8 @@ public class Rack_City implements EntryPoint {
 				 */
 				currentSearchList = filters.completeFilteredList(radius, crimeScore, rating);
 				currentSearchList = filters.completeFilteredList(radius, crimeScore, rating);
-				//Commented code
+				
+				
 				/*
 				 * The following code should plot the position of each rack within the given 
 				 * radius. This needs to be tested once the parser is functional.
