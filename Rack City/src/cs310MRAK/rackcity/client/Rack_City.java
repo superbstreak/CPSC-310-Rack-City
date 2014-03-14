@@ -50,6 +50,7 @@ import com.google.gwt.maps.client.event.MapClickHandler;
  */
 public class Rack_City implements EntryPoint {
 
+	RootPanel rootPanel;
 	private MapWidget googleMap = null;
 	private DockPanel dockPanel = null;
 	private Marker currentMarker = null;
@@ -64,9 +65,16 @@ public class Rack_City implements EntryPoint {
 	//=============================
 	  private LoginInfo loginInfo = null;
 	  private VerticalPanel loginPanel = new VerticalPanel();
-	  private Label loginLabel = new Label("Please sign in to your Google Account to access the StockWatcher application.");
+	  private Label loginLabel = new Label("Please sign in to your Google Account to access specific features.");
+	  private Label logoutLabel = new Label("Please click on signout to confirm your action");
 	  private Anchor signInLink = new Anchor("Sign In");
+	  private Anchor signOutLink = new Anchor("Sign Out");
 	 
+	// google+ login stuff ------ S2 ---------
+	  //private static final Plus plus = GWT.create(Plus.class);
+	  //private static final String CLIENT_ID = "692753340433.apps.googleusercontent.com";
+	  //private static final String API_KEY = "AIzaSyA5bNyuRQFaTQle_YC5BUH7tQzRmAPiqsM";
+	  //private static final String APPLICATION_NAME = "cs310rackcity/1.0";
 	  
 	  
 
@@ -467,9 +475,58 @@ public class Rack_City implements EntryPoint {
 //		    hackyCodeInt = 1;
 //			}
 
+		GUIsetup();
 		
 		
-		RootPanel rootPanel = RootPanel.get();
+	}
+	
+	 private void handleError(Throwable error) {
+		    Window.alert(error.getMessage());
+		    if (error instanceof NotLoggedInException) {
+		      Window.Location.replace(loginInfo.getLogoutUrl());
+		    }
+		  }
+	
+	private void startLoginProcess()
+	{
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+	      public void onFailure(Throwable error) {
+	    	  Window.alert("Error loading loginService!");
+	    	  handleError(error);
+	      }
+
+	      public void onSuccess(LoginInfo result) {
+	        loginInfo = result;
+	        if(loginInfo.isLoggedIn()) 
+	        {
+	        	// if logged in, set text to sign out
+	        	
+	        	 // Set up sign out hyperlink.
+	        	rootPanel.clear();
+	        	signOutLink.setHref(loginInfo.getLogoutUrl());
+	        	loginPanel.add(logoutLabel);
+		     	loginPanel.add(signOutLink);
+		     	RootPanel.get().add(loginPanel);
+	        } 
+	        else 
+	        {
+	        	// otherwise, continue login procedure
+	        	rootPanel.clear();
+	        	signInLink.setHref(loginInfo.getLoginUrl());
+	     	    loginPanel.add(loginLabel);
+	     	    loginPanel.add(signInLink);
+	     	    RootPanel.get().add(loginPanel);
+	        }
+	 
+	      }
+	      
+	    });
+	}
+	
+	private void GUIsetup()
+	{
+		rootPanel = RootPanel.get();
 		rootPanel.setSize("1160px", "637px");
 		dockPanel = new DockPanel();
 		rootPanel.add(dockPanel, 10, 0);
@@ -517,6 +574,29 @@ public class Rack_City implements EntryPoint {
 		 
 		final Button loginButton = new Button("loginButton");
 		loginButton.setText("Login");
+		
+		//set text correctly
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+	      public void onFailure(Throwable error) {
+	    	  Window.alert("Error loading loginService!");
+	    	  handleError(error);
+	      }
+
+	      public void onSuccess(LoginInfo result) {
+	        loginInfo = result;
+	        if(loginInfo.isLoggedIn()) 
+	        {
+	        	// if logged in, set text to sign out
+	        	loginButton.setText("Sign Out");			        	
+	        } 
+	        else 
+	        {
+	        	loginButton.setText("Sign In");
+	        }
+	      }
+	    });
+	    
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
@@ -524,6 +604,7 @@ public class Rack_City implements EntryPoint {
 			    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
 			      public void onFailure(Throwable error) {
 			    	  Window.alert("Error loading loginService!");
+			    	  handleError(error);
 			      }
 
 			      public void onSuccess(LoginInfo result) {
@@ -531,17 +612,17 @@ public class Rack_City implements EntryPoint {
 			        if(loginInfo.isLoggedIn()) 
 			        {
 			        	// if logged in, set text to sign out
-			        	loginButton.setText("Sign Out");
-			        	
+			        	loginButton.setText("Sign Out");			        	
 			        } 
 			        else 
 			        {
-			        	// otherwise, continue login procedure
-			        	loginButton.setText("Login");
-			        	
+			        	loginButton.setText("Sign In");
 			        }
 			      }
 			    });
+				
+				
+				startLoginProcess();
 				
 				
 				
@@ -915,7 +996,9 @@ public class Rack_City implements EntryPoint {
 			        loginInfo = result;
 			        if(loginInfo.isLoggedIn()) 
 			        {
-			        	Window.alert("Report Crime Pressed!");
+			        	LatLng incident = currentMarker.getLatLng();
+			        	
+			        	Window.alert("Crime Reported!");
 			        } 
 			        else 
 			        {
@@ -1022,17 +1105,17 @@ public class Rack_City implements EntryPoint {
 		Marker mark = new Marker(pos);
 		if (type == 1)		// search address: ME
 		{
-			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_blue.png");
+			mark.setImage("http://www.google.com/mapfiles/dd-start.png");
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 2)		// bike racks: GREEN, !!!!! SHOULD HAVE DIFFERENT COLOR BASED ON RACK#
 		{
-			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_green.png");
+			mark.setImage("http://maps.google.com/mapfiles/arrow.png");
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 3)		// crime place: RED
 		{
-			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_red.png");
+			mark.setImage("http://www.google.com/mapfiles/dd-end.png");
 			googleMap.addOverlay(mark);
 		}
 		/* set listener if the marker is pressed (single)
