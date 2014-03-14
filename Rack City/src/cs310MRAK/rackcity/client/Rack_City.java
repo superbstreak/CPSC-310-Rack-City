@@ -1,11 +1,14 @@
 package cs310MRAK.rackcity.client;
 
 import java.util.logging.Logger;
+
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
@@ -37,6 +40,7 @@ import com.google.gwt.maps.client.geocode.LocationCallback;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
+import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
@@ -575,6 +579,7 @@ public class Rack_City implements EntryPoint {
 
 				if(currentMarker != null){
 					((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+					((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
 					currentMarker = null;
 				}
 
@@ -660,7 +665,7 @@ public class Rack_City implements EntryPoint {
 		Label lblRadius = new Label("Radius (km):");
 		userInputPanel.add(lblRadius, 24, 169);
 
-		Label lblCrimeScore = new Label("Crime Score:");
+		Label lblCrimeScore = new Label("Crime Score <=:");
 		userInputPanel.add(lblCrimeScore, 24, 221);
 		lblCrimeScore.setSize("151px", "18px");
 
@@ -676,9 +681,9 @@ public class Rack_City implements EntryPoint {
 		crimeCombo.setSize("151px", "22px");
 		crimeCombo.setTabIndex(5);
 
-		Label lblRating = new Label("Rating:");
+		Label lblRating = new Label("Rating >=:");
 		userInputPanel.add(lblRating, 24, 277);
-		lblRating.setSize("44px", "18px");
+		lblRating.setSize("151px", "18px");
 
 		final ListBox ratingCombo = new ListBox();
 		ratingCombo.addItem("");
@@ -701,6 +706,16 @@ public class Rack_City implements EntryPoint {
 							if(!ratingCombo.getValue(ratingCombo.getSelectedIndex()).equals("")){
 
 								googleMap.clearOverlays();
+								currentRackList = null;
+								currentCrimeList = null;
+								currentAddress = null;
+								
+								if(currentMarker != null){
+									currentMarker = null;
+									((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+									((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
+								}
+								
 								addMapOverlay(txtbxAddress.getText(), 
 										Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())),
 										Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
@@ -735,22 +750,31 @@ public class Rack_City implements EntryPoint {
 			googleMap.setVisible(true);
 			googleMap.addMapClickHandler(new MapClickHandler() {
 				public void onClick(MapClickEvent event) {
-					Marker tmpRack = ((Marker) event.getOverlay());
-					event.getOverlay();
-					System.out.println(tmpRack.getLatLng());
+					Overlay ovr = event.getOverlay();
 					
-					if(tmpRack != null && !latlngCompare(tmpRack.getLatLng(), currentAddress)){
-						if(currentMarker != null && !tmpRack.equals(currentMarker)){
-							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-							currentMarker = tmpRack;
-							clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
+					if(ovr != null && ovr.getClass().toString().contains("Marker")){
+						
+						Marker tmpRack = ((Marker) event.getOverlay());
+						
+						if(getRack(tmpRack.getLatLng()) != null && tmpRack != null && !latlngCompare(tmpRack.getLatLng(), currentAddress)){
+							if(currentMarker != null && !tmpRack.equals(currentMarker)){
+								((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+								currentMarker = tmpRack;
+								clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
 
-						}else if (currentMarker == null){
-							currentMarker = tmpRack;
-							clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
+							}else if (currentMarker == null){
+								currentMarker = tmpRack;
+								clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
 
-						}else if(tmpRack.equals(currentMarker)){
-							//do nothing
+							}else if(tmpRack.equals(currentMarker)){
+								//do nothing
+							}
+						}else{
+							if(currentMarker != null){
+								currentMarker = null;
+								((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+								((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
+							}
 						}
 					}else{
 						if(currentMarker != null){
@@ -784,7 +808,7 @@ public class Rack_City implements EntryPoint {
 	 * @param crimeScore - Only display racks that have > input crime score
 	 * @param rating - Only display racks that have > input rating
 	 */
-	private void addMapOverlay(String address, final double radius, final int crimeScore, final double rating){
+	private void addMapOverlay(final String address, final double radius, final int crimeScore, final double rating){
 
 		//Geocodes the address that the user inputs and creates a latlong opbject
 		Geocoder latLongAddress = new Geocoder();
@@ -796,6 +820,10 @@ public class Rack_City implements EntryPoint {
 
 			@Override
 			public void onSuccess(LatLng point) {
+				
+				System.out.println("Address: " + address);
+				System.out.println("LatLng: " + point);
+				
 				currentAddress = point;
 				googleMap.setCenter(currentAddress);
 				googleMap.setZoomLevel(14);
@@ -814,12 +842,14 @@ public class Rack_City implements EntryPoint {
 				
 				if(!currentRackList.isEmpty()){
 					for (BikeRack rack : currentRackList) {
+						//System.out.println("Rack Coordinate: " + rack.getCoordinate());
 						addMarker(rack.getCoordinate(), 2);
 					}
 				}
 				
 				if(!currentCrimeList.isEmpty()){
 					for (Crime crime : currentCrimeList) {
+						//System.out.println("Crime Coordinate: " + crime.getCoordinate());
 						addMarker(crime.getCoordinate(), 3);
 					}
 				}
@@ -842,6 +872,10 @@ public class Rack_City implements EntryPoint {
 	 * Displays the 'Report Crime' button and title of rack in a panel on the right of the page
 	 */
 	private void clickRackDisplayPanel(BikeRack rack){
+		
+		if(rack == null){
+			return;
+		}
 		
 		final AbsolutePanel rackClickPanel = new AbsolutePanel();
 		((HorizontalPanel) dockPanel.getWidget(3)).add(rackClickPanel);
@@ -923,6 +957,11 @@ public class Rack_City implements EntryPoint {
 		rackCountRatingLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(rackCountRatingLabel, 0, 270);
 		rackCountRatingLabel.setSize("250px", "54px");
+		
+		Label distanceLabel = new Label("Distance from you (km): " + calcLatLngDistance(rack.getCoordinate()));
+		distanceLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		rackClickPanel.add(distanceLabel, 0, 324);
+		distanceLabel.setSize("250px", "54px");
 
 		((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(1);
 
@@ -1020,7 +1059,7 @@ public class Rack_City implements EntryPoint {
 
 	    int meterConversion = 1609;
 
-	    return (double) (dist * meterConversion);
+	    return (double) (dist * meterConversion)/1000;
 	}
 	
 	/**
