@@ -42,6 +42,7 @@ public class Rack_City implements EntryPoint {
 	private MapWidget googleMap = null;
 	private DockPanel dockPanel = null;
 	private Marker currentMarker = null;
+	private String currentDatasheetItem = null;
 	private Filter filters;
 	private List<BikeRack> currentRackList = null;
 	private List<Crime> currentCrimeList = null;
@@ -80,9 +81,13 @@ public class Rack_City implements EntryPoint {
 		centerRackViewPanel.add(rackViewPanel);
 		rackViewPanel.setSize("700px","500px");
 
-		VerticalPanel verticalPanel_1 = new VerticalPanel();
-		dockPanel.add(verticalPanel_1, DockPanel.NORTH);
-		verticalPanel_1.setSize("696px", "0px");
+		VerticalPanel titlePanel = new VerticalPanel();
+		dockPanel.add(titlePanel, DockPanel.NORTH);
+		titlePanel.setSize("696px", "20px");
+		
+		final AbsolutePanel titleViewPanel = new AbsolutePanel();
+		titlePanel.add(titleViewPanel);
+		titleViewPanel.setSize("696px","20px");
 
 		HorizontalPanel rightRackClickPanel = new HorizontalPanel();
 		dockPanel.add(rightRackClickPanel, DockPanel.EAST);
@@ -94,6 +99,15 @@ public class Rack_City implements EntryPoint {
 		/*
 		 * Adding UI elements to each panel
 		 */
+		Button loginButton = new Button("loginButton");
+		loginButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				
+			}
+		});
+		loginButton.setText("Login");
+		titleViewPanel.add(loginButton, 550, 0);
+		
 		final TextBox txtbxAddress = new TextBox();
 		txtbxAddress.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -127,7 +141,15 @@ public class Rack_City implements EntryPoint {
 						int lat = Integer.parseInt(temp.substring(1, temp.indexOf(",")));
 						int lng = Integer.parseInt(temp.substring(temp.indexOf(",")+1,temp.length()));
 						
-						clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
+						if(!currentDatasheetItem.equals(temp)){
+							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+							clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
+						}else if (currentDatasheetItem.equals(temp)){
+							
+						}
+						else{
+							clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
+						}
 					}
 				});
 				rackList.setSize("700px", "500px");
@@ -150,14 +172,19 @@ public class Rack_City implements EntryPoint {
 		Button mapViewButton = new Button("mapViewButton");
 		mapViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				
+				if(currentDatasheetItem != null){
+					((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+					currentDatasheetItem = null;
+				}
 
-				//TODO INSERT CODE HERE to handle when user wants to see the map view of the bike racks
 				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 
 				final DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
 				dock.addNorth(googleMap, 500);
 				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(dock);
 				googleMap.setVisible(true);
+				
 			}
 		});
 		mapViewButton.setText("Map View");
