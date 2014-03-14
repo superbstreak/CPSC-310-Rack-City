@@ -505,7 +505,7 @@ public class Rack_City implements EntryPoint {
 	        	 // Set up sign out hyperlink.
 	        	rootPanel.clear();
 	        	signOutLink.setHref(loginInfo.getLogoutUrl());
-	        	loginPanel.add(loginLabel);
+	        	loginPanel.add(logoutLabel);
 		     	loginPanel.add(signOutLink);
 		     	RootPanel.get().add(loginPanel);
 	        } 
@@ -984,7 +984,9 @@ public class Rack_City implements EntryPoint {
 			        loginInfo = result;
 			        if(loginInfo.isLoggedIn()) 
 			        {
-			        	Window.alert("Report Crime Pressed!");
+			        	LatLng incident = currentMarker.getLatLng();
+			        	
+			        	Window.alert("Crime Reported!");
 			        } 
 			        else 
 			        {
