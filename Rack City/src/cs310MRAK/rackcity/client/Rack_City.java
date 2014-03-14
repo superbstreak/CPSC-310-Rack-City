@@ -589,11 +589,11 @@ public class Rack_City implements EntryPoint {
 			        if(loginInfo.isLoggedIn()) 
 			        {
 			        	// if logged in, set text to sign out
-			        	loginButton.setText("SignIn");			        	
+			        	loginButton.setText("Sign Out");			        	
 			        } 
 			        else 
 			        {
-			        	loginButton.setText("SignOut");
+			        	loginButton.setText("Sign In");
 			        }
 			      }
 			    });
