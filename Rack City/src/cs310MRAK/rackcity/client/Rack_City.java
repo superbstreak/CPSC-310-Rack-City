@@ -736,20 +736,24 @@ public class Rack_City implements EntryPoint {
 			googleMap.addMapClickHandler(new MapClickHandler() {
 				public void onClick(MapClickEvent event) {
 					Marker tmpRack = ((Marker) event.getOverlay());
+					event.getOverlay();
+					System.out.println(tmpRack.getLatLng());
 					
-					if(!latlngCompare(tmpRack.getLatLng(), currentAddress)){
-						if(tmpRack != null && currentMarker != null && !tmpRack.equals(currentMarker)){
+					if(tmpRack != null && !latlngCompare(tmpRack.getLatLng(), currentAddress)){
+						if(currentMarker != null && !tmpRack.equals(currentMarker)){
 							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 							currentMarker = tmpRack;
 							clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
 
-						}else if (tmpRack != null && currentMarker == null){
+						}else if (currentMarker == null){
 							currentMarker = tmpRack;
 							clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
 
-						}else if(tmpRack != null && tmpRack.equals(currentMarker)){
-
-						}else{
+						}else if(tmpRack.equals(currentMarker)){
+							//do nothing
+						}
+					}else{
+						if(currentMarker != null){
 							currentMarker = null;
 							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 							((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
