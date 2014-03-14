@@ -1,5 +1,7 @@
 package cs310MRAK.rackcity.client;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.logging.Logger;
 
 import javax.jdo.JDOHelper;
@@ -707,7 +709,7 @@ public class Rack_City implements EntryPoint {
 					for (BikeRack rack : currentRackList){
 						rackList.addItem("(" + rack.getCoordinate().getLatitude() + ", " + 
 								rack.getCoordinate().getLongitude() + ") " + "Distance from you (km): " + 
-								calcLatLngDistance(rack.getCoordinate()));
+								round(calcLatLngDistance(rack.getCoordinate()), 2));
 					}
 				}
 				
@@ -1055,7 +1057,7 @@ public class Rack_City implements EntryPoint {
 		rackClickPanel.add(rackCountRatingLabel, 0, 270);
 		rackCountRatingLabel.setSize("250px", "54px");
 		
-		Label distanceLabel = new Label("Distance from you (km): " + calcLatLngDistance(rack.getCoordinate()));
+		Label distanceLabel = new Label("Distance from you (km): " + round(calcLatLngDistance(rack.getCoordinate()), 2));
 		distanceLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(distanceLabel, 0, 324);
 		distanceLabel.setSize("250px", "54px");
@@ -1198,6 +1200,21 @@ public class Rack_City implements EntryPoint {
 		
 		return false;
 		
+	}
+	
+	/**
+	 * Code adapted from http://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places?lq=1
+	 * Rounds double values to user-specified decimal places
+	 * @param value
+	 * @param places
+	 * @return
+	 */
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
 	}
 	
 //	// because singleton. 
