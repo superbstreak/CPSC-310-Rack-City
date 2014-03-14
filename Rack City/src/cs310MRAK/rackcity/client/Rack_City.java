@@ -127,7 +127,7 @@ public class Rack_City implements EntryPoint {
 						int lat = Integer.parseInt(temp.substring(1, temp.indexOf(",")));
 						int lng = Integer.parseInt(temp.substring(temp.indexOf(",")+1,temp.length()));
 						
-						
+						clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
 					}
 				});
 				rackList.setSize("700px", "500px");
@@ -266,11 +266,11 @@ public class Rack_City implements EntryPoint {
 					if(tmpRack != null && currentMarker != null && !tmpRack.equals(currentMarker)){
 						((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 						currentMarker = tmpRack;
-						clickRackDisplayPanel(currentMarker.getLatLng());
+						clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
 
 					}else if (tmpRack != null && currentMarker == null){
 						currentMarker = tmpRack;
-						clickRackDisplayPanel(currentMarker.getLatLng());
+						clickRackDisplayPanel(getRack(currentMarker.getLatLng()));
 
 					}else if(tmpRack != null && tmpRack.equals(currentMarker)){
 
@@ -344,7 +344,7 @@ public class Rack_City implements EntryPoint {
 	 * Method called when a rack on a map is clicked.
 	 * Displays the 'Report Crime' button and title of rack in a panel on the right of the page
 	 */
-	private void clickRackDisplayPanel(LatLng rack){
+	private void clickRackDisplayPanel(BikeRack rack){
 		
 		final AbsolutePanel rackClickPanel = new AbsolutePanel();
 		((HorizontalPanel) dockPanel.getWidget(3)).add(rackClickPanel);
@@ -368,7 +368,7 @@ public class Rack_City implements EntryPoint {
 
 		//Reverse Geocodes the rack location into an address for the user to see
 		Geocoder latLongAddress = new Geocoder();
-		latLongAddress.getLocations(rack, new LocationCallback() {
+		latLongAddress.getLocations(rack.getCoordinate(), new LocationCallback() {
 			@Override
 			public void onFailure(int statusCode) {
 
@@ -384,16 +384,26 @@ public class Rack_City implements EntryPoint {
 		});
 
 		//Add code to get # of stolen bikes for a particular rack
-		Label rackStolenBikesLabel = new Label("# of Stolen Bikes in this Location: ");
+		Label rackStolenBikesLabel = new Label("# of Stolen Bikes in this Location: " + rack.getNumberStolenBikes());
 		rackStolenBikesLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(rackStolenBikesLabel, 0, 108);
 		rackStolenBikesLabel.setSize("250px", "54px");
 
 		//Add code to get rating for a particular rack
-		Label rackRatingLabel = new Label("Bike Rack Rating (out of 5): ");
+		Label rackRatingLabel = new Label("Bike Rack Rating (out of 5): " + rack.getRating());
 		rackRatingLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(rackRatingLabel, 0, 162);
 		rackRatingLabel.setSize("250px", "54px");
+		
+		Label crimeRatingLabel = new Label("Bike Rack Crime Score (out of 5): " + rack.getCrimeScore());
+		crimeRatingLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		rackClickPanel.add(crimeRatingLabel, 0, 216);
+		crimeRatingLabel.setSize("250px", "54px");
+		
+		Label rackCountRatingLabel = new Label("Bike Rack Count: " + rack.getRackCount());
+		rackCountRatingLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		rackClickPanel.add(rackCountRatingLabel, 0, 270);
+		rackCountRatingLabel.setSize("250px", "54px");
 
 		((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(1);
 
@@ -490,5 +500,22 @@ public class Rack_City implements EntryPoint {
 	    int meterConversion = 1609;
 
 	    return (double) (dist * meterConversion);
+	}
+	
+	/**
+	 * Gets the BikeRack from the list of current BikeRacks that matches the lat and long
+	 * @param lat
+	 * @param lng
+	 * @return
+	 */
+	private BikeRack getRack(LatLng latlng){
+		
+		for (BikeRack rack : currentRackList){
+			if(rack.getCoordinate().equals(latlng)){
+				return rack;
+			}
+		}
+		
+		return null;
 	}
 }
