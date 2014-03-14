@@ -1093,17 +1093,17 @@ public class Rack_City implements EntryPoint {
 		Marker mark = new Marker(pos);
 		if (type == 1)		// search address: ME
 		{
-			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_blue.png");
+			mark.setImage("http://www.google.com/mapfiles/dd-start.png");
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 2)		// bike racks: GREEN, !!!!! SHOULD HAVE DIFFERENT COLOR BASED ON RACK#
 		{
-			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_green.png");
+			mark.setImage("http://maps.google.com/mapfiles/arrow.png");
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 3)		// crime place: RED
 		{
-			mark.setImage("http://labs.google.com/ridefinder/images/mm_20_red.png");
+			mark.setImage("http://www.google.com/mapfiles/dd-end.png");
 			googleMap.addOverlay(mark);
 		}
 		/* set listener if the marker is pressed (single)
