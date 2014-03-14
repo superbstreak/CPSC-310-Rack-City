@@ -3,8 +3,6 @@ package cs310MRAK.rackcity.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.maps.client.geom.LatLng;
-
 
 public class Filter {
 
@@ -31,24 +29,24 @@ public class Filter {
 	 * @param myLocation
 	 * @return
 	 */
-	private List<BikeRack> filteredDistanceList(double radius, LatLng myLocation,
-			List<BikeRack> list) {
-
-		for(BikeRack rack : list) {
-			double distanceX = (rack.getCoordinate().getLongitude()
-					- myLocation.getLongitude());
-			double distanceY = (rack.getCoordinate().getLatitude()
-					- myLocation.getLatitude());
-			double distance = Math.sqrt((distanceX)*(distanceX)
-					+ (distanceY)*(distanceY));
-
-			if (distance <= radius) {
-				this.filteredList.add(rack);
-			}
-		}
-
-		return this.filteredList;
-	}
+//	public List<BikeRack> filteredDistanceList(double radius, GeoPoint myLocation,
+//			List<BikeRack> list) {
+//		
+//		for(BikeRack rack : list) {
+//			double distanceX = (rack.getCoordinate().getLongitude()
+//					- myLocation.getLongitude());
+//			double distanceY = (rack.getCoordinate().getLatitude()
+//					- myLocation.getLatitude());
+//			double distance = Math.sqrt((distanceX)*(distanceX)
+//					+ (distanceY)*(distanceY));
+//
+//			if (distance <= radius) {
+//				this.filteredList.add(rack);
+//			}
+//		}
+//
+//		return this.filteredList;
+//	}
 
 	/**
 	 * 
@@ -58,7 +56,7 @@ public class Filter {
 	 * @param rating
 	 * @return
 	 */
-	private List<BikeRack> filteredRatingList(double rating,
+	public List<BikeRack> filteredRatingList(double rating,
 			List<BikeRack> list) {
 
 		for(BikeRack rack : list) {			
@@ -80,7 +78,7 @@ public class Filter {
 	 * @param crimeScore
 	 * @return
 	 */
-	private List<BikeRack> filteredCrimeScoreList(int crimeScore,
+	public List<BikeRack> filteredCrimeScoreList(int crimeScore,
 			List<BikeRack> list) {
 
 		for(BikeRack rack : list) {
@@ -90,19 +88,6 @@ public class Filter {
 		}
 
 		return this.filteredList;
-	}
-	
-	public List<BikeRack> completeFilteredList(int radius, LatLng myLocation, double rating,
-			int crimeScore) {
-		
-		this.filteredList = this.filteredDistanceList(radius, myLocation, this.unfilteredList());
-		
-		this.filteredList = this.filteredRatingList(rating, this.filteredList);
-		
-		this.filteredList = this.filteredCrimeScoreList(crimeScore, this.filteredList);
-		
-		return this.filteredList;
-		
 	}
 
 	/**
