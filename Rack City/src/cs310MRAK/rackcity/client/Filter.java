@@ -92,8 +92,7 @@ public class Filter {
 		return this.filteredList;
 	}
 	
-	public List<BikeRack> completeFilteredList(int radius, LatLng myLocation, double rating,
-			int crimeScore) {
+	public List<BikeRack> completeFilteredList(LatLng myLocation, double radius, double rating, int crimeScore) {
 		
 		this.filteredList = this.filteredDistanceList(radius, myLocation, this.unfilteredList());
 		
@@ -112,7 +111,7 @@ public class Filter {
 	 * between the RackCity class and the Parser class
 	 * @return
 	 */
-	public List<BikeRack> unfilteredList() {
+	private List<BikeRack> unfilteredList() {
 		this.unfilteredList = parser.getRackList();
 		return this.unfilteredList;
 	}

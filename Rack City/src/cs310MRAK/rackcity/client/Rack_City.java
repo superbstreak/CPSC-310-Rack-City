@@ -43,7 +43,7 @@ public class Rack_City implements EntryPoint {
 	private static DockPanel dockPanel = null;
 	private static Marker currentRack = null;
 	private Filter filters;
-	private ArrayList<BikeRack> currentSearchList = null;
+	private List<BikeRack> currentSearchList = null;
 
 	/**
 	 * This is the entry point method.
@@ -318,9 +318,7 @@ public class Rack_City implements EntryPoint {
 				/*
 				 * The following code should get the appropriate list based on all the preconditions.
 				 */
-				currentSearchList = filters.completeFilteredList(radius, crimeScore, rating);
-				currentSearchList = filters.completeFilteredList(radius, crimeScore, rating);
-				
+				currentSearchList = filters.completeFilteredList(point, radius, rating, crimeScore);
 				
 				/*
 				 * The following code should plot the position of each rack within the given 
