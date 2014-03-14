@@ -106,7 +106,17 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loginButton.setText("Login");
-		titleViewPanel.add(loginButton, 550, 0);
+		titleViewPanel.add(loginButton, 500, 0);
+		
+		
+		Button adminButton = new Button("adminButton");
+		adminButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				
+			}
+		});
+		adminButton.setText("Admin");
+		titleViewPanel.add(adminButton, 575, 0);
 		
 		final TextBox txtbxAddress = new TextBox();
 		txtbxAddress.addClickHandler(new ClickHandler() {
@@ -145,7 +155,6 @@ public class Rack_City implements EntryPoint {
 							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 							clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
 						}else if (currentDatasheetItem.equals(temp)){
-							
 						}
 						else{
 							clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
@@ -536,7 +545,6 @@ public class Rack_City implements EntryPoint {
 	 * @return
 	 */
 	private BikeRack getRack(LatLng latlng){
-		
 		for (BikeRack rack : currentRackList){
 			if(rack.getCoordinate().equals(latlng)){
 				return rack;
