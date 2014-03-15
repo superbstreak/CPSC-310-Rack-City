@@ -1,6 +1,8 @@
 <html>
 	<head>
 		<title>Bike Rack App: Rack City</title>
+		<p><u>Product link:</u></p>
+		<p>http://cs310rackcity.appspot.com/</p>
 		<p>http://www.youtube.com/watch?v=_P1wcF_XBlE</p>
 		<p>http://tutorials.jenkov.com/java-servlets/httpservlet.html</p>
 		<p><u>Completed Tasks</u>: #36, #31, #30, #28, #27, #26, #25, #20</p>
