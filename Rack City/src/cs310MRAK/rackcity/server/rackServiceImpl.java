@@ -3,6 +3,7 @@ package cs310MRAK.rackcity.server;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jdo.JDOHelper;
@@ -218,8 +219,35 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		return fin.getRating();
 	}
 	
+	@Override
+	public void removeRack(String pos) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		try {
+			long deleteCount = 0;	
+			String query = "select from " + Rack.class.getName();
+			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
+			for (Rack r: Racks)
+			{
+				if (r.getLL().equals(pos))
+				{
+					deleteCount++;
+					pm.deletePersistent(r);
+				}
+			}
+			//if (deleteCount != 1) { LOG.log(Level.WARNING, "removeRack deleted " + deleteCount + " Racks");}
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+	
+	
 	private PersistenceManager getPersistenceManager() {
 		return PMF.getPersistenceManager();
 	}
+
+	
 
 }

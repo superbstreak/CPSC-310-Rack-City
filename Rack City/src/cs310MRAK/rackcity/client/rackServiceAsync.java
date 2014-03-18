@@ -10,10 +10,13 @@ public interface rackServiceAsync {
 	void updateStolen(String p, int steal, AsyncCallback<Void> callback);
 	void updateRate(String p, double rating, AsyncCallback<Void> callback);
 	
+	// getters
 	void getAddress(String p, AsyncCallback<String> callback);
 	void getRackNum(String p, AsyncCallback<Integer> callback);
 	void getStolen(String p, AsyncCallback<Integer> callback);
 	void getCS(String p, AsyncCallback<Double> callback);
 	void getRate(String p, AsyncCallback<Double> callback);
-
+	
+	//remover
+	void removeRack(String pos, AsyncCallback<Void> callback);
 }

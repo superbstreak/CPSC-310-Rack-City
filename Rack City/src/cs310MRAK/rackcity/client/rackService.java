@@ -12,9 +12,13 @@ public interface rackService extends RemoteService {
 	public void updateStolen(String p, int steal);
 	public void updateRate(String p, double rating);
 	
+	// get
 	public String getAddress(String p);
 	public int getRackNum(String p);
 	public int getStolen(String p);
 	public double getCS(String p);
 	public double getRate(String p);
+	
+	// remove
+	public void removeRack(String pos);
 }
