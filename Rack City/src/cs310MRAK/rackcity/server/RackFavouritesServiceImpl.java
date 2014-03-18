@@ -17,7 +17,7 @@ import cs310MRAK.rackcity.client.RackFavouritesService;
 public class RackFavouritesServiceImpl extends RemoteServiceServlet implements RackFavouritesService{
 
 	// The messages logged by "LOG" are viewable when we inspect our RackCity application in appengine.google.com
-		private static final Logger LOG = Logger.getLogger(StolenBikesServiceImpl.class.getName());
+		//private static final Logger LOG = Logger.getLogger(StolenBikesServiceImpl.class.getName());
 		
 			// This is related to line 6 in src/META-INF/jdoconfig.xml
 			// We just need to do this to use JDO.

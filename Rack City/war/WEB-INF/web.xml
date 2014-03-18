@@ -21,18 +21,6 @@
   </servlet-mapping>
   
   
-  
-    <servlet>
-    <servlet-name>StolenBikesService</servlet-name>
-    <servlet-class>cs310MRAK.rackcity.server.StolenBikesServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>StolenBikesService</servlet-name>
-    <url-pattern>/rackcity/stolenbikesservice</url-pattern>
-  </servlet-mapping>
-  
-  
    <!-- Servlets !! change to Google+ After Sprint -->
   <servlet>
     <servlet-name>loginService</servlet-name>
