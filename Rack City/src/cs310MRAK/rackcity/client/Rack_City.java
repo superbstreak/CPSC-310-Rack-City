@@ -582,7 +582,7 @@ public class Rack_City implements EntryPoint {
 		((HorizontalPanel) dockPanel.getWidget(3)).add(rackClickPanel);
 		rackClickPanel.setSize("250px", "500px");
 
-		Button reportCrimeButton = new Button("reportCrimeButton");
+		final Button reportCrimeButton = new Button("reportCrimeButton");
 		reportCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO INSERT CODE HERE to handle when user wants to report a crime
@@ -623,6 +623,7 @@ public class Rack_City implements EntryPoint {
 						{
 							rService = GWT.create(rackService.class);
 						}
+						reportCrimeButton.setEnabled(false);
 						AsyncCallback callback = new AsyncCallback<Void>()
 						{
 							public void onFailure(Throwable error)
@@ -635,7 +636,9 @@ public class Rack_City implements EntryPoint {
 								Window.alert("Crime successfully reported!");
 							}};
 						
+						//rService.getStolen(newp, callback);
 						rService.updateStolen(newp, numOfStolen, callback);
+						reportCrimeButton.setEnabled(true);
 			        	//Window.alert(" Reported!");
 			        } 
 			        //=========================================================================
