@@ -43,6 +43,18 @@
     <servlet-name>rackService</servlet-name>
     <url-pattern>/rack_city/rack</url-pattern>
   </servlet-mapping>
+  
+  <!-- Servlets for bike racks -->  
+  <servlet>
+    <servlet-name>crimeService</servlet-name>
+    <servlet-class>cs310MRAK.rackcity.server.crimeServiceImpl</servlet-class>
+  </servlet>
+ 
+ 
+  <servlet-mapping>
+    <servlet-name>crimeService</servlet-name>
+    <url-pattern>/rack_city/crime</url-pattern>
+  </servlet-mapping>
       
       
   <!-- Default page to serve -->
