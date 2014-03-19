@@ -29,10 +29,10 @@ public class BikeRack {
 	public int crimeScore;
 	private int numberStolenBikes;
 
-	
+
 	// TODO: will need to add User object to the constructor as well
 	// TODO: make @persistent
-	
+
 	public BikeRack(String address, LatLng coordinate, double rating,
 			int rackCount, int crimeScore, int numberStolenBikes){
 		this.address = address;
@@ -42,42 +42,51 @@ public class BikeRack {
 		this.crimeScore = crimeScore;
 		this.numberStolenBikes = numberStolenBikes;
 	}
-	
+
 	public String getAddress() {
 		return this.address;
 	}
-	
+
 	public LatLng getCoordinate() {
 		return this.coordinate;
 	}
-	
+
 	public double getRating() {
 		return this.rating;
 	}
-	
+
 	public int getRackCount() {
 		return this.rackCount;
 	}
-	
+
 	public int getCrimeScore() {
 		return this.crimeScore;
 	}
-	
+
 	public int getNumberStolenBikes(){
 		return numberStolenBikes;
 	}
-	
+
 	public void setRating(double newRating) {
 		this.rating = newRating;
 	}
-	
+
 	public void setCrimeScore(int newCrimeScore) {
 		this.crimeScore = newCrimeScore;
 	}
-	
+
 	public void addStolenBike() {
 		this.numberStolenBikes++;
+
+		int currNumStolenBikes = this.numberStolenBikes;
+		int currCrimeScore = this.getCrimeScore();
+		int mod = 10;
+
+		if (currNumStolenBikes % mod == 0
+				&& currCrimeScore < 5) {
+			this.setCrimeScore(currCrimeScore + 1);
+		}
 	}
-	
+
 
 }
