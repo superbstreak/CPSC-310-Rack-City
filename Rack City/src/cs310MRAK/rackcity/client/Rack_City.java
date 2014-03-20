@@ -248,7 +248,8 @@ public class Rack_City implements EntryPoint {
 				addtolist();
 				if (w == 3)
 				{
-					addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 2);
+					addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 1);
+				//	rService.addRack(addr, p, rnum, stolen, cs, rate, callback);
 					w = 0;
 				}
 				
@@ -619,21 +620,30 @@ public class Rack_City implements EntryPoint {
 			        	}
 			        	// =============== UPDATE STOLEN BIKE ON DATASTORE ==================
 			        	String newp = incident.toString();
+			        	System.out.println("newp value is: "+ newp);
+			        //	String beforeNewp = "name=";
+			       // 	newp = beforeNewp + newp;
+			        	System.out.println("now newp value is: " + newp);
 						if (rService == null) 
 						{
 							rService = GWT.create(rackService.class);
 						}
 						reportCrimeButton.setEnabled(false);
-						AsyncCallback callback = new AsyncCallback<Void>()
+						AsyncCallback callback = new AsyncCallback<String>()
 						{
 							public void onFailure(Throwable error)
 							{
-								Window.alert("Server Error!");
+								Window.alert("Server Error  !");
 								handleError(error);
 							}
 							public void onSuccess(Void ignore)
 							{
 								Window.alert("Crime successfully reported!");
+							}
+							@Override
+							public void onSuccess(String result) {
+								// TODO Auto-generated method stub
+								
 							}};
 						
 						//rService.getStolen(newp, callback);
@@ -717,7 +727,7 @@ public class Rack_City implements EntryPoint {
 		LatLng[] circlePoints = new LatLng[361];
 		Polygon circle;
 
-		double PI = 3.1415;
+		double PI = 3.14159265;
 
 		double d = radius / 6378.8; // radians
 
@@ -855,6 +865,7 @@ public class Rack_City implements EntryPoint {
 	    return bd.doubleValue();
 	}
 	
+						// 						3		1		1		1		2
 	private void addRacker(String a, LatLng p, int rn, int s, int cs, int r, int type)
 	{
 		if (type == 0)		// delete rack
