@@ -207,7 +207,7 @@ public class Rack_City implements EntryPoint {
 	    
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				addtolist();
+				//addtolist();
 				LoginServiceAsync loginService = GWT.create(LoginService.class);
 			    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
 			      public void onFailure(Throwable error) {
@@ -245,15 +245,17 @@ public class Rack_City implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				
 				w++;
-				addtolist();
 				if (w == 3)
 				{
+					addtolist();
+					// 
 					addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 1);
 				//	rService.addRack(addr, p, rnum, stolen, cs, rate, callback);
 					w = 0;
+				    Window.alert("Data added to the datastore because you clicked the admin button three times. Awesome. ");
+
 				}
 				
-			    Window.alert("DEBUG Done");
 			}
 		});
 		adminButton.setText("Admin");
@@ -886,13 +888,13 @@ public class Rack_City implements EntryPoint {
 						}
 						public void onSuccess(Void ignore)
 						{
-							Window.alert("Success (RMV-RACK)");
+							// Window.alert("Success (RMV-RACK)");
 						}
 					};
 			rService.removeRack(newp, callback);
 		}
 		
-		if (type == 1)
+		if (type == 2)
 		{
 			String newp = p.toString();
 			if (rService == null) {
@@ -911,8 +913,10 @@ public class Rack_City implements EntryPoint {
 						}
 					};
 			rService.addRack(a, newp, rn, s, cs, r, callback);
+			BikeRack tmp = new BikeRack(a, p, r, rn, cs, s);
+			listofracks.add(tmp);
 		}
-		else if (type == 2)
+		else if (type == 3)
 		{
 			BikeRack tmp = new BikeRack(a, p, r, rn, cs, s);
 			listofracks.add(tmp);
@@ -973,7 +977,7 @@ public class Rack_City implements EntryPoint {
 		}
 	}
 	
-	
+	// `
 	public void addtolist()
 	{
 		listofracks = new ArrayList<BikeRack>();
