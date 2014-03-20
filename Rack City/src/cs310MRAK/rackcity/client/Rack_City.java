@@ -865,6 +865,9 @@ public class Rack_City implements EntryPoint {
 	    return bd.doubleValue();
 	}
 	
+	private void removeRacker(String a, LatLng p, int rn, int s, int cs, int r, int type){
+		addRacker(a, p, rn, s, cs, r, 0);
+	}
 						// 						3		1		1		1		2
 	private void addRacker(String a, LatLng p, int rn, int s, int cs, int r, int type)
 	{
