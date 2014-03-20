@@ -2216,7 +2216,8 @@ public class Rack_City implements EntryPoint {
 //	    crimeOps(2011, LatLng.newInstance(49.29964,-123.13578), 1);
 //	    crimeOps(2011, LatLng.newInstance(49.30094,-123.14331), 1);
 //	    crimeOps(2011, LatLng.newInstance(49.32797,-123.16811), 1);
-	    Window.alert("DONE ");
+	    //String test = LatLng.newInstance(49.26688,-123.09581).toString();
+	    //Window.alert("DONE ");
 	    }
 	public static ArrayList<Crime> getCrimeData()
 	{
