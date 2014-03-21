@@ -32,17 +32,7 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
   
-   <!-- Servlets for bike racks -->  
-  <servlet>
-    <servlet-name>rackService</servlet-name>
-    <servlet-class>cs310MRAK.rackcity.server.rackServiceImpl</servlet-class>
-  </servlet>
- 
- 
-  <servlet-mapping>
-    <servlet-name>rackService</servlet-name>
-    <url-pattern>/rack_city/rack</url-pattern>
-  </servlet-mapping>
+   <!-- Servlets for bike racks -->
   
   <!-- Servlets for bike racks -->  
   <servlet>

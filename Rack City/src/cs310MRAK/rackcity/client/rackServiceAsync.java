@@ -20,7 +20,7 @@ public interface rackServiceAsync {
 	void getRate(String p, AsyncCallback<Double> callback);
 	
 	// parser
-	void getRacks (AsyncCallback<ArrayList<Rack>> callback);
+	void getRacks (AsyncCallback<ArrayList<Rackclient>> callback);
 	
 	//remover
 	void removeRack(String pos, AsyncCallback<Void> callback);

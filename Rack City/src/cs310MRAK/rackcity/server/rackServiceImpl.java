@@ -13,7 +13,7 @@ import javax.jdo.PersistenceManagerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import cs310MRAK.rackcity.client.Rack;
+import cs310MRAK.rackcity.client.Rackclient;
 import cs310MRAK.rackcity.client.rackService;
 
 
@@ -252,16 +252,16 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 	}
 
 	@Override
-	public ArrayList<Rack> getRacks() {
+	public ArrayList<Rackclient> getRacks() {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = getPersistenceManager();
-		ArrayList<Rack> symbols = new ArrayList<Rack>();
+		ArrayList<Rackclient> symbols = new ArrayList<Rackclient>();
  
 		try {
-			String query = "select from " + Rack.class.getName();
-			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
+			String query = "select from " + Rackclient.class.getName();
+			List<Rackclient> Racks = (List<Rackclient>) pm.newQuery(query).execute();
  
-			for (Rack r : Racks) {
+			for (Rackclient r : Racks) {
 				symbols.add(r);
 			}
 		} finally {

@@ -22,7 +22,7 @@ public interface rackService extends RemoteService {
 	public double getRate(String p);
 	
 	// parser
-	public ArrayList<Rack> getRacks();
+	public ArrayList<Rackclient> getRacks();
 	
 	// remove
 	public void removeRack(String pos);
