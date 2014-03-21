@@ -74,8 +74,6 @@ public class Parser {
 		return this.crimesList;
 	}
 	
-	// call on rackServiceImpl soon. 
-	
 	public void parseBikeRacks() {
 		
 		BikeRack rack1 = new BikeRack("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1);
