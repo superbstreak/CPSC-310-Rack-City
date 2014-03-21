@@ -1,4 +1,4 @@
-package cs310MRAK.rackcity.server;
+package cs310MRAK.rackcity.client;
 
 import java.util.Date;
 
