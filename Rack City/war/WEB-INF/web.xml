@@ -55,7 +55,21 @@
     <servlet-name>crimeService</servlet-name>
     <url-pattern>/rack_city/crime</url-pattern>
   </servlet-mapping>
-      
+  
+  
+  
+  
+  <! -- Servlet for FTP Connection. Or maybe we'll have to use dropbox. wtf -->
+        <servlet>
+    <servlet-name>FTPservice</servlet-name>
+    <servlet-class>cs310MRAK.rackcity.server.FTPserviceImpl</servlet-class>
+  </servlet>
+ 
+ 
+  <servlet-mapping>
+    <servlet-name>FTPservice</servlet-name>
+    <url-pattern>/rack_city/grabData</url-pattern>
+  </servlet-mapping>
       
   <!-- Default page to serve -->
   <welcome-file-list>
