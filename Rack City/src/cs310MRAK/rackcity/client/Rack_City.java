@@ -241,20 +241,20 @@ public class Rack_City implements EntryPoint {
 		titleViewPanel.add(loginButton, 500, 5);
 		
 		
-		Button adminButton = new Button("Admin");
+		Button adminButton = new Button("adminButton");
 		adminButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
-				addtolist();
 				w++;
-				if (w == 3)
+				if (true)
 				{
-					
+					Window.alert("Data added to the datastore because you clicked the admin button three times. Awesome. ");
+					addtolist();
 					// 
 					//addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 1);
 				//	rService.addRack(addr, p, rnum, stolen, cs, rate, callback);
 					w = 0;
-				    Window.alert("Data added to the datastore because you clicked the admin button three times. Awesome. ");
+				    
 
 				}
 				
@@ -624,10 +624,10 @@ public class Rack_City implements EntryPoint {
 			        	}
 			        	// =============== UPDATE STOLEN BIKE ON DATASTORE ==================
 			        	String newp = incident.toString();
-			        	//System.out.println("newp value is: "+ newp);
+			        	System.out.println("newp value is: "+ newp);
 			        //	String beforeNewp = "name=";
 			       // 	newp = beforeNewp + newp;
-			        	//System.out.println("now newp value is: " + newp);
+			        	System.out.println("now newp value is: " + newp);
 						if (rService == null) 
 						{
 							rService = GWT.create(rackService.class);
@@ -890,13 +890,13 @@ public class Rack_City implements EntryPoint {
 						}
 						public void onSuccess(Void ignore)
 						{
-							// Window.alert("Success (RMV-RACK)");
+							Window.alert("Success (RMV-RACK)");
 						}
 					};
 			rService.removeRack(newp, callback);
 		}
 		
-		if (type == 2)
+		if (type == 1)
 		{
 			String newp = p.toString();
 			if (rService == null) {
@@ -906,7 +906,7 @@ public class Rack_City implements EntryPoint {
 					{
 						public void onFailure(Throwable error)
 						{
-							Window.alert("Server Error! (UPD-CRIME)");
+							Window.alert("Server Error! (UPD-RACK)");
 							handleError(error);
 						}
 						public void onSuccess(Void ignore)
@@ -916,12 +916,12 @@ public class Rack_City implements EntryPoint {
 					};
 			rService.addRack(a, newp, rn, s, cs, r, callback);
 			BikeRack tmp = new BikeRack(a, p, r, rn, cs, s);
-			//listofracks.add(tmp);
+			listofracks.add(tmp);
 		}
 		else if (type == 3)
 		{
 			BikeRack tmp = new BikeRack(a, p, r, rn, cs, s);
-			//listofracks.add(tmp);
+			listofracks.add(tmp);
 		}
 		
 	}
@@ -1028,7 +1028,7 @@ public class Rack_City implements EntryPoint {
 			BikeRack temp = new BikeRack(addr, pos, rate, rackcount, (int)crimeScore, numStolen);
 			listofracks.add(temp);
 		}
-		
+		//=========================================
 		
 //		addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 2);
 //		addRacker("216 East Abbott St, Vancouver, BC", LatLng.newInstance(49.283429,-123.106404), 4, 2, 1, 1, 2);
