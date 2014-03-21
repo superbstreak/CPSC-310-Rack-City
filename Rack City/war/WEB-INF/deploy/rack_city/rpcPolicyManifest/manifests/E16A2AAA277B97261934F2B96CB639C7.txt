@@ -1,0 +1,2 @@
+serviceClass: cs310MRAK.rackcity.client.crimeService
+path: D2A8DB51E5EDE4ED1FE749DD555D24EB.gwt.rpc
