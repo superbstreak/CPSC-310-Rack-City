@@ -3,6 +3,7 @@ package cs310MRAK.rackcity.client;
 import com.google.gwt.maps.client.geom.LatLng;
 
 
+
 /**
  * 
  * @author aprad1124
@@ -10,22 +11,13 @@ import com.google.gwt.maps.client.geom.LatLng;
  * BikeRack object class
  *
  */
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class BikeRack {
-	@Persistent
+	
 	public String address;
-	@PrimaryKey
-	public LatLng coordinate;
-	@Persistent
+	public String coordinate;
 	public double rating;
-	@Persistent
 	public int rackCount;
-	@Persistent
 	public int crimeScore;
 	private int numberStolenBikes;
 
@@ -33,8 +25,7 @@ public class BikeRack {
 	// TODO: will need to add User object to the constructor as well
 	// TODO: make @persistent
 
-	public BikeRack(String address, LatLng coordinate, double rating,
-			int rackCount, int crimeScore, int numberStolenBikes){
+	public BikeRack(String address, String coordinate, double rating, int rackCount, int crimeScore, int numberStolenBikes){
 		this.address = address;
 		this.coordinate = coordinate;
 		this.rating = rating;
@@ -48,7 +39,17 @@ public class BikeRack {
 	}
 
 	public LatLng getCoordinate() {
-		return this.coordinate;
+		String c = this.coordinate;
+		// ====== Process LL ========
+		String[] results = c.split( "," );
+		String Lat = results[0];
+		String Lon = results[1];
+		Lat = Lat.substring(1);
+		Lon = Lon.substring(0, Lon.length() - 1);
+		double LatVal = Double.parseDouble(Lat);
+		double LonVal = Double.parseDouble(Lon);
+		LatLng pos = LatLng.newInstance(LatVal, LonVal);
+		return pos;
 	}
 
 	public double getRating() {
