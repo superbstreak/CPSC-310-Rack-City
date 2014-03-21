@@ -246,15 +246,14 @@ public class Rack_City implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				
 				w++;
-				if (true)
+				if (w == 3)
 				{
-					Window.alert("Data added to the datastore because you clicked the admin button three times. Awesome. ");
 					addtolist();
 					// 
-					//addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 1);
+					addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 1);
 				//	rService.addRack(addr, p, rnum, stolen, cs, rate, callback);
 					w = 0;
-				    
+				    Window.alert("Data added to the datastore because you clicked the admin button three times. Awesome. ");
 
 				}
 				
@@ -896,7 +895,7 @@ public class Rack_City implements EntryPoint {
 			rService.removeRack(newp, callback);
 		}
 		
-		if (type == 1)
+		if (type == 2)
 		{
 			String newp = p.toString();
 			if (rService == null) {
@@ -906,7 +905,7 @@ public class Rack_City implements EntryPoint {
 					{
 						public void onFailure(Throwable error)
 						{
-							Window.alert("Server Error! (UPD-RACK)");
+							Window.alert("Server Error! (UPD-CRIME)");
 							handleError(error);
 						}
 						public void onSuccess(Void ignore)
@@ -984,30 +983,32 @@ public class Rack_City implements EntryPoint {
 	{
 		listofracks = new ArrayList<BikeRack>();
 		listofcrimes = new ArrayList<Crime>();
-		final ArrayList<Rackclient> output = new ArrayList<Rackclient>();
+		
+		// ============= call Parser ============
+		final ArrayList<Rack> output = new ArrayList<Rack>();
 		if (rService == null)
 		{
 			rService = GWT.create(rackService.class);
 		}
-		AsyncCallback callback = new AsyncCallback<ArrayList<Rackclient>>()
+		AsyncCallback callback = new AsyncCallback<ArrayList<Rack>>()
 				{
 					public void onFailure(Throwable error)
 					{
-						Window.alert("Server Error! (PAR-RACK)");
+						Window.alert("Server Error! (RMV-RACK)");
 						handleError(error);
 					}
-					public void onSuccess(ArrayList<Rackclient> result) {
+					public void onSuccess(ArrayList<Rack> result) {
 						// TODO Auto-generated method stub
-						Window.alert("Success (PAR-RACK)");
+						Window.alert("Success (RMV-RACK)");
 						output.addAll(result);
 					}
 				};
 		rService.getRacks(callback);
-		Window.alert("Result" + output.size());
+		
 		for(int i = 0; i <= output.size(); i++)
 		{
 			//String address, LatLng coordinate, double rating, int rackCount, int crimeScore, int numberStolenBikes
-			Rackclient rctemp = output.get(i);
+			Rack rctemp = output.get(i);
 			String addr = rctemp.getAddr();
 			Window.alert("P" + i);
 			// ==== Convert from string latlng to latlng ====
@@ -1020,7 +1021,7 @@ public class Rack_City implements EntryPoint {
 			double Latvalue = Double.parseDouble(Lat);
 			double Lonvalue = Double.parseDouble(Lon);
 			LatLng pos = LatLng.newInstance(Latvalue, Lonvalue);
-		
+			
 			double rate = rctemp.getRating();
 			int rackcount = rctemp.getRnum();
 			double crimeScore = rctemp.getCS();
