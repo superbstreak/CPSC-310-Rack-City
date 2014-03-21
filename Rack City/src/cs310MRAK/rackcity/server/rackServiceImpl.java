@@ -76,7 +76,6 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		try
 		{
 			Rack r = pm.getObjectById(Rack.class, p);
-			System.out.println("so getObjectById gets us: "+r);
 			r.setStolen(steal);
 		}
 		finally
