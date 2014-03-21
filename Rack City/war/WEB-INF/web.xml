@@ -59,8 +59,10 @@
   
   
   
-  <! -- Servlet for FTP Connection. Or maybe we'll have to use dropbox. wtf -->
-        <servlet>
+  <!-- Servlet for FTP Connection. Or maybe we'll have to use dropbox. wtf -->
+
+ 
+   <servlet>
     <servlet-name>FTPservice</servlet-name>
     <servlet-class>cs310MRAK.rackcity.server.FTPserviceImpl</servlet-class>
   </servlet>
@@ -70,7 +72,27 @@
     <servlet-name>FTPservice</servlet-name>
     <url-pattern>/rack_city/grabData</url-pattern>
   </servlet-mapping>
-      
+  
+  
+    <!-- https://code.google.com/p/googleappengine/issues/detail?id=8166 -->
+    
+  <filter>
+    <filter-name>_ah_DevSocketFilter</filter-name>
+    <filter-class>
+      com.google.appengine.api.socket.dev.DevSocketFilter
+    </filter-class>
+    <init-param>
+      <param-name>use-native-sockets</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>_ah_DevSocketFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Rack_City.html</welcome-file>
