@@ -1,2 +1,5 @@
 # Module rack_city
 # RPC service class, partial path of RPC policy file
+cs310MRAK.rackcity.client.rackService, 0F2E908B4FD210F0C20810F848045272.gwt.rpc
+cs310MRAK.rackcity.client.LoginService, E9D4CDD510EF361F2DBEA4390A3A8704.gwt.rpc
+cs310MRAK.rackcity.client.crimeService, D2A8DB51E5EDE4ED1FE749DD555D24EB.gwt.rpc
