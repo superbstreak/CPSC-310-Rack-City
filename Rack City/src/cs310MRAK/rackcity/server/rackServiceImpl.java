@@ -2,7 +2,6 @@ package cs310MRAK.rackcity.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -249,34 +248,6 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 	
 	private PersistenceManager getPersistenceManager() {
 		return PMF.getPersistenceManager();
-	}
-
-	@Override
-	public ArrayList<Rack> getRacks() {
-		// TODO Auto-generated method stub
-		PersistenceManager pm = getPersistenceManager();
-		ArrayList<Rack> symbols = new ArrayList<Rack>();
- 
-		try {
-			String query = "select from " + Rack.class.getName();
-			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
- 
-			for (Rack r : Racks) {
-				symbols.add(r);
-			}
-		} finally {
-			pm.close();
-		}
- 
-//		Rack[] ret = new Rack[symbols.size()];
-// 
-//		int i = 0;
-//		for (String s : symbols) {
-//			ret[i] = s;
-//			i++;
-//		}
-// 
-		return symbols;
 	}
 
 	

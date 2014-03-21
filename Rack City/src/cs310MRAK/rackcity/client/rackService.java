@@ -1,7 +1,5 @@
 package cs310MRAK.rackcity.client;
 
-import java.util.ArrayList;
-
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -20,9 +18,6 @@ public interface rackService extends RemoteService {
 	public int getStolen(String p);
 	public double getCS(String p);
 	public double getRate(String p);
-	
-	// parser
-	public ArrayList<Rack> getRacks();
 	
 	// remove
 	public void removeRack(String pos);

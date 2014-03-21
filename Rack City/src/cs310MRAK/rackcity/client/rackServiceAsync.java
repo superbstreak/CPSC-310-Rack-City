@@ -1,7 +1,5 @@
 package cs310MRAK.rackcity.client;
 
-import java.util.ArrayList;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface rackServiceAsync {
@@ -18,9 +16,6 @@ public interface rackServiceAsync {
 	void getStolen(String p, AsyncCallback<Integer> callback);
 	void getCS(String p, AsyncCallback<Double> callback);
 	void getRate(String p, AsyncCallback<Double> callback);
-	
-	// parser
-	void getRacks (AsyncCallback<ArrayList<Rack>> callback);
 	
 	//remover
 	void removeRack(String pos, AsyncCallback<Void> callback);
