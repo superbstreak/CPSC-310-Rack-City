@@ -6,7 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gwt-maps.jar"/>
 	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gwt-plus-v1-0.3-alpha.jar"/>
-	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/google-api-client-1.16.0-rc.jar"/>
 	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/google-oauth-client-1.16.0-rc.jar"/>
 	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gwt-oauth2-0.2-alpha.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>

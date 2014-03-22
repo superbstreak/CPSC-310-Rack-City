@@ -62,16 +62,16 @@
   <!-- Servlet for FTP Connection. Or maybe we'll have to use dropbox. wtf -->
 
  
-   <servlet>
-    <servlet-name>FTPservice</servlet-name>
-    <servlet-class>cs310MRAK.rackcity.server.FTPserviceImpl</servlet-class>
-     </servlet>
+<!--    <servlet> -->
+<!--     <servlet-name>FTPservice</servlet-name> -->
+<!--     <servlet-class>cs310MRAK.rackcity.server.FTPserviceImpl</servlet-class> -->
+<!--      </servlet> -->
  
  
-  <servlet-mapping>
-    <servlet-name>FTPservice</servlet-name>
-    <url-pattern>/rack_city/grabData</url-pattern>
-  </servlet-mapping>
+<!--   <servlet-mapping> -->
+<!--     <servlet-name>FTPservice</servlet-name> -->
+<!--     <url-pattern>/rack_city/grabData</url-pattern> -->
+<!--   </servlet-mapping> -->
   
   
     <!-- https://code.google.com/p/googleappengine/issues/detail?id=8166 -->
