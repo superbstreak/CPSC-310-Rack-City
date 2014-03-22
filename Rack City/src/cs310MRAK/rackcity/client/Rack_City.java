@@ -1080,6 +1080,43 @@ public class Rack_City implements EntryPoint {
 		}
 	}
 	
+	public void parseCrime()
+	{
+		//======== PARSE FROM DB =============
+		ArrayList<BikeRack> fin = new ArrayList<BikeRack>();
+				if (cService == null) {
+					cService = GWT.create(crimeService.class);
+				    }
+				
+				cService.getCrimes(new AsyncCallback<ArrayList<String[]>>()
+					{
+						public void onFailure(Throwable error)
+						{
+							Window.alert("Server Error! (PAR-CRIME)");
+							handleError(error);
+						}
+						@Override
+						public void onSuccess(ArrayList<String[]> result) {
+							// TODO Auto-generated method stub
+							Window.alert("Success. (PAR-CRIME)");
+							assignCrimeOutput(result);
+						}
+					});
+	}
+	
+	public void assignCrimeOutput(ArrayList<String[]> result)
+	{
+		//Window.alert("Parsing...");
+		for(int i = 0; i <= result.size(); i++)
+		{
+			//Window.alert("P"+i);
+			String[] temp = result.get(i);
+			String addr = temp[0].toString();
+			String LL = temp[1].toString();   // string
+
+			listofcrimes.add(new Crime (addr, LL));
+		}
+	}
 	
 	public void parseRack ()
 	{
@@ -1135,6 +1172,7 @@ public class Rack_City implements EntryPoint {
 		listofracks = new ArrayList<BikeRack>();
 		listofcrimes = new ArrayList<Crime>();
 		parseRack();
+		parseCrime();
 	}
 	public static ArrayList<Crime> getCrimeData()
 	{

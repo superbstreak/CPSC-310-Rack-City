@@ -2,6 +2,7 @@ package cs310MRAK.rackcity.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,6 +110,36 @@ public class crimeServiceImpl extends RemoteServiceServlet implements crimeServi
 		{
 			pm.close();
 		}
+	}
+
+
+
+
+	@Override
+	public ArrayList<String[]> getCrimes() {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		ArrayList<String[]> fin = new ArrayList<String[]>();
+		try
+		{	
+			String query = "select from " + Crime.class.getName();
+			List<Crime> Crimes = (List<Crime>) pm.newQuery(query).execute();
+			for (Crime c: Crimes)
+			{
+				// ====== Basic Info ========
+				String addr = "Record Year: "+c.getYear();
+				String LL = c.getLL();			
+				
+				String[] temp = {addr, LL};
+				fin.add(temp);
+			}
+			
+		}
+		finally
+		{
+			pm.close();
+		}
+		return fin;
 	}
 
 }
