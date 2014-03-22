@@ -5,11 +5,17 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.google.appengine.api.datastore.DatastoreService;
-//import com.google.appengine.api.datastore.DatastoreServiceFactory;
-//import com.google.appengine.api.datastore.Entity;
-//import com.google.appengine.api.datastore.PreparedQuery;
-//import com.google.appengine.api.datastore.Query;
+import com.google.api.gwt.client.GoogleApiRequestTransport;
+import com.google.api.gwt.client.OAuth2Login;
+import com.google.api.gwt.services.plus.shared.Plus;
+import com.google.api.gwt.services.plus.shared.Plus.ActivitiesContext.ListRequest.Collection;
+import com.google.api.gwt.services.plus.shared.Plus.PeopleContext.GetRequest;
+import com.google.api.gwt.services.plus.shared.Plus.PlusAuthScope;
+import com.google.api.gwt.services.plus.shared.model.Activity;
+import com.google.api.gwt.services.plus.shared.model.ActivityFeed;
+import com.google.api.gwt.services.plus.shared.model.Person;
+import com.google.gwt.core.client.Callback;
+//======================== ^ G+ ============================
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -18,6 +24,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -47,6 +54,8 @@ import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.RequestContext;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -75,10 +84,10 @@ public class Rack_City implements EntryPoint {
 	  private Anchor signOutLink = new Anchor("Sign Out");
 	  public int w = 0;
 	// google+ login stuff ------ S2 ---------
-	  //private static final Plus plus = GWT.create(Plus.class);
-	  //private static final String CLIENT_ID = "692753340433.apps.googleusercontent.com";
-	  //private static final String API_KEY = "AIzaSyA5bNyuRQFaTQle_YC5BUH7tQzRmAPiqsM";
-	  //private static final String APPLICATION_NAME = "cs310rackcity/1.0";
+	  private static final Plus plus = GWT.create(Plus.class);
+	  private static final String CLIENT_ID = "146858113551-ktl431gm3sbkrvid1khqrlvh1afclct4.apps.googleusercontent.com";
+	  private static final String API_KEY = "AIzaSyCeb8Iws1UqI8caz2aHJee_JtTTiNdqqAY";
+	  private static final String APPLICATION_NAME = "cs310rackcity";
 	  
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
@@ -89,20 +98,26 @@ public class Rack_City implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		
-		GUIsetup();
+		
+		
 		FTPserviceAsync ftpService = GWT.create(FTPservice.class);
 		AsyncCallback callback = new AsyncCallback<Void>()
 				{
 					public void onFailure(Throwable error)
 					{
-						Window.alert("success brah");
+						Window.alert("Failed FTP.");
 						handleError(error);
 					}
 					public void onSuccess(Void ignore)
 					{
-						Window.alert("not success brah");
+						Window.alert("Success FTP");
 					}};
 		ftpService.adminConnection(callback);
+		
+		
+		
+		GUIsetup();
+		
 	}
 	
 	 private void handleError(Throwable error) {
@@ -111,42 +126,97 @@ public class Rack_City implements EntryPoint {
 		      Window.Location.replace(loginInfo.getLogoutUrl());
 		    }
 		  }
-	
-	private void startLoginProcess()
-	{
-		LoginServiceAsync loginService = GWT.create(LoginService.class);
-	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-	      public void onFailure(Throwable error) {
-	    	  Window.alert("Error loading loginService!");
-	    	  handleError(error);
-	      }
-
-	      public void onSuccess(LoginInfo result) {
-	        loginInfo = result;
-	        if(loginInfo.isLoggedIn()) 
-	        {
-	        	// if logged in, set text to sign out
-	        	
-	        	 // Set up sign out hyperlink.
-	        	rootPanel.clear();
-	        	signOutLink.setHref(loginInfo.getLogoutUrl());
-	        	loginPanel.add(logoutLabel);
-		     	loginPanel.add(signOutLink);
-		     	RootPanel.get().add(loginPanel);
-	        } 
-	        else 
-	        {
-	        	// otherwise, continue login procedure
-	        	rootPanel.clear();
-	        	signInLink.setHref(loginInfo.getLoginUrl());
-	     	    loginPanel.add(loginLabel);
-	     	    loginPanel.add(signInLink);
-	     	    RootPanel.get().add(loginPanel);
-	        }
 	 
-	      }
-	      
-	    });
+	private void getMe(final Plus p)
+	{	
+		messenger("inGetMe");		
+		p.people().get("me").to(new Receiver <Person>(){
+			@Override
+			public void onSuccess(Person per) {
+				// TODO Auto-generated method stub
+				String out = "Welcom "+ per.getDisplayName()+"! Your Bday: "+ per.getBirthday()
+						+", Gender: "+per.getGender();
+				messenger(out);
+				getMyActivities(p);
+			}
+		}).fire();
+				
+	}
+	
+	private void messenger(String s)
+	{
+		Window.alert(s);
+	}
+	
+	private void getMyActivities(Plus p)
+	{
+		Window.alert("DEBUG GMA-FETCHING");
+		p.activities().list("me", Collection.PUBLIC).to(new Receiver<ActivityFeed>()
+		{
+			@Override
+			public void onSuccess(ActivityFeed f) {
+				// TODO Auto-generated method stub
+				if (f.getItems() == null || f.getItems().isEmpty())
+				{
+					messenger("DEBUG GMA-NO-ACTV");
+				}
+				else
+				{
+					messenger("DEBUG GMA-HAVE-ACTV");
+				}
+			}
+		});
+	}
+	
+	private void startLoginProcess(final Plus p)
+	{
+		OAuth2Login.get().authorize(CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>()
+		{
+			public void onSuccess(Void v)
+			{
+				messenger("G+ SUCCESS-SLP-SUCC");
+				getMe(p);
+			}
+			@Override
+			public void onFailure(Exception reason) {
+				messenger("G+ ERROR-SLP-Fail!");
+		    	handleError(reason);
+			}
+		});
+		
+//		LoginServiceAsync loginService = GWT.create(LoginService.class);
+//	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+//	      public void onFailure(Throwable error) {
+//	    	  Window.alert("Error loading loginService!");
+//	    	  handleError(error);
+//	      }
+//
+//	      public void onSuccess(LoginInfo result) {
+//	        loginInfo = result;
+//	        if(loginInfo.isLoggedIn()) 
+//	        {
+//	        	// if logged in, set text to sign out
+//	        	
+//	        	 // Set up sign out hyperlink.
+//	        	rootPanel.clear();
+//	        	signOutLink.setHref(loginInfo.getLogoutUrl());
+//	        	loginPanel.add(logoutLabel);
+//		     	loginPanel.add(signOutLink);
+//		     	RootPanel.get().add(loginPanel);
+//	        } 
+//	        else 
+//	        {
+//	        	// otherwise, continue login procedure
+//	        	rootPanel.clear();
+//	        	signInLink.setHref(loginInfo.getLoginUrl());
+//	     	    loginPanel.add(loginLabel);
+//	     	    loginPanel.add(signInLink);
+//	     	    RootPanel.get().add(loginPanel);
+//	        }
+//	 
+//	      }
+//	      
+//	    });
 	}
 	
 	private void GUIsetup()
@@ -200,53 +270,51 @@ public class Rack_City implements EntryPoint {
 		loginButton.setText("Login");
 		
 		//set text correctly
-		LoginServiceAsync loginService = GWT.create(LoginService.class);
-	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-	      public void onFailure(Throwable error) {
-	    	  Window.alert("Error loading loginService!");
-	    	  handleError(error);
-	      }
-
-	      public void onSuccess(LoginInfo result) {
-	        loginInfo = result;
-	        if(loginInfo.isLoggedIn()) 
-	        {
-	        	// if logged in, set text to sign out
-	        	loginButton.setText("Sign Out");
-	        } 
-	        else 
-	        {
-	        	loginButton.setText("Sign In");
-	        }
-	      }
-	    });
+//		LoginServiceAsync loginService = GWT.create(LoginService.class);
+//	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+//	      public void onFailure(Throwable error) {
+//	    	  Window.alert("Error loading loginService!");
+//	    	  handleError(error);
+//	      }
+//
+//	      public void onSuccess(LoginInfo result) {
+//	        loginInfo = result;
+//	        if(loginInfo.isLoggedIn()) 
+//	        {
+//	        	// if logged in, set text to sign out
+//	        	loginButton.setText("Sign Out");
+//	        } 
+//	        else 
+//	        {
+//	        	loginButton.setText("Sign In");
+//	        }
+//	      }
+//	    });
 	    
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				addtolist();
-				LoginServiceAsync loginService = GWT.create(LoginService.class);
-			    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-			      public void onFailure(Throwable error) {
-			    	  Window.alert("Error loading loginService!");
-			    	  handleError(error);
-			      }
-
-			      public void onSuccess(LoginInfo result) {
-			        loginInfo = result;
-			        if(loginInfo.isLoggedIn()) 
-			        {
-			        	// if logged in, set text to sign out
-			        	loginButton.setText("Sign Out");			        	
-			        } 
-			        else 
-			        {
-			        	loginButton.setText("Sign In");
-			        }
-			      }
-			    });
-				
-				
-				startLoginProcess();
+//				LoginServiceAsync loginService = GWT.create(LoginService.class);
+//			    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+//			      public void onFailure(Throwable error) {
+//			    	  Window.alert("Error loading loginService!");
+//			    	  handleError(error);
+//			      }
+//
+//			      public void onSuccess(LoginInfo result) {
+//			        loginInfo = result;
+//			        if(loginInfo.isLoggedIn()) 
+//			        {
+//			        	// if logged in, set text to sign out
+//			        	loginButton.setText("Sign Out");			        	
+//			        } 
+//			        else 
+//			        {
+//			        	loginButton.setText("Sign In");
+//			        }
+//			      }
+//			    });
+				plus.initialize(new SimpleEventBus(), new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY));
+				startLoginProcess(plus);
 				
 				
 				
@@ -261,10 +329,14 @@ public class Rack_City implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				
 				w++;
-				addtolist();
+				//addtolist();
 				if (w == 3)
 				{
-					addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 1);
+					addRacker("TESTer", LatLng.newInstance(49.123,-123.0023), 1, 1, 1, 1, 1);
+				}
+				if (w == 4)
+				{
+					parseRack ();
 					w = 0;
 				}
 //				LatLng testOUTPUT = LatLng.newInstance(49.284176,-123.106037);
@@ -918,12 +990,12 @@ public class Rack_City implements EntryPoint {
 					{
 						public void onFailure(Throwable error)
 						{
-							Window.alert("Server Error! (UPD-CRIME)");
+							Window.alert("Server Error! (ADD-RACK)");
 							handleError(error);
 						}
 						public void onSuccess(Void ignore)
 						{
-							Window.alert("Success. (UPD-RACK)");
+							Window.alert("Success. (ADD-RACK)");
 						}
 					};
 			rService.addRack(a, newp, rn, s, cs, r, callback);
@@ -1062,7 +1134,7 @@ public class Rack_City implements EntryPoint {
 		
 		parseRack();
 		//dataStoreTest();
-		Window.alert("LoR Size: " + listofracks.size());
+		//Window.alert("LoR Size: " + listofracks.size());
 		
 //		addRacker("134 East Abbott St, Vancouver, BC", LatLng.newInstance(49.284176,-123.106037), 3, 1, 1, 1, 2);
 //		addRacker("216 East Abbott St, Vancouver, BC", LatLng.newInstance(49.283429,-123.106404), 4, 2, 1, 1, 2);
@@ -2327,10 +2399,6 @@ public class Rack_City implements EntryPoint {
 	{
 		return listofracks;
 	}
-//	// because singleton. 
-//	private PersistenceManager getPersistenceManager() {
-//		// TODO Auto-generated method stub
-//		return PMF.getPersistenceManager();
-//	}
+
 }
 

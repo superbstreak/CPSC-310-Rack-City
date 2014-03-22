@@ -65,7 +65,7 @@
    <servlet>
     <servlet-name>FTPservice</servlet-name>
     <servlet-class>cs310MRAK.rackcity.server.FTPserviceImpl</servlet-class>
-  </servlet>
+     </servlet>
  
  
   <servlet-mapping>

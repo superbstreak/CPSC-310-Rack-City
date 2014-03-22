@@ -12,7 +12,6 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 import cs310MRAK.rackcity.client.rackService;
 
 
