@@ -97,7 +97,7 @@ public class Rack_City implements EntryPoint {
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
 	  private crimeServiceAsync cService = GWT.create(crimeService.class);
-
+	  private int initialsync = 0;
 	/**
 	 * This is the entry point method.
 	 */
@@ -119,7 +119,12 @@ public class Rack_City implements EntryPoint {
 //					}};
 //		ftpService.adminConnection(callback);
 		// ========================================================
-		
+		if (initialsync == 0)
+		{
+			addtolist();
+			initialsync = 1;
+		}
+			
 		
 		GUIsetup();
 		
@@ -987,7 +992,7 @@ public class Rack_City implements EntryPoint {
 	    return bd.doubleValue();
 	}
 	
-	// ===================== SERVER ASYNC CALLS ==========================
+	// ===================== SERVER ASYNC CALLS  ==========================
 	/**
 	 * Call rackOps (Admin only): 
 	 * type == 0: REMOVE OPERATION. require LatLng
@@ -1182,12 +1187,12 @@ public class Rack_City implements EntryPoint {
 				String stolenN = temp[5].toString(); // int
 
 				
-				System.out.println("butwhy" + addr+", "+LL+", "+rate+", "+rackN+", "+cs+", "+stolenN);
+				//System.out.println("butwhy" + addr+", "+LL+", "+rate+", "+rackN+", "+cs+", "+stolenN);
 				double rateDouble = Double.parseDouble(rate);
 				int intRackN = Integer.parseInt(rackN);
 				int intcs = Integer.parseInt(cs);
 				int intstolenN = Integer.parseInt(stolenN);
-				System.out.println("butwhy" + addr+", "+LL+", "+rateDouble+", "+intRackN+", "+intcs+", "+intstolenN);
+				//System.out.println("butwhy" + addr+", "+LL+", "+rateDouble+", "+intRackN+", "+intcs+", "+intstolenN);
 				listofracks.add(new BikeRack (addr, LL, Double.parseDouble(rate), Integer.parseInt(rackN), Integer.parseInt(cs), Integer.parseInt(stolenN)));
 			}
 		}
@@ -1204,7 +1209,7 @@ public class Rack_City implements EntryPoint {
 		parseRack();
 		parseCrime();
 	}
-	// ==================================================================
+	// ===================== SERVER ASYNC CALLS ENDS ==========================
 	public static ArrayList<Crime> getCrimeData()
 	{
 		return listofcrimes;
