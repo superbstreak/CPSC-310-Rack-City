@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.google.api.gwt.client.GoogleApiRequestTransport;
 import com.google.api.gwt.client.OAuth2Login;
+import com.google.api.gwt.oauth2.client.Auth;
+import com.google.api.gwt.oauth2.client.AuthRequest;
 import com.google.api.gwt.services.plus.shared.Plus;
 import com.google.api.gwt.services.plus.shared.Plus.ActivitiesContext.ListRequest.Collection;
 import com.google.api.gwt.services.plus.shared.Plus.PeopleContext.GetRequest;
@@ -88,7 +90,10 @@ public class Rack_City implements EntryPoint {
 	  private static final String CLIENT_ID = "146858113551-ktl431gm3sbkrvid1khqrlvh1afclct4.apps.googleusercontent.com";
 	  private static final String API_KEY = "AIzaSyCeb8Iws1UqI8caz2aHJee_JtTTiNdqqAY";
 	  private static final String APPLICATION_NAME = "cs310rackcity";
-	  
+	  private int loginFlipFlop = 0;
+	  private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
+	  private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
+	  private static final Auth AUTH = Auth.get();
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
 	  private crimeServiceAsync cService = GWT.create(crimeService.class);
@@ -99,7 +104,7 @@ public class Rack_City implements EntryPoint {
 	public void onModuleLoad() {
 		
 		
-		
+		// ================ Please double check this =============
 		FTPserviceAsync ftpService = GWT.create(FTPservice.class);
 		AsyncCallback callback = new AsyncCallback<Void>()
 				{
@@ -113,7 +118,7 @@ public class Rack_City implements EntryPoint {
 						Window.alert("Success FTP");
 					}};
 		ftpService.adminConnection(callback);
-		
+		// ========================================================
 		
 		
 		GUIsetup();
@@ -168,21 +173,49 @@ public class Rack_City implements EntryPoint {
 		});
 	}
 	
-	private void startLoginProcess(final Plus p)
+	private void startLoginProcess(final Plus p, final Button loginButton)
 	{
-		OAuth2Login.get().authorize(CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>()
+		if (loginFlipFlop == 0)
 		{
-			public void onSuccess(Void v)
-			{
-				messenger("G+ SUCCESS-SLP-SUCC");
-				getMe(p);
-			}
-			@Override
-			public void onFailure(Exception reason) {
-				messenger("G+ ERROR-SLP-Fail!");
-		    	handleError(reason);
-			}
-		});
+			OAuth2Login.get().authorize(CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>()
+					{
+						public void onSuccess(Void v)
+						{
+							messenger("G+ SUCCESS-SLP-SUCC");
+							loginButton.setText("Sign Out");
+							loginFlipFlop = 1;
+							getMe(p);
+						}
+						@Override
+						public void onFailure(Exception reason) {
+							messenger("G+ ERROR-SLP-Fail!");
+					    	handleError(reason);
+						}
+					});
+			
+			
+			final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE);
+			AUTH.login(req, new Callback<String, Throwable>() {
+		          @Override
+		          public void onSuccess(String token) {
+		            Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
+		            
+		          }
+
+		          @Override
+		          public void onFailure(Throwable caught) {
+		            Window.alert("Error:\n" + caught.getMessage());
+		          }
+		        });
+		}
+		else
+		{
+			
+			Auth.get().clearAllTokens();
+			 Window.alert("Successfully cleared all tokens and signed out");
+			loginButton.setText("Sign in");
+			loginFlipFlop = 0;
+		}
 		
 //		LoginServiceAsync loginService = GWT.create(LoginService.class);
 //	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
@@ -314,7 +347,7 @@ public class Rack_City implements EntryPoint {
 //			      }
 //			    });
 				plus.initialize(new SimpleEventBus(), new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY));
-				startLoginProcess(plus);
+				startLoginProcess(plus, loginButton);
 				
 				
 				
