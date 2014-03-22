@@ -1115,12 +1115,13 @@ public class Rack_City implements EntryPoint {
 		{
 			Window.alert("P"+i);
 			String[] temp = result.get(i);
-			String addr = temp[0];
-			String LL = temp[1];
-			String rate = temp[2];
-			String rackN = temp[3];
-			String cs = temp[4];
-			String stolenN = temp[4];
+			String addr = temp[0].toString();
+			String LL = temp[1].toString();   // string
+			String rate = temp[2].toString(); // double
+			String rackN = temp[3].toString(); // int
+			String cs = temp[4].toString().substring(0,1); 	// int
+			String stolenN = temp[5].toString(); // int
+
 			
 			System.out.println("butwhy" + addr+", "+LL+", "+rate+", "+rackN+", "+cs+", "+stolenN);
 			double rateDouble = Double.parseDouble(rate);
