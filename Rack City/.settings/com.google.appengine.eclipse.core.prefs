@@ -6,4 +6,4 @@ gaeHrdEnabled=true
 gaeLaunchAppInBrowser=true
 googleCloudSqlEnabled=false
 localDevMySqlEnabled=true
-ormEnhancementInclusions=src/cs310MRAK/rackcity/server/Rack.java|src/cs310MRAK/rackcity/server/Crime.java|src/|src/cs310MRAK/rackcity/server/|src/cs310MRAK/rackcity/client/
+ormEnhancementInclusions=src/cs310MRAK/rackcity/server/Rack.java|src/cs310MRAK/rackcity/server/Crime.java|src/cs310MRAK/rackcity/server/|src/cs310MRAK/rackcity/client/

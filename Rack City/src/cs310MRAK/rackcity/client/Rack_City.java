@@ -348,9 +348,7 @@ public class Rack_City implements EntryPoint {
 //			    });
 				plus.initialize(new SimpleEventBus(), new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY));
 				startLoginProcess(plus, loginButton);
-				
-				
-				
+
 			}
 		});
 		loginButton.setText("Login");
@@ -1107,15 +1105,19 @@ public class Rack_City implements EntryPoint {
 	public void assignCrimeOutput(ArrayList<String[]> result)
 	{
 		//Window.alert("Parsing...");
-		for(int i = 0; i <= result.size(); i++)
+		if (!(result.isEmpty() || result == null))
 		{
-			//Window.alert("P"+i);
-			String[] temp = result.get(i);
-			String addr = temp[0].toString();
-			String LL = temp[1].toString();   // string
+			for(int i = 0; i <= result.size(); i++)
+			{
+				//Window.alert("P"+i);
+				String[] temp = result.get(i);
+				String addr = temp[0].toString();
+				String LL = temp[1].toString();   // string
 
-			listofcrimes.add(new Crime (addr, LL));
+				listofcrimes.add(new Crime (addr, LL));
+			}
 		}
+		
 	}
 	
 	public void parseRack ()
@@ -1145,26 +1147,30 @@ public class Rack_City implements EntryPoint {
 	private void assignrackOutput (ArrayList<String[]> result)
 	{
 		//Window.alert("Parsing...");
-		for(int i = 0; i <= result.size(); i++)
+		if (!(result.isEmpty() || result == null))
 		{
-			//Window.alert("P"+i);
-			String[] temp = result.get(i);
-			String addr = temp[0].toString();
-			String LL = temp[1].toString();   // string
-			String rate = temp[2].toString(); // double
-			String rackN = temp[3].toString(); // int
-			String cs = temp[4].toString().substring(0,1); 	// int
-			String stolenN = temp[5].toString(); // int
+			for(int i = 0; i <= result.size(); i++)
+			{
+				//Window.alert("P"+i);
+				String[] temp = result.get(i);
+				String addr = temp[0].toString();
+				String LL = temp[1].toString();   // string
+				String rate = temp[2].toString(); // double
+				String rackN = temp[3].toString(); // int
+				String cs = temp[4].toString().substring(0,1); 	// int
+				String stolenN = temp[5].toString(); // int
 
-			
-			System.out.println("butwhy" + addr+", "+LL+", "+rate+", "+rackN+", "+cs+", "+stolenN);
-			double rateDouble = Double.parseDouble(rate);
-			int intRackN = Integer.parseInt(rackN);
-			int intcs = Integer.parseInt(cs);
-			int intstolenN = Integer.parseInt(stolenN);
-			System.out.println("butwhy" + addr+", "+LL+", "+rateDouble+", "+intRackN+", "+intcs+", "+intstolenN);
-			listofracks.add(new BikeRack (addr, LL, Double.parseDouble(rate), Integer.parseInt(rackN), Integer.parseInt(cs), Integer.parseInt(stolenN)));
+				
+				System.out.println("butwhy" + addr+", "+LL+", "+rate+", "+rackN+", "+cs+", "+stolenN);
+				double rateDouble = Double.parseDouble(rate);
+				int intRackN = Integer.parseInt(rackN);
+				int intcs = Integer.parseInt(cs);
+				int intstolenN = Integer.parseInt(stolenN);
+				System.out.println("butwhy" + addr+", "+LL+", "+rateDouble+", "+intRackN+", "+intcs+", "+intstolenN);
+				listofracks.add(new BikeRack (addr, LL, Double.parseDouble(rate), Integer.parseInt(rackN), Integer.parseInt(cs), Integer.parseInt(stolenN)));
+			}
 		}
+		
 	}
 	
 	public void addtolist()
