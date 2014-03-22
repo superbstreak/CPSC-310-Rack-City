@@ -987,7 +987,13 @@ public class Rack_City implements EntryPoint {
 	    return bd.doubleValue();
 	}
 	
-	private void addRacker(String a, LatLng p, int rn, int s, int cs, int r, int type)
+	// ===================== SERVER ASYNC CALLS ==========================
+	/**
+	 * Call rackOps (Admin only): 
+	 * type == 0: REMOVE OPERATION. require LatLng
+	 * type == 1: ADD OPERATION. require all parameters
+	 */
+	private void rackOps(String a, LatLng p, int rn, int s, int cs, int r, int type)
 	{
 		if (type == 0)		// delete rack
 		{
@@ -1032,6 +1038,11 @@ public class Rack_City implements EntryPoint {
 		}		
 	}
 	
+	/**
+	 * Call crimeOps (Admin only): 
+	 * type == 0: REMOVE OPERATION. require LatLng
+	 * type == 1: ADD OPERATION. require all parameters
+	 */
 	private void crimeOps (int i, LatLng p, int type)
 	{
 		//cService = GWT.create(crimeService.class);
@@ -1078,10 +1089,12 @@ public class Rack_City implements EntryPoint {
 		}
 	}
 	
+	/**
+	 * Only call this if want to refetch CRIME from db
+	 */
 	public void parseCrime()
 	{
 		//======== PARSE FROM DB =============
-		ArrayList<BikeRack> fin = new ArrayList<BikeRack>();
 				if (cService == null) {
 					cService = GWT.create(crimeService.class);
 				    }
@@ -1102,6 +1115,9 @@ public class Rack_City implements EntryPoint {
 					});
 	}
 	
+	/**
+	 * Called automagically by parseCrime
+	 */
 	public void assignCrimeOutput(ArrayList<String[]> result)
 	{
 		//Window.alert("Parsing...");
@@ -1120,10 +1136,12 @@ public class Rack_City implements EntryPoint {
 		
 	}
 	
+	/**
+	 * Only call this if want to refetch RACK from db
+	 */
 	public void parseRack ()
 	{
 		//======== PARSE FROM DB =============
-		ArrayList<BikeRack> fin = new ArrayList<BikeRack>();
 				if (rService == null) {
 					rService = GWT.create(rackService.class);
 				    }
@@ -1143,7 +1161,10 @@ public class Rack_City implements EntryPoint {
 						}
 					});
 	}
-		
+	
+	/**
+	 * Called automagically by parseRack
+	 */
 	private void assignrackOutput (ArrayList<String[]> result)
 	{
 		//Window.alert("Parsing...");
@@ -1173,6 +1194,9 @@ public class Rack_City implements EntryPoint {
 		
 	}
 	
+	/**
+	 * Only call this if want to refetch ALL from db (SLOW!)
+	 */
 	public void addtolist()
 	{
 		listofracks = new ArrayList<BikeRack>();
@@ -1180,6 +1204,7 @@ public class Rack_City implements EntryPoint {
 		parseRack();
 		parseCrime();
 	}
+	// ==================================================================
 	public static ArrayList<Crime> getCrimeData()
 	{
 		return listofcrimes;
