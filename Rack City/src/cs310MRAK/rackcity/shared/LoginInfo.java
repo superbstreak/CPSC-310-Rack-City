@@ -1,4 +1,4 @@
-package cs310MRAK.rackcity.client;
+package cs310MRAK.rackcity.shared;
 
 import java.io.Serializable;
 

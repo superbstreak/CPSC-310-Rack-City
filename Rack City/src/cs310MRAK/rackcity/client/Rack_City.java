@@ -59,6 +59,8 @@ import com.google.gwt.maps.client.event.MapClickHandler;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 
+import cs310MRAK.rackcity.shared.LoginInfo;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -215,8 +217,36 @@ public class Rack_City implements EntryPoint {
 			          @Override
 			          public void onSuccess(String token) {
 			            Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
-			            //TODO token recived, start api access
-			            saveToken(token);
+			            if (!token.isEmpty())
+			            {
+			            	//TODO token recived, start api access
+			            	saveToken(token);
+			     
+//			         		LoginServiceAsync loginService = GWT.create(LoginService.class);
+//			         	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() 
+//			         	    {
+//			         	      public void onFailure(Throwable error) 
+//			         	      {
+//			         	    	  Window.alert("Error loading loginService!");
+//			         	    	  handleError(error);
+//			         	      }
+//			         
+//			         	      public void onSuccess(LoginInfo result) 
+//			         	      {
+//			         	        loginInfo = result;
+//			         	        if(loginInfo.isLoggedIn()) 
+//			         	        {
+//			         	        	// if logged in, set text to sign out
+//			         	        	loginButton.setText("Sign Out");
+//			         	        } 
+//			         	        else 
+//			         	        {
+//			         	        	loginButton.setText("Sign In");
+//			         	        }
+//			         	      }
+//			         	    });
+			            }
+			           
 			            loginButton.setText("Sign Out");
 						loginFlipFlop = 1;
 			          }
@@ -234,7 +264,8 @@ public class Rack_City implements EntryPoint {
 			if (loginAttempt == 1)
 			{
 				OAuth2Login.get().authorize(CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>()
-						{
+				{
+					GoogleApiRequestTransport Gbus = new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY);
 							public void onSuccess(Void v)
 							{
 								//messenger("G+ SUCCESS-SLP-SUCC");
