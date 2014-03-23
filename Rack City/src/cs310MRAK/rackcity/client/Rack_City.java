@@ -91,6 +91,7 @@ public class Rack_City implements EntryPoint {
 	  private static final String API_KEY = "AIzaSyCeb8Iws1UqI8caz2aHJee_JtTTiNdqqAY";
 	  private static final String APPLICATION_NAME = "cs310rackcity";
 	  private int loginFlipFlop = 0;
+	  private int loginAttempt = 0;
 	  private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
 	  private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
 	  private static final Auth AUTH = Auth.get();
@@ -120,7 +121,7 @@ public class Rack_City implements EntryPoint {
 //		ftpService.adminConnection(callback);
 		// ========================================================
 		if (initialsync == 0)
-		{
+		{	
 			addtolist();
 			initialsync = 1;
 		}
@@ -139,7 +140,7 @@ public class Rack_City implements EntryPoint {
 	 
 	private void getMe(final Plus p)
 	{	
-		messenger("inGetMe");		
+		//messenger("inGetMe");		
 		p.people().get("me").to(new Receiver <Person>(){
 			@Override
 			public void onSuccess(Person per) {
@@ -178,46 +179,63 @@ public class Rack_City implements EntryPoint {
 		});
 	}
 	
+	private void loginAttemptSwitcher()
+	{
+		if (loginAttempt == 0) loginAttempt = 1;
+		else if (loginAttempt == 1) loginAttempt = 0;
+	}
+	
 	private void startLoginProcess(final Plus p, final Button loginButton)
 	{
+		loginAttempt = 0;
 		if (loginFlipFlop == 0)
 		{
-			OAuth2Login.get().authorize(CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>()
-					{
-						public void onSuccess(Void v)
-						{
-							messenger("G+ SUCCESS-SLP-SUCC");
-							loginButton.setText("Sign Out");
-							loginFlipFlop = 1;
-							getMe(p);
-						}
-						@Override
-						public void onFailure(Exception reason) {
-							messenger("G+ ERROR-SLP-Fail!");
-					    	handleError(reason);
-						}
-					});
-			
-			
-			final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE);
-			AUTH.login(req, new Callback<String, Throwable>() {
-		          @Override
-		          public void onSuccess(String token) {
-		            Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
-		            
-		          }
+			// Signin Type 1
+			if (loginAttempt == 0)
+			{
+				final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE);
+				AUTH.login(req, new Callback<String, Throwable>() {
+			          @Override
+			          public void onSuccess(String token) {
+			            Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
+			            
+			          }
 
-		          @Override
-		          public void onFailure(Throwable caught) {
-		            Window.alert("Error:\n" + caught.getMessage());
-		          }
-		        });
+			          @Override
+			          public void onFailure(Throwable caught) 
+			          {
+			        	loginAttemptSwitcher();
+			        	messenger("G+ ERROR-SLP-Fail TYPE 0!");
+			          }
+			        });
+			}
+			
+			// Sign in type 2
+			if (loginAttempt == 1)
+			{
+				OAuth2Login.get().authorize(CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>()
+						{
+							public void onSuccess(Void v)
+							{
+								//messenger("G+ SUCCESS-SLP-SUCC");
+								loginButton.setText("Sign Out");
+								loginFlipFlop = 1;
+								getMe(p);
+							}
+							@Override
+							public void onFailure(Exception reason) {
+								messenger("G+ ERROR-SLP-Fail TYPE 1!");
+						    	handleError(reason);
+							}
+						});
+			}
+			
 		}
 		else
 		{
-			
 			Auth.get().clearAllTokens();
 			 Window.alert("Successfully cleared all tokens and signed out");
+			
 			loginButton.setText("Sign in");
 			loginFlipFlop = 0;
 		}
@@ -1126,6 +1144,7 @@ public class Rack_City implements EntryPoint {
 	public void assignCrimeOutput(ArrayList<String[]> result)
 	{
 		//Window.alert("Parsing...");
+		listofcrimes = new ArrayList<Crime>();
 		if (!(result.isEmpty() || result == null))
 		{
 			for(int i = 0; i <= result.size(); i++)
@@ -1172,6 +1191,7 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void assignrackOutput (ArrayList<String[]> result)
 	{
+		listofracks = new ArrayList<BikeRack>();
 		//Window.alert("Parsing...");
 		if (!(result.isEmpty() || result == null))
 		{
@@ -1204,8 +1224,6 @@ public class Rack_City implements EntryPoint {
 	 */
 	public void addtolist()
 	{
-		listofracks = new ArrayList<BikeRack>();
-		listofcrimes = new ArrayList<Crime>();
 		parseRack();
 		parseCrime();
 	}
