@@ -93,8 +93,16 @@ public class Rack_City implements EntryPoint {
 	  private int loginFlipFlop = 0;
 	  private int loginAttempt = 0;
 	  private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
+	  private static final String AUTH_URL_REVOKE = " https://accounts.google.com/o/oauth2/revoke";
 	  private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
+	  private static final String EMAIL_SCOPE = "https://www.googleapis.com/auth/plus.profile.emails.read";
+	  private static final String clientSecret = "VjH_CAHvgoq5T0DS5QR2TbEI";
 	  private static final Auth AUTH = Auth.get();
+	  // User information
+	  private String userEmail = "";
+	  private String userName = "";
+	  private String userToken = "";
+	  
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
 	  private crimeServiceAsync cService = GWT.create(crimeService.class);
@@ -140,7 +148,10 @@ public class Rack_City implements EntryPoint {
 	 
 	private void getMe(final Plus p)
 	{	
-		//messenger("inGetMe");		
+		//messenger("inGetMe");	
+		
+		Person person;
+		
 		p.people().get("me").to(new Receiver <Person>(){
 			@Override
 			public void onSuccess(Person per) {
@@ -185,6 +196,12 @@ public class Rack_City implements EntryPoint {
 		else if (loginAttempt == 1) loginAttempt = 0;
 	}
 	
+	private void saveToken(String t)
+	{
+		userToken = t;
+	}
+	
+	
 	private void startLoginProcess(final Plus p, final Button loginButton)
 	{
 		loginAttempt = 0;
@@ -193,12 +210,15 @@ public class Rack_City implements EntryPoint {
 			// Signin Type 1
 			if (loginAttempt == 0)
 			{
-				final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE);
+				final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE, EMAIL_SCOPE);
 				AUTH.login(req, new Callback<String, Throwable>() {
 			          @Override
 			          public void onSuccess(String token) {
 			            Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
-			            
+			            //TODO token recived, start api access
+			            saveToken(token);
+			            loginButton.setText("Sign Out");
+						loginFlipFlop = 1;
 			          }
 
 			          @Override
@@ -222,7 +242,6 @@ public class Rack_City implements EntryPoint {
 								loginFlipFlop = 1;
 								getMe(p);
 							}
-							@Override
 							public void onFailure(Exception reason) {
 								messenger("G+ ERROR-SLP-Fail TYPE 1!");
 						    	handleError(reason);
@@ -234,8 +253,7 @@ public class Rack_City implements EntryPoint {
 		else
 		{
 			Auth.get().clearAllTokens();
-			 Window.alert("Successfully cleared all tokens and signed out");
-			
+			Window.alert("Successfully cleared all tokens and signed out");
 			loginButton.setText("Sign in");
 			loginFlipFlop = 0;
 		}
@@ -383,32 +401,20 @@ public class Rack_City implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				
 				w++;
-				addtolist();
 				if (w == 3)
 				{
-					//addRacker("TESTer", LatLng.newInstance(49.123,-123.0023), 1, 1, 1, 1, 1);
+					messenger("You are 1 click away from requesting for a refectch!");
 				}
 				if (w == 4)
 				{
-					parseRack ();
+					if (userEmail.equals("robwu15@gmail.com"))
+					{
+						messenger("Refetch Request Approved");
+						addtolist();
+					}
+					messenger("Refetch Request Denied. You are not a registered admin");
 					w = 0;
 				}
-//				LatLng testOUTPUT = LatLng.newInstance(49.284176,-123.106037);
-//				String tout = testOUTPUT.toString();
-//				
-//				String[] results = tout.split( "," );
-//				String Lat = results[0];
-//				String Lon = results[1];
-//				System.out.println("D1 Lat: "+Lat+" Lon: "+Lon);
-//				Lat = Lat.substring(1);
-//				Lon = Lon.substring(0, Lon.length() - 1);
-//				System.out.println("D2 Lat: "+Lat+" Lon: "+Lon);
-//				double LatVal = Double.parseDouble(Lat);
-//				double LonVal = Double.parseDouble(Lon);
-//				System.out.println("D3 Lat: "+LatVal+" Lon: "+LonVal);
-//				LatLng pos = LatLng.newInstance(LatVal, LonVal);
-				
-			    Window.alert("DEBUG Done");
 			}
 		});
 		adminButton.setText("Admin");
@@ -1097,7 +1103,7 @@ public class Rack_City implements EntryPoint {
 				cService = GWT.create(crimeService.class);
 			    }
 			AsyncCallback<Void> crimeCallback = new AsyncCallback<Void>()
-					{
+			{
 						public void onFailure(Throwable error)
 						{
 							Window.alert("Server Error! (UPD-CRIME)");

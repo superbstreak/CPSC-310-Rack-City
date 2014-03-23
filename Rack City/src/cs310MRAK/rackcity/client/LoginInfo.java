@@ -9,6 +9,24 @@ public class LoginInfo implements Serializable {
   private String logoutUrl;
   private String emailAddress;
   private String nickname;
+  private String name;
+  
+  public LoginInfo()
+  {
+	  
+  }
+  
+  public LoginInfo(String email, String name, String nickname, String Bday)
+  {
+	  this.emailAddress = email;
+	  this.name = name;
+	  this.nickname = nickname;
+  }
+  
+  public String getName()
+  {
+	  return name;
+  }
 
   public boolean isLoggedIn() {
     return loggedIn;
