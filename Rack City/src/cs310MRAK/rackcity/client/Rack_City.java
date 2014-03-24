@@ -330,6 +330,13 @@ public class Rack_City implements EntryPoint {
 		else
 		{
 			Auth.get().clearAllTokens();
+			userEmail = "";
+			userName = "";
+			userToken = "";
+			userId = "";
+			userImageURL = "";
+			userGender = "";
+			userIsPlus = false;
 			messenger("Successfully cleared all tokens and signed out");
 			loginButton.setText("Sign in");
 			loginFlipFlop = 0;
@@ -833,61 +840,51 @@ public class Rack_City implements EntryPoint {
 				
 				//=====================================================================
 				// Check login status using login service.
-			    LoginServiceAsync loginService = GWT.create(LoginService.class);
-			    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-			      public void onFailure(Throwable error) {
-			    	  Window.alert("Error loading loginService!");
-			      }
-
-			      public void onSuccess(LoginInfo result) {
-			        loginInfo = result;
-			        if(loginInfo.isLoggedIn()) 
-			        {
-			        	LatLng incident = currentMarker.getLatLng();
-			        	int numOfStolen = 0;
-			        	// Adds to numberStolenBike of the rack in question
-			        	for (int i = 0; i < currentRackList.size(); i++) 
-			        	{
-			        		BikeRack currentRack = currentRackList.get(i);
-			        		if (currentRack.getCoordinate() == incident) 
-			        		{
-			        			currentRack.addStolenBike();
-			        			numOfStolen = currentRack.getNumberStolenBikes();
-			        			clickRackDisplayPanel(currentRack);
-			        		}
-			        	}
-			        	// =============== UPDATE STOLEN BIKE ON DATASTORE ==================
-			        	String newp = incident.toString();
-						if (rService == null) 
+				if(!userEmail.isEmpty()) //TODO loginInfo.isLoggedIn() 
+		        {
+		        	LatLng incident = currentMarker.getLatLng();
+		        	int numOfStolen = 0;
+		        	// Adds to numberStolenBike of the rack in question
+		        	for (int i = 0; i < currentRackList.size(); i++) 
+		        	{
+		        		BikeRack currentRack = currentRackList.get(i);
+		        		if (currentRack.getCoordinate() == incident) 
+		        		{
+		        			currentRack.addStolenBike();
+		        			numOfStolen = currentRack.getNumberStolenBikes();
+		        			clickRackDisplayPanel(currentRack);
+		        		}
+		        	}
+		        	// =============== UPDATE STOLEN BIKE ON DATASTORE ==================
+		        	String newp = incident.toString();
+					if (rService == null) 
+					{
+						rService = GWT.create(rackService.class);
+					}
+					reportCrimeButton.setEnabled(false);
+					AsyncCallback callback = new AsyncCallback<Void>()
+					{
+						public void onFailure(Throwable error)
 						{
-							rService = GWT.create(rackService.class);
+							Window.alert("Server Error!");
+							handleError(error);
 						}
-						reportCrimeButton.setEnabled(false);
-						AsyncCallback callback = new AsyncCallback<Void>()
+						public void onSuccess(Void ignore)
 						{
-							public void onFailure(Throwable error)
-							{
-								Window.alert("Server Error!");
-								handleError(error);
-							}
-							public void onSuccess(Void ignore)
-							{
-								Window.alert("Crime successfully reported!");
-							}};
-						
-						//rService.getStolen(newp, callback);
-						rService.updateStolen(newp, numOfStolen, callback);
-						reportCrimeButton.setEnabled(true);
-			        	//Window.alert(" Reported!");
-			        } 
-			        //=========================================================================
-			        else 
-			        {
-			        	Window.alert("Please login to use this feature.");
-			        	//loadLogin();
-			        }
-			      }
-			    });
+							Window.alert("Crime successfully reported!");
+						}};
+					
+					//rService.getStolen(newp, callback);
+					rService.updateStolen(newp, numOfStolen, callback);
+					reportCrimeButton.setEnabled(true);
+		        	//Window.alert(" Reported!");
+		        } 
+		        //=========================================================================
+		        else 
+		        {
+		        	Window.alert("Please login to use this feature.");
+		        	//loadLogin();
+		        }
 				
 				
 			}
@@ -1241,7 +1238,7 @@ public class Rack_City implements EntryPoint {
 						@Override
 						public void onSuccess(ArrayList<String[]> result) {
 							// TODO Auto-generated method stub
-							//Window.alert("Success. (PAR-CRIME)");
+							Window.alert("Success. (PAR-CRIME)");
 							assignCrimeOutput(result);
 						}
 					});
@@ -1289,7 +1286,7 @@ public class Rack_City implements EntryPoint {
 						@Override
 						public void onSuccess(ArrayList<String[]> result) {
 							// TODO Auto-generated method stub
-							//Window.alert("Success. (PAR-RACK)");
+							Window.alert("Success. (PAR-RACK)");
 							assignrackOutput(result);
 						}
 					});
