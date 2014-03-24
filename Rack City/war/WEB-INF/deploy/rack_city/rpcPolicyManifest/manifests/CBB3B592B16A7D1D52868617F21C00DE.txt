@@ -1,2 +1,0 @@
-serviceClass: cs310MRAK.rackcity.client.LoginService
-path: E9D4CDD510EF361F2DBEA4390A3A8704.gwt.rpc

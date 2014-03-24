@@ -27,6 +27,16 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -104,6 +114,10 @@ public class Rack_City implements EntryPoint {
 	  private String userEmail = "";
 	  private String userName = "";
 	  private String userToken = "";
+	  private String userId = "";
+	  private String userImageURL = "";
+	  private String userGender = "";
+	  private Boolean userIsPlus = false;
 	  
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
@@ -216,37 +230,67 @@ public class Rack_City implements EntryPoint {
 				AUTH.login(req, new Callback<String, Throwable>() {
 			          @Override
 			          public void onSuccess(String token) {
-			            Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
+			            //Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
 			            if (!token.isEmpty())
 			            {
 			            	//TODO token recived, start api access
 			            	saveToken(token);
-			     
-//			         		LoginServiceAsync loginService = GWT.create(LoginService.class);
-//			         	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() 
-//			         	    {
-//			         	      public void onFailure(Throwable error) 
-//			         	      {
-//			         	    	  Window.alert("Error loading loginService!");
-//			         	    	  handleError(error);
-//			         	      }
-//			         
-//			         	      public void onSuccess(LoginInfo result) 
-//			         	      {
-//			         	        loginInfo = result;
-//			         	        if(loginInfo.isLoggedIn()) 
-//			         	        {
-//			         	        	// if logged in, set text to sign out
-//			         	        	loginButton.setText("Sign Out");
-//			         	        } 
-//			         	        else 
-//			         	        {
-//			         	        	loginButton.setText("Sign In");
-//			         	        }
-//			         	      }
-//			         	    });
+			            	// ============== on Success ==============
+			            	String url = "https://www.googleapis.com/plus/v1/people/me?access_token=" + token;
+			            	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
+			            	try 
+			            	{
+								Request request = builder.sendRequest(null, new RequestCallback() {
+								@SuppressWarnings("deprecation")
+								@Override
+								public void onResponseReceived(Request request, Response response) 
+								{
+									// request successful
+									if (response.getStatusCode() == 200)
+									{
+										// success request, start info parsing
+										messenger("Success TRY-REQ-RES=GOOD");
+										
+										if (response.getText() != null)
+										{
+											JSONValue jsv = JSONParser.parse(response.getText());			
+											JSONObject js = jsv.isObject();
+											
+											JSONArray jsemail = js.get("emails").isArray();
+											
+											  userEmail = jsemail.get(0).isObject().get("value").isString().stringValue();
+											  userName = js.get("displayName").isString().stringValue();
+											  userId = js.get("id").isString().stringValue();
+											  userImageURL = js.get("image").isObject().get("url").isString().stringValue();
+											  userGender = js.get("gender").isString().stringValue();
+											  userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
+											  loginButton.setText(userName);
+										}
+									}
+									else if (response.getStatusCode() == 400)
+									{
+										// bad request, bad information
+										messenger("Failed TRY-REQ-RES=BAD");	
+									}
+									else
+									{
+										messenger("Failed TRY-REQ-RES=FORBIDDEN");
+									}
+								}
+								@Override
+								public void onError(Request request, Throwable exception)
+								{
+										messenger("Error LOGIN-TRY-ONERROR");										
+								}});
+							} 
+			            	catch (RequestException e) 
+			            	{
+			            		// fail request
+			            		messenger("Error LOGIN-CATCH"+e);	
+							}
+			         		
+			            	// ============== on Success ==============
 			            }
-			           
 			            loginButton.setText("Sign Out");
 						loginFlipFlop = 1;
 			          }
@@ -269,7 +313,7 @@ public class Rack_City implements EntryPoint {
 							public void onSuccess(Void v)
 							{
 								//messenger("G+ SUCCESS-SLP-SUCC");
-								loginButton.setText("Sign Out");
+								loginButton.setText("Sign Out"+userName);
 								loginFlipFlop = 1;
 								getMe(p);
 							}
@@ -284,7 +328,7 @@ public class Rack_City implements EntryPoint {
 		else
 		{
 			Auth.get().clearAllTokens();
-			Window.alert("Successfully cleared all tokens and signed out");
+			messenger("Successfully cleared all tokens and signed out");
 			loginButton.setText("Sign in");
 			loginFlipFlop = 0;
 		}
@@ -443,7 +487,8 @@ public class Rack_City implements EntryPoint {
 						messenger("Refetch Request Approved");
 						addtolist();
 					}
-					messenger("Refetch Request Denied. You are not a registered admin");
+					else
+						messenger("Refetch Request Denied. You are not a registered admin");
 					w = 0;
 				}
 			}
@@ -940,6 +985,8 @@ public class Rack_City implements EntryPoint {
 		{
 			MarkerOptions markerOptions = MarkerOptions.newInstance();
 			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));
+			if (!userImageURL.isEmpty() || userImageURL == null)  
+				markerOptions.setIcon(Icon.newInstance(userImageURL));
 			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
 		}
@@ -1095,7 +1142,30 @@ public class Rack_City implements EntryPoint {
 						}
 					};
 			rService.addRack(a, newp, rn, s, cs, r, callback);
-		}		
+		}	
+		
+		if (type == 2)		//update
+		{
+			String newp = p.toString();
+			if (rService == null) {
+				rService = GWT.create(rackService.class);
+			    }
+			AsyncCallback callback = new AsyncCallback<Void>()
+					{
+						public void onFailure(Throwable error)
+						{
+							Window.alert("Server Error! (UPD-RACK)");
+							handleError(error);
+						}
+						public void onSuccess(Void ignore)
+						{
+							Window.alert("Success. (UPD-RACK)");
+						}
+					};
+			rService.updateStolen(newp, 0, callback);
+			rService.updateCS(newp, 0, callback);
+			rService.updateRate(newp, 5, callback);
+		}	
 	}
 	
 	/**
