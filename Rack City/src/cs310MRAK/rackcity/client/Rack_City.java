@@ -105,7 +105,7 @@ public class Rack_City implements EntryPoint {
 	  private int loginFlipFlop = 0;
 	  private int loginAttempt = 0;
 	  private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
-	  private static final String AUTH_URL_REVOKE = " https://accounts.google.com/o/oauth2/revoke";
+	  private static final String AUTH_URL_REVOKE = " https://accounts.google.com/o/oauth2/revoke?token=";
 	  private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
 	  private static final String EMAIL_SCOPE = "https://www.googleapis.com/auth/plus.profile.emails.read";
 	  private static final String clientSecret = "VjH_CAHvgoq5T0DS5QR2TbEI";
@@ -328,8 +328,12 @@ public class Rack_City implements EntryPoint {
 			
 		}
 		else
-		{
-			Auth.get().clearAllTokens();
+		{		
+			String url = "https://www.google.com/accounts/Logout?continue";	
+			final AuthRequest req = new AuthRequest(url, CLIENT_ID);
+			AUTH.clearAllTokens();
+			com.google.gwt.user.client.Window.open(url, "_blank", "");
+			
 			userEmail = "";
 			userName = "";
 			userToken = "";
