@@ -482,7 +482,7 @@ public class Rack_City implements EntryPoint {
 				}
 				if (w == 4)
 				{
-					if (userEmail.equals("robwu15@gmail.com"))
+					if (userEmail.equals("robwu15@gmail.com") || userEmail.equals("obedientworker@gmail.com") || userEmail.equals("kevin.david.greer@gmail.com") || userEmail.equals("abhisek.pradhan91@gmail.com"))
 					{
 						messenger("Refetch Request Approved");
 						addtolist();
