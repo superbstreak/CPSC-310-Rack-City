@@ -249,10 +249,11 @@ public class Rack_City implements EntryPoint {
 									if (response.getStatusCode() == 200)
 									{
 										// success request, start info parsing
-										messenger("Success TRY-REQ-RES=GOOD");
+										//messenger("Success TRY-REQ-RES=GOOD");
 										
 										if (response.getText() != null)
 										{
+											messenger("What I know about you"+response.getText());
 											JSONValue jsv = JSONParser.parse(response.getText());			
 											JSONObject js = jsv.isObject();
 											
@@ -264,6 +265,7 @@ public class Rack_City implements EntryPoint {
 											  userImageURL = js.get("image").isObject().get("url").isString().stringValue();
 											  userGender = js.get("gender").isString().stringValue();
 											  userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
+											  
 											  loginButton.setText(userName);
 										}
 									}
@@ -1239,7 +1241,7 @@ public class Rack_City implements EntryPoint {
 						@Override
 						public void onSuccess(ArrayList<String[]> result) {
 							// TODO Auto-generated method stub
-							Window.alert("Success. (PAR-CRIME)");
+							//Window.alert("Success. (PAR-CRIME)");
 							assignCrimeOutput(result);
 						}
 					});
@@ -1251,7 +1253,7 @@ public class Rack_City implements EntryPoint {
 	public void assignCrimeOutput(ArrayList<String[]> result)
 	{
 		//Window.alert("Parsing...");
-		listofcrimes = new ArrayList<Crime>();
+		
 		if (!(result.isEmpty() || result == null))
 		{
 			for(int i = 0; i <= result.size(); i++)
@@ -1287,7 +1289,7 @@ public class Rack_City implements EntryPoint {
 						@Override
 						public void onSuccess(ArrayList<String[]> result) {
 							// TODO Auto-generated method stub
-							Window.alert("Success. (PAR-RACK)");
+							//Window.alert("Success. (PAR-RACK)");
 							assignrackOutput(result);
 						}
 					});
@@ -1298,7 +1300,7 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void assignrackOutput (ArrayList<String[]> result)
 	{
-		listofracks = new ArrayList<BikeRack>();
+		
 		//Window.alert("Parsing...");
 		if (!(result.isEmpty() || result == null))
 		{
@@ -1331,6 +1333,8 @@ public class Rack_City implements EntryPoint {
 	 */
 	public void addtolist()
 	{
+		listofcrimes = new ArrayList<Crime>();
+		listofracks = new ArrayList<BikeRack>();
 		parseRack();
 		parseCrime();
 	}
