@@ -891,6 +891,7 @@ public class Rack_City implements EntryPoint {
 	/**
 	 * Called when user log in to determine new or returning
 	 */
+	// search tag: &^%%
 	private void checkUserInfo(final String id, final String name, final String email, final String gender, final Boolean isPlus, final String propic)
 	{
 		if (uService == null) 
@@ -939,6 +940,31 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		uService.addUser(id, name, email, gender, isPlus, propic, callback);
+	}
+	
+	/**
+	 *call when new user is logged in to G+
+	 */
+	private void AddUserSearchHistory(String userID, String searchAddress, String searchAddressLatLong, String radius, String crimeScore)
+	{
+		if (uService == null) 
+		{
+			uService = GWT.create(userService.class);
+		}
+		AsyncCallback<Void> callback = new AsyncCallback<Void>()
+		{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-USER-HISTORY-INSTANCE)");
+				handleError(error);
+			}
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+				// no messages
+			}
+		};
+		uService.addUserSearchHistoryInstance(userID, searchAddress, searchAddressLatLong, radius, crimeScore, callback);
 	}
 	
 	/**
@@ -1355,6 +1381,7 @@ public class Rack_City implements EntryPoint {
 								@Override
 								public void onResponseReceived(Request request, Response response) 
 								{
+									// search tag: %#%#
 									// request successful
 									if (response.getStatusCode() == 200)
 									{
