@@ -383,8 +383,14 @@ public class Rack_City implements EntryPoint {
 								
 								// task 45
 								if(!userEmail.isEmpty()){
-									
+									// String userID, String searchAddress, String radius, String crimeScore
+									String userID = userId;
+									String searchAddress = txtbxAddress.getText();
+									String radius = Integer.toString(radiusCombo.getSelectedIndex());
+									String crimeScore = Integer.toString(crimeCombo.getSelectedIndex());
+									System.out.println("userID: "+userID+", searchAddress: "+searchAddress+", radius: "+radius+", crimeScore: "+crimeScore+".");
 								}
+								// now call the function and will need to make  db parse function to call on it 
 								
 								googleMap.clearOverlays();
 								currentRackList = null;
@@ -945,7 +951,7 @@ public class Rack_City implements EntryPoint {
 	/**
 	 *call when new user is logged in to G+
 	 */
-	private void AddUserSearchHistory(String userID, String searchAddress, String searchAddressLatLong, String radius, String crimeScore)
+	private void AddUserSearchHistory(String userID, String searchAddress, String radius, String crimeScore)
 	{
 		if (uService == null) 
 		{
@@ -964,7 +970,7 @@ public class Rack_City implements EntryPoint {
 				// no messages
 			}
 		};
-		uService.addUserSearchHistoryInstance(userID, searchAddress, searchAddressLatLong, radius, crimeScore, callback);
+		uService.addUserSearchHistoryInstance(userID, searchAddress, radius, crimeScore, callback);
 	}
 	
 	/**

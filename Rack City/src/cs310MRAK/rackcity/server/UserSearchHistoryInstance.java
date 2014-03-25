@@ -18,8 +18,6 @@ public class UserSearchHistoryInstance {
 		@Persistent
 		private String searchAddress; // "vancouver"
 		@Persistent
-		private String searchAddressLatLong; // "49.231, -149.859"
-		@Persistent
 		private String radius; // "2"
 		@Persistent
 		private String crimeScore; // "5"
@@ -32,12 +30,11 @@ public class UserSearchHistoryInstance {
 			}
 		 
 		 
-		public UserSearchHistoryInstance(String userID, String searchAddress, String searchAddressLatLong, String radius, String crimeScore)
+		public UserSearchHistoryInstance(String userID, String searchAddress, String radius, String crimeScore)
 		{
 			this();
 			this.userID = userID;
 			this.searchAddress = searchAddress;
-			this.searchAddressLatLong = searchAddressLatLong;
 			this.radius = radius;
 			this.crimeScore = crimeScore;
 		}
@@ -76,24 +73,6 @@ public class UserSearchHistoryInstance {
 
 		public void setSearchAddress(String searchAddress) {
 			this.searchAddress = searchAddress;
-		}
-
-
-
-
-
-
-		public String getSearchAddressLatLong() {
-			return searchAddressLatLong;
-		}
-
-
-
-
-
-
-		public void setSearchAddressLatLong(String searchAddressLatLong) {
-			this.searchAddressLatLong = searchAddressLatLong;
 		}
 
 
