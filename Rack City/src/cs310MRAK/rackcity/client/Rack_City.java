@@ -208,6 +208,7 @@ public class Rack_City implements EntryPoint {
 						addtolist();
 					}
 					else
+						// dude, amazing. 
 						messenger("Refetch Request Denied. You are not a registered admin");
 					w = 0;
 				}
@@ -371,12 +372,20 @@ public class Rack_City implements EntryPoint {
 		Button searchButton = new Button("searchButton");
 		searchButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// task 45
+			
+				
+				
 				
 				if(!txtbxAddress.getText().equals("")){
 					if(!radiusCombo.getValue(radiusCombo.getSelectedIndex()).equals("")){
 						if(!crimeCombo.getValue(crimeCombo.getSelectedIndex()).equals("")){
 							if(!ratingCombo.getValue(ratingCombo.getSelectedIndex()).equals("")){
+								
+								// task 45
+								if(!userEmail.isEmpty()){
+									
+								}
+								
 								googleMap.clearOverlays();
 								currentRackList = null;
 								currentCrimeList = null;
@@ -960,6 +969,7 @@ public class Rack_City implements EntryPoint {
 			rService.removeRack(newp, callback);
 		}
 		
+		// !@#
 		if (type == 1)
 		{
 			String newp = p.toString();
