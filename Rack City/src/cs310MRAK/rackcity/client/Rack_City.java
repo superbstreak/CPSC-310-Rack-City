@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
@@ -18,7 +17,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -37,7 +35,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.dev.util.collect.HashSet;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -99,7 +96,6 @@ public class Rack_City implements EntryPoint {
 	  private Boolean userIsPlus = false;
 	  private ArrayList<String[]> userFriends = new ArrayList<String[]>();
 	  private ArrayList<String[]> favRacks = new ArrayList<String[]>();
-	  private Set<LatLng> searchHistory = new HashSet<LatLng>();
 	  
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
@@ -841,7 +837,7 @@ public class Rack_City implements EntryPoint {
 		fService.addToFavorite(uid, address, newP, callback);
 	}
 	
-
+	
 	
 	/**
 	 * Called when user log in to determine new or returning
@@ -1288,7 +1284,7 @@ public class Rack_City implements EntryPoint {
 											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
 											
 											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL);
-											
+											Add2Fav (userId, "YO", LatLng.newInstance(0, 0));
 											loginButton.setText(userName);
 											getUserFriends();
 										}

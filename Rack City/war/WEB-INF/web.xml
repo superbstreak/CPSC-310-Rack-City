@@ -17,7 +17,7 @@
 
   <servlet-mapping>
     <servlet-name>RackFavouritesService</servlet-name>
-    <url-pattern>/rackcity/rackfavouritesservice</url-pattern>
+    <url-pattern>/rack_city/rackfavouritesservice</url-pattern>
   </servlet-mapping>
   
   
