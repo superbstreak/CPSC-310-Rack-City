@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
@@ -36,6 +37,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.dev.util.collect.HashSet;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -96,11 +98,14 @@ public class Rack_City implements EntryPoint {
 	  private String userGender = "";
 	  private Boolean userIsPlus = false;
 	  private ArrayList<String[]> userFriends = new ArrayList<String[]>();
+	  private ArrayList<String[]> favRacks = new ArrayList<String[]>();
+	  private Set<LatLng> searchHistory = new HashSet<LatLng>();
 	  
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
 	  private crimeServiceAsync cService = GWT.create(crimeService.class);
 	  private userServiceAsync uService = GWT.create(userService.class);
+	  private RackFavouritesServiceAsync fService = GWT.create(RackFavouritesService.class);
 	  private int initialsync = 0;
 	/**
 	 * This is the entry point method.
@@ -128,268 +133,9 @@ public class Rack_City implements EntryPoint {
 			addtolist();
 			initialsync = 1;
 		}
-			
-		
+
 		GUIsetup();
 		
-	}
-	
-	 private void handleError(Throwable error) {
-		    Window.alert(error.getMessage());
-		   
-		  }
-	 	
-	private void messenger(String s)
-	{
-		Window.alert(s);
-	}
-	
-	private void deBugMessenger()
-	{
-		String output = "Your Friends: \n";
-		for (int i = 0; i < userFriends.size(); i++)
-		{
-			String[] tmp = userFriends.get(i);
-			output = output + "\nName: " + tmp[0] +" id: "+tmp[1];
-		}
-		messenger(output);
-	}
-	
-	
-	private void getUserFriends()
-	{
-		if (!userToken.isEmpty() && !userEmail.isEmpty())
-		{
-			if (userIsPlus == true)
-			{
-				// confirm user logged in, user is a google plus user, token is valid (hopfully not expired)
-				String url = "https://www.googleapis.com/plus/v1/people/me/people/visible?access_token=" + userToken;
-            	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
-            	try 
-            	{
-					Request request = builder.sendRequest(null, new RequestCallback() {
-					@SuppressWarnings("deprecation")
-					@Override
-					public void onResponseReceived(Request request, Response response) 
-					{
-						// request successful
-						if (response.getStatusCode() == 200)
-						{
-							// success request, start info parsing							
-							if (response.getText() != null)
-							{
-								JSONValue jsv = JSONParser.parse(response.getText());			
-								JSONObject js = jsv.isObject();
-								
-								int totalItems = (int) js.get("totalItems").isNumber().doubleValue();
-								JSONArray jsFriends = js.get("items").isArray();
-								
-								for (int i = 0; i < totalItems; i++)
-								{
-									String friendId = jsFriends.get(i).isObject().get("id").isString().stringValue();
-									String friendName = jsFriends.get(i).isObject().get("displayName").isString().stringValue();
-									String friendType = jsFriends.get(i).isObject().get("objectType").isString().stringValue();
-									if (friendType.equals("person"))
-									{
-										String[] person = {friendName, friendId};
-										userFriends.add(person);
-									}
-								}
-								deBugMessenger();
-							}
-						}
-						else if (response.getStatusCode() == 400)
-						{
-							// bad request, bad information
-							messenger("Failed to GetFriends-TRY-REQ-RES=BAD");	
-						}
-						else
-						{
-							messenger("Failed to GetFriends-TRY-REQ-RES=FORBIDDEN");
-						}
-					}
-					@Override
-					public void onError(Request request, Throwable exception)
-					{
-							messenger("Error on GetFriends-TRY-ONERROR");										
-					}});
-				} 
-            	catch (RequestException e) 
-            	{
-            		// fail request
-            		messenger("Error on GetFriends-CATCH"+e);	
-				}
-			}
-			else
-			{
-				messenger("Please sign up for Google+ to take advantage of our favorite page social features");
-			}
-		}
-	}
-
-	
-	private void loginAttemptSwitcher()
-	{
-		if (loginAttempt == 0) loginAttempt = 1;
-		else if (loginAttempt == 1) loginAttempt = 0;
-	}
-	
-	private void saveToken(String t)
-	{
-		userToken = t;
-	}
-	
-	
-	private void startLoginProcess(final Button loginButton)
-	{
-		loginAttempt = 0;
-		if (loginFlipFlop == 0)
-		{
-				final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE, FRIEND_SCOPE, EMAIL_SCOPE);
-				AUTH.login(req, new Callback<String, Throwable>() {
-			          @Override
-			          public void onSuccess(String token) {
-			            //Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
-			            if (!token.isEmpty())
-			            {
-			            	//TODO token recived, start api access
-			            	saveToken(token);
-			            	// ============== on Success ==============
-			            	String url = "https://www.googleapis.com/plus/v1/people/me?access_token=" + token;
-			            	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
-			            	try 
-			            	{
-								Request request = builder.sendRequest(null, new RequestCallback() {
-								@SuppressWarnings("deprecation")
-								@Override
-								public void onResponseReceived(Request request, Response response) 
-								{
-									// request successful
-									if (response.getStatusCode() == 200)
-									{
-										// success request, start info parsing
-										if (response.getText() != null)
-										{
-											JSONValue jsv = JSONParser.parse(response.getText());			
-											JSONObject js = jsv.isObject();
-											
-											JSONArray jsemail = js.get("emails").isArray();
-											userEmail = jsemail.get(0).isObject().get("value").isString().stringValue();
-											userName = js.get("displayName").isString().stringValue();
-											userId = js.get("id").isString().stringValue();
-											userImageURL = js.get("image").isObject().get("url").isString().stringValue();
-											userGender = js.get("gender").isString().stringValue();
-											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
-											
-											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL);
-											
-											loginButton.setText(userName);
-											getUserFriends();
-										}
-									}
-									else if (response.getStatusCode() == 400)
-									{
-										// bad request, bad information
-										messenger("Failed to LOGIN-TRY-REQ-RES=BAD");	
-									}
-									else
-									{
-										messenger("Failed to LOGIN-TRY-REQ-RES=FORBIDDEN");
-									}
-								}
-								@Override
-								public void onError(Request request, Throwable exception)
-								{
-										messenger("Error on LOGIN-TRY-ONERROR");										
-								}});
-							} 
-			            	catch (RequestException e) 
-			            	{
-			            		// fail request
-			            		messenger("Error on LOGIN-CATCH"+e);	
-							}
-			         		
-			            	// ============== on Success ==============
-			            }
-			            loginButton.setText("Sign Out");
-						loginFlipFlop = 1;
-			          }
-
-			          @Override
-			          public void onFailure(Throwable caught) 
-			          {
-			        	loginAttemptSwitcher();
-			        	messenger("G+ ERROR-SLP-Fail TYPE 0!");
-			          }
-			        });
-			
-		}
-		else
-		{		
-			String url = "https://www.google.com/accounts/Logout?continue";	
-			final AuthRequest req = new AuthRequest(url, CLIENT_ID);
-			AUTH.clearAllTokens();
-			com.google.gwt.user.client.Window.open(url, "_blank", "");
-			
-			userEmail = "";
-			userName = "";
-			userToken = "";
-			userId = "";
-			userImageURL = "";
-			userGender = "";
-			userIsPlus = false;
-			userFriends = new ArrayList<String[]>();
-			messenger("Successfully cleared all tokens and signed out");
-			loginButton.setText("Sign in");
-			loginFlipFlop = 0;
-		}
-	}
-	
-	private void checkUserInfo(final String id, final String name, final String email, final String gender, final Boolean isPlus, final String propic)
-	{
-		if (uService == null) 
-		{
-			uService = GWT.create(userService.class);
-		}
-		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
-		{
-			public void onFailure(Throwable error)
-			{
-				Window.alert("Server Error! (ADD-USER)");
-				handleError(error);
-			}
-			@Override
-			public void onSuccess(Boolean result) {
-				// TODO Auto-generated method stub
-				if (result == false)
-				{
-					AddUserInfo(id, name, email, gender, isPlus, propic);
-				}
-			}
-		};
-		uService.hasUser(id, callback);
-	}
-	
-	private void AddUserInfo(String id, String name, String email, String gender, Boolean isPlus, String propic)
-	{
-		if (uService == null) 
-		{
-			uService = GWT.create(userService.class);
-		}
-		AsyncCallback<Void> callback = new AsyncCallback<Void>()
-		{
-			public void onFailure(Throwable error)
-			{
-				Window.alert("Server Error! (ADD-USER)");
-				handleError(error);
-			}
-			@Override
-			public void onSuccess(Void result) {
-				// TODO Auto-generated method stub
-				// no messages
-			}
-		};
-		uService.addUser(id, name, email, gender, isPlus, propic, callback);
 	}
 	
 	private void GUIsetup()
@@ -1068,6 +814,88 @@ public class Rack_City implements EntryPoint {
 	}
 	
 	// ===================== SERVER ASYNC CALLS  ==========================
+	
+	/**
+	 *  Called when user add a rack to favorite
+	 */
+	private void Add2Fav (String uid, String address, LatLng pos)
+	{
+		String newP = pos.toString();
+		if (fService == null) 
+		{
+			fService = GWT.create(RackFavouritesService.class);
+		}
+		AsyncCallback<Void> callback = new AsyncCallback<Void>()
+		{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-FAV)");
+				handleError(error);
+			}
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+				// no messages
+			}
+		};
+		fService.addToFavorite(uid, address, newP, callback);
+	}
+	
+
+	
+	/**
+	 * Called when user log in to determine new or returning
+	 */
+	private void checkUserInfo(final String id, final String name, final String email, final String gender, final Boolean isPlus, final String propic)
+	{
+		if (uService == null) 
+		{
+			uService = GWT.create(userService.class);
+		}
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
+		{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-USER)");
+				handleError(error);
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				// TODO Auto-generated method stub
+				if (result == false)
+				{
+					AddUserInfo(id, name, email, gender, isPlus, propic);
+				}
+			}
+		};
+		uService.hasUser(id, callback);
+	}
+	
+	/**
+	 *call when new user is logged in to G+
+	 */
+	private void AddUserInfo(String id, String name, String email, String gender, Boolean isPlus, String propic)
+	{
+		if (uService == null) 
+		{
+			uService = GWT.create(userService.class);
+		}
+		AsyncCallback<Void> callback = new AsyncCallback<Void>()
+		{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-USER)");
+				handleError(error);
+			}
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+				// no messages
+			}
+		};
+		uService.addUser(id, name, email, gender, isPlus, propic, callback);
+	}
+	
 	/**
 	 * Call rackOps (Admin only): 
 	 * type == 0: REMOVE OPERATION. require LatLng
@@ -1310,6 +1138,221 @@ public class Rack_City implements EntryPoint {
 		parseCrime();
 	}
 	// ===================== SERVER ASYNC CALLS ENDS ==========================
+	
+	// ===================== LOGIN PROCEDURE CALLS ============================
+	
+	 private void handleError(Throwable error) 
+	 {
+		 Window.alert(error.getMessage());   
+	 }
+	 	
+	private void messenger(String s)
+	{
+		Window.alert(s);
+	}
+	
+	private void deBugMessenger()
+	{
+		String output = "Your Friends: \n";
+		for (int i = 0; i < userFriends.size(); i++)
+		{
+			String[] tmp = userFriends.get(i);
+			output = output + "\nName: " + tmp[0] +" id: "+tmp[1];
+		}
+		messenger(output);
+	}
+	
+	
+	private void getUserFriends()
+	{
+		if (!userToken.isEmpty() && !userEmail.isEmpty())
+		{
+			if (userIsPlus == true)
+			{
+				// confirm user logged in, user is a google plus user, token is valid (hopfully not expired)
+				String url = "https://www.googleapis.com/plus/v1/people/me/people/visible?access_token=" + userToken;
+           	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
+           	try 
+           	{
+					Request request = builder.sendRequest(null, new RequestCallback() {
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onResponseReceived(Request request, Response response) 
+					{
+						// request successful
+						if (response.getStatusCode() == 200)
+						{
+							// success request, start info parsing							
+							if (response.getText() != null)
+							{
+								JSONValue jsv = JSONParser.parse(response.getText());			
+								JSONObject js = jsv.isObject();
+								
+								int totalItems = (int) js.get("totalItems").isNumber().doubleValue();
+								JSONArray jsFriends = js.get("items").isArray();
+								
+								for (int i = 0; i < totalItems; i++)
+								{
+									String friendId = jsFriends.get(i).isObject().get("id").isString().stringValue();
+									String friendName = jsFriends.get(i).isObject().get("displayName").isString().stringValue();
+									String friendType = jsFriends.get(i).isObject().get("objectType").isString().stringValue();
+									if (friendType.equals("person"))
+									{
+										String[] person = {friendName, friendId};
+										userFriends.add(person);
+									}
+								}
+								deBugMessenger();
+							}
+						}
+						else if (response.getStatusCode() == 400)
+						{
+							// bad request, bad information
+							messenger("Failed to GetFriends-TRY-REQ-RES=BAD");	
+						}
+						else
+						{
+							messenger("Failed to GetFriends-TRY-REQ-RES=FORBIDDEN");
+						}
+					}
+					@Override
+					public void onError(Request request, Throwable exception)
+					{
+							messenger("Error on GetFriends-TRY-ONERROR");										
+					}});
+				} 
+           	catch (RequestException e) 
+           	{
+           		// fail request
+           		messenger("Error on GetFriends-CATCH"+e);	
+				}
+			}
+			else
+			{
+				messenger("Please sign up for Google+ to take advantage of our favorite page social features");
+			}
+		}
+	}
+
+	
+	private void loginAttemptSwitcher()
+	{
+		if (loginAttempt == 0) loginAttempt = 1;
+		else if (loginAttempt == 1) loginAttempt = 0;
+	}
+	
+	private void saveToken(String t)
+	{
+		userToken = t;
+	}
+	
+	private void startLoginProcess(final Button loginButton)
+	{
+		loginAttempt = 0;
+		if (loginFlipFlop == 0)
+		{
+				final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE, FRIEND_SCOPE, EMAIL_SCOPE);
+				AUTH.login(req, new Callback<String, Throwable>() {
+			          @Override
+			          public void onSuccess(String token) {
+			            //Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
+			            if (!token.isEmpty())
+			            {
+			            	//TODO token recived, start api access
+			            	saveToken(token);
+			            	// ============== on Success ==============
+			            	String url = "https://www.googleapis.com/plus/v1/people/me?access_token=" + token;
+			            	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
+			            	try 
+			            	{
+								Request request = builder.sendRequest(null, new RequestCallback() {
+								@SuppressWarnings("deprecation")
+								@Override
+								public void onResponseReceived(Request request, Response response) 
+								{
+									// request successful
+									if (response.getStatusCode() == 200)
+									{
+										// success request, start info parsing
+										if (response.getText() != null)
+										{
+											JSONValue jsv = JSONParser.parse(response.getText());			
+											JSONObject js = jsv.isObject();
+											
+											JSONArray jsemail = js.get("emails").isArray();
+											userEmail = jsemail.get(0).isObject().get("value").isString().stringValue();
+											userName = js.get("displayName").isString().stringValue();
+											userId = js.get("id").isString().stringValue();
+											userImageURL = js.get("image").isObject().get("url").isString().stringValue();
+											userGender = js.get("gender").isString().stringValue();
+											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
+											
+											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL);
+											
+											loginButton.setText(userName);
+											getUserFriends();
+										}
+									}
+									else if (response.getStatusCode() == 400)
+									{
+										// bad request, bad information
+										messenger("Failed to LOGIN-TRY-REQ-RES=BAD");	
+									}
+									else
+									{
+										messenger("Failed to LOGIN-TRY-REQ-RES=FORBIDDEN");
+									}
+								}
+								@Override
+								public void onError(Request request, Throwable exception)
+								{
+										messenger("Error on LOGIN-TRY-ONERROR");										
+								}});
+							} 
+			            	catch (RequestException e) 
+			            	{
+			            		// fail request
+			            		messenger("Error on LOGIN-CATCH"+e);	
+							}
+			         		
+			            	// ============== on Success ==============
+			            }
+			            loginButton.setText("Sign Out");
+						loginFlipFlop = 1;
+			          }
+
+			          @Override
+			          public void onFailure(Throwable caught) 
+			          {
+			        	loginAttemptSwitcher();
+			        	messenger("G+ ERROR-SLP-Fail TYPE 0!");
+			          }
+			        });
+			
+		}
+		else
+		{		
+			String url = "https://www.google.com/accounts/Logout?continue";	
+			final AuthRequest req = new AuthRequest(url, CLIENT_ID);
+			AUTH.clearAllTokens();
+			com.google.gwt.user.client.Window.open(url, "_blank", "");
+			
+			userEmail = "";
+			userName = "";
+			userToken = "";
+			userId = "";
+			userImageURL = "";
+			userGender = "";
+			userIsPlus = false;
+			userFriends = new ArrayList<String[]>();
+			messenger("Successfully cleared all tokens and signed out");
+			loginButton.setText("Sign in");
+			loginFlipFlop = 0;
+		}
+	}
+
+	// ====================== LOGIN PROCEDURE CALLS END ======================
+	
 	public static ArrayList<Crime> getCrimeData()
 	{
 		return listofcrimes;

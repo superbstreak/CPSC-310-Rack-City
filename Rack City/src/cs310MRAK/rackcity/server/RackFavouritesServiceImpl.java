@@ -1,6 +1,7 @@
 package cs310MRAK.rackcity.server;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.maps.client.geom.LatLng;
@@ -13,43 +14,90 @@ import javax.jdo.Query;
 
 import cs310MRAK.rackcity.client.BikeRack;
 import cs310MRAK.rackcity.client.RackFavouritesService;
+import cs310MRAK.rackcity.shared.FavoriteRack;
 
 public class RackFavouritesServiceImpl extends RemoteServiceServlet implements RackFavouritesService{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -932652595470237815L;
 
-	// The messages logged by "LOG" are viewable when we inspect our RackCity application in appengine.google.com
-		//private static final Logger LOG = Logger.getLogger(StolenBikesServiceImpl.class.getName());
+	private static final Logger LOG = Logger.getLogger(RackFavouritesServiceImpl.class.getName());
+	 
+	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 		
-			// This is related to line 6 in src/META-INF/jdoconfig.xml
-			// We just need to do this to use JDO.
-		private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
-		
-				
-		 	@Override
-		 	public void addFavourite(String rackID, LatLng coordinate, 	double rating, int rackCount, int crimeScore)
-		 	{
-		 		// TODO JDO !!!
-		 		
-		 	}
-		 
-		 	@Override
-		 	public ArrayList<BikeRack> getFavourites() {
-		 		// TODO JDO !!!
-		 		return null;
-		 	}
-		 
-		 	@Override
-		 	public void removeFavourite(String rackID, LatLng coordinate,
-		 			double rating, int rackCount, int crimeScore) {
-		 		// TODO JDO !!!
-		 		
-		 	}
-		 	
-		 	
-		 	// because singleton. 
-		 	private PersistenceManager getPersistenceManager() {
-		 		// TODO Auto-generated method stub
-				return PMF.getPersistenceManager();
-		 	}
+	private PersistenceManager getPersistenceManager() {
+		// TODO Auto-generated method stub
+		return PMF.getPersistenceManager();
+	}
+
+
+	@Override
+	public ArrayList<String[]> getFavorite(String uid) 
+	{
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		ArrayList<String[]> fin = new ArrayList<String[]>();
+		try
+		{	
+			String query = "select from " + FavoriteRack.class.getName();
+			List<FavoriteRack> FavoriteRacks = (List<FavoriteRack>) pm.newQuery(query).execute();
+			for (FavoriteRack r: FavoriteRacks)
+			{
+				// ====== Basic Info ========
+				if (r.getUid().equals(uid))
+				{
+					String addr = r.getAddress();
+					String LL = r.getPosition();
+					String[] temp = {LL, addr};
+					fin.add(temp);
+				}
+			}
+		}
+		finally
+		{
+			pm.close();
+		}
+		return fin;
+	}
+
+	@Override
+	public void removeFavorite(String uid, String cooridinate) 
+	{
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		try {
+			String query = "select from " +FavoriteRack.class.getName();
+			List<FavoriteRack> FavoriteRacks = (List<FavoriteRack>) pm.newQuery(query).execute();
+			for (FavoriteRack r: FavoriteRacks)
+			{
+				if (r.getUid().equals(uid) && r.getPosition().equals(cooridinate))
+				{
+					pm.deletePersistent(r);
+				}
+			}
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+
+
+	@Override
+	public void addToFavorite(String uid, String address, String cooridinate) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			pm.makePersistent(new FavoriteRack(uid, address, cooridinate));
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
 
 
 }
