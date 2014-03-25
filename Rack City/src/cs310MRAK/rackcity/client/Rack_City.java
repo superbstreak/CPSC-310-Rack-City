@@ -88,9 +88,8 @@ public class Rack_City implements EntryPoint {
 	private static ArrayList<Crime> listofcrimes = null;
 	private boolean filter = false;
 	//private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
-//	private static final Logger LOG = Logger.getLogger(Rack_City.class.getName());
+	//	private static final Logger LOG = Logger.getLogger(Rack_City.class.getName());
 	// google+ login stuff ------ S2 ---------
-	  private static final Plus plus = GWT.create(Plus.class);
 	  private static final String CLIENT_ID = "146858113551-ktl431gm3sbkrvid1khqrlvh1afclct4.apps.googleusercontent.com";
 	  private static final String API_KEY = "AIzaSyCeb8Iws1UqI8caz2aHJee_JtTTiNdqqAY";
 	  private static final String APPLICATION_NAME = "cs310rackcity";
@@ -154,25 +153,7 @@ public class Rack_City implements EntryPoint {
 		    Window.alert(error.getMessage());
 		   
 		  }
-	 
-	private void getMe(final Plus p)
-	{	
-		//messenger("inGetMe");	
-		
-		Person person;
-		
-		p.people().get("me").to(new Receiver <Person>(){
-			@Override
-			public void onSuccess(Person per) {
-				// TODO Auto-generated method stub
-				String out = "Welcom "+ per.getDisplayName()+"! Your Bday: "+ per.getBirthday()
-						+", Gender: "+per.getGender();
-				messenger(out);
-			}
-		}).fire();
-				
-	}
-	
+	 	
 	private void messenger(String s)
 	{
 		Window.alert(s);
@@ -261,14 +242,11 @@ public class Rack_City implements EntryPoint {
 	}
 	
 	
-	private void startLoginProcess(final Plus p, final Button loginButton)
+	private void startLoginProcess(final Button loginButton)
 	{
 		loginAttempt = 0;
 		if (loginFlipFlop == 0)
 		{
-			// Signin Type 1
-			if (loginAttempt == 0)
-			{
 				final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE, FRIEND_SCOPE, EMAIL_SCOPE);
 				AUTH.login(req, new Callback<String, Throwable>() {
 			          @Override
@@ -298,37 +276,37 @@ public class Rack_City implements EntryPoint {
 											JSONObject js = jsv.isObject();
 											
 											JSONArray jsemail = js.get("emails").isArray();
-											 userEmail = jsemail.get(0).isObject().get("value").isString().stringValue();
-											 userName = js.get("displayName").isString().stringValue();
-											 userId = js.get("id").isString().stringValue();
-											 userImageURL = js.get("image").isObject().get("url").isString().stringValue();
-											 userGender = js.get("gender").isString().stringValue();
-											 userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
+											userEmail = jsemail.get(0).isObject().get("value").isString().stringValue();
+											userName = js.get("displayName").isString().stringValue();
+											userId = js.get("id").isString().stringValue();
+											userImageURL = js.get("image").isObject().get("url").isString().stringValue();
+											userGender = js.get("gender").isString().stringValue();
+											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
 											 
-											 loginButton.setText(userName);
-											 getUserFriends();
+											loginButton.setText(userName);
+											getUserFriends();
 										}
 									}
 									else if (response.getStatusCode() == 400)
 									{
 										// bad request, bad information
-										messenger("Failed TRY-REQ-RES=BAD");	
+										messenger("Failed to LOGIN-TRY-REQ-RES=BAD");	
 									}
 									else
 									{
-										messenger("Failed TRY-REQ-RES=FORBIDDEN");
+										messenger("Failed to LOGIN-TRY-REQ-RES=FORBIDDEN");
 									}
 								}
 								@Override
 								public void onError(Request request, Throwable exception)
 								{
-										messenger("Error LOGIN-TRY-ONERROR");										
+										messenger("Error on LOGIN-TRY-ONERROR");										
 								}});
 							} 
 			            	catch (RequestException e) 
 			            	{
 			            		// fail request
-			            		messenger("Error LOGIN-CATCH"+e);	
+			            		messenger("Error on LOGIN-CATCH"+e);	
 							}
 			         		
 			            	// ============== on Success ==============
@@ -344,27 +322,6 @@ public class Rack_City implements EntryPoint {
 			        	messenger("G+ ERROR-SLP-Fail TYPE 0!");
 			          }
 			        });
-			}
-			
-			// Sign in type 2
-			if (loginAttempt == 1)
-			{
-				OAuth2Login.get().authorize(CLIENT_ID, PlusAuthScope.PLUS_ME, new Callback<Void, Exception>()
-				{
-					GoogleApiRequestTransport Gbus = new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY);
-							public void onSuccess(Void v)
-							{
-								//messenger("G+ SUCCESS-SLP-SUCC");
-								loginButton.setText("Sign Out"+userName);
-								loginFlipFlop = 1;
-								getMe(p);
-							}
-							public void onFailure(Exception reason) {
-								messenger("G+ ERROR-SLP-Fail TYPE 1!");
-						    	handleError(reason);
-							}
-						});
-			}
 			
 		}
 		else
@@ -441,8 +398,7 @@ public class Rack_City implements EntryPoint {
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
-				plus.initialize(new SimpleEventBus(), new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY));
-				startLoginProcess(plus, loginButton);
+				startLoginProcess(loginButton);
 				
 
 			}
