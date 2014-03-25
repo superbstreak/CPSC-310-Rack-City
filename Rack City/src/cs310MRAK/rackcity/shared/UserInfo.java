@@ -21,7 +21,7 @@ public class UserInfo{
 	private String Email;
 	@Persistent
 	private String Gender;
-	@Persistent
+	@Persistent 
 	private Boolean isPlus;
 	@Persistent
 	private String proPicURL;

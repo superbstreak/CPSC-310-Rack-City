@@ -386,7 +386,7 @@ public class Rack_City implements EntryPoint {
 			@Override
 			public void onSuccess(Void result) {
 				// TODO Auto-generated method stub
-				
+				// no messages
 			}
 		};
 		uService.addUser(id, name, email, gender, isPlus, propic, callback);
