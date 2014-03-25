@@ -22,15 +22,6 @@
   
   
    <!-- Servlets !! change to Google+ After Sprint -->
-  <servlet>
-    <servlet-name>loginService</servlet-name>
-    <servlet-class>cs310MRAK.rackcity.server.LoginServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>loginService</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
   
    <!-- Servlets for bike racks -->  
   <servlet>

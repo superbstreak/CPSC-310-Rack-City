@@ -89,14 +89,6 @@ public class Rack_City implements EntryPoint {
 	private boolean filter = false;
 	//private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 //	private static final Logger LOG = Logger.getLogger(Rack_City.class.getName());
-	//=============================
-	  private LoginInfo loginInfo = null;
-	  private VerticalPanel loginPanel = new VerticalPanel();
-	  private Label loginLabel = new Label("Please sign in to your Google Account to access specific features.");
-	  private Label logoutLabel = new Label("Please click on signout to confirm your action");
-	  private Anchor signInLink = new Anchor("Sign In");
-	  private Anchor signOutLink = new Anchor("Sign Out");
-	  public int w = 0;
 	// google+ login stuff ------ S2 ---------
 	  private static final Plus plus = GWT.create(Plus.class);
 	  private static final String CLIENT_ID = "146858113551-ktl431gm3sbkrvid1khqrlvh1afclct4.apps.googleusercontent.com";
@@ -107,9 +99,11 @@ public class Rack_City implements EntryPoint {
 	  private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
 	  private static final String AUTH_URL_REVOKE = " https://accounts.google.com/o/oauth2/revoke?token=";
 	  private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
+	  private static final String FRIEND_SCOPE = "https://www.googleapis.com/auth/plus.login";
 	  private static final String EMAIL_SCOPE = "https://www.googleapis.com/auth/plus.profile.emails.read";
 	  private static final String clientSecret = "VjH_CAHvgoq5T0DS5QR2TbEI";
 	  private static final Auth AUTH = Auth.get();
+	  public int w = 0;
 	  // User information
 	  private String userEmail = "";
 	  private String userName = "";
@@ -118,6 +112,7 @@ public class Rack_City implements EntryPoint {
 	  private String userImageURL = "";
 	  private String userGender = "";
 	  private Boolean userIsPlus = false;
+	  private ArrayList<String[]> userFriends = new ArrayList<String[]>();
 	  
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
@@ -157,9 +152,7 @@ public class Rack_City implements EntryPoint {
 	
 	 private void handleError(Throwable error) {
 		    Window.alert(error.getMessage());
-		    if (error instanceof NotLoggedInException) {
-		      Window.Location.replace(loginInfo.getLogoutUrl());
-		    }
+		   
 		  }
 	 
 	private void getMe(final Plus p)
@@ -175,7 +168,6 @@ public class Rack_City implements EntryPoint {
 				String out = "Welcom "+ per.getDisplayName()+"! Your Bday: "+ per.getBirthday()
 						+", Gender: "+per.getGender();
 				messenger(out);
-				getMyActivities(p);
 			}
 		}).fire();
 				
@@ -186,25 +178,76 @@ public class Rack_City implements EntryPoint {
 		Window.alert(s);
 	}
 	
-	private void getMyActivities(Plus p)
+	private void getUserFriends()
 	{
-		Window.alert("DEBUG GMA-FETCHING");
-		p.activities().list("me", Collection.PUBLIC).to(new Receiver<ActivityFeed>()
+		if (!userToken.isEmpty() && !userEmail.isEmpty())
 		{
-			@Override
-			public void onSuccess(ActivityFeed f) {
-				// TODO Auto-generated method stub
-				if (f.getItems() == null || f.getItems().isEmpty())
-				{
-					messenger("DEBUG GMA-NO-ACTV");
-				}
-				else
-				{
-					messenger("DEBUG GMA-HAVE-ACTV");
+			if (userIsPlus == true)
+			{
+				// confirm user logged in, user is a google plus user, token is valid (hopfully not expired)
+				String url = "https://www.googleapis.com/plus/v1/people/me/people/visible?access_token=" + userToken;
+            	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
+            	try 
+            	{
+					Request request = builder.sendRequest(null, new RequestCallback() {
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onResponseReceived(Request request, Response response) 
+					{
+						// request successful
+						if (response.getStatusCode() == 200)
+						{
+							// success request, start info parsing							
+							if (response.getText() != null)
+							{
+								JSONValue jsv = JSONParser.parse(response.getText());			
+								JSONObject js = jsv.isObject();
+								
+								int totalItems = (int) js.get("totalItems").isNumber().doubleValue();
+								JSONArray jsFriends = js.get("items").isArray();
+								
+								for (int i = 0; i < totalItems; i++)
+								{
+									String friendId = jsFriends.get(i).isObject().get("id").isString().stringValue();
+									String friendName = jsFriends.get(i).isObject().get("displayName").isString().stringValue();
+									String friendType = jsFriends.get(i).isObject().get("objectType").isString().stringValue();
+									if (friendType.equals("person"))
+									{
+										String[] person = {friendName, friendId};
+										userFriends.add(person);
+									}
+								}
+							}
+						}
+						else if (response.getStatusCode() == 400)
+						{
+							// bad request, bad information
+							messenger("Failed to GetFriends-TRY-REQ-RES=BAD");	
+						}
+						else
+						{
+							messenger("Failed to GetFriends-TRY-REQ-RES=FORBIDDEN");
+						}
+					}
+					@Override
+					public void onError(Request request, Throwable exception)
+					{
+							messenger("Error on GetFriends-TRY-ONERROR");										
+					}});
+				} 
+            	catch (RequestException e) 
+            	{
+            		// fail request
+            		messenger("Error on GetFriends-CATCH"+e);	
 				}
 			}
-		});
+			else
+			{
+				messenger("Please sign up for Google+ to take advantage of our favorite page social features");
+			}
+		}
 	}
+
 	
 	private void loginAttemptSwitcher()
 	{
@@ -226,7 +269,7 @@ public class Rack_City implements EntryPoint {
 			// Signin Type 1
 			if (loginAttempt == 0)
 			{
-				final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE, EMAIL_SCOPE);
+				final AuthRequest req = new AuthRequest(GOOGLE_AUTH_URL, CLIENT_ID).withScopes(PLUS_ME_SCOPE, FRIEND_SCOPE, EMAIL_SCOPE);
 				AUTH.login(req, new Callback<String, Throwable>() {
 			          @Override
 			          public void onSuccess(String token) {
@@ -249,24 +292,21 @@ public class Rack_City implements EntryPoint {
 									if (response.getStatusCode() == 200)
 									{
 										// success request, start info parsing
-										//messenger("Success TRY-REQ-RES=GOOD");
-										
 										if (response.getText() != null)
 										{
-											messenger("What I know about you"+response.getText());
 											JSONValue jsv = JSONParser.parse(response.getText());			
 											JSONObject js = jsv.isObject();
 											
 											JSONArray jsemail = js.get("emails").isArray();
-											
-											  userEmail = jsemail.get(0).isObject().get("value").isString().stringValue();
-											  userName = js.get("displayName").isString().stringValue();
-											  userId = js.get("id").isString().stringValue();
-											  userImageURL = js.get("image").isObject().get("url").isString().stringValue();
-											  userGender = js.get("gender").isString().stringValue();
-											  userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
-											  
-											  loginButton.setText(userName);
+											 userEmail = jsemail.get(0).isObject().get("value").isString().stringValue();
+											 userName = js.get("displayName").isString().stringValue();
+											 userId = js.get("id").isString().stringValue();
+											 userImageURL = js.get("image").isObject().get("url").isString().stringValue();
+											 userGender = js.get("gender").isString().stringValue();
+											 userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
+											 
+											 loginButton.setText(userName);
+											 getUserFriends();
 										}
 									}
 									else if (response.getStatusCode() == 400)
@@ -341,44 +381,11 @@ public class Rack_City implements EntryPoint {
 			userImageURL = "";
 			userGender = "";
 			userIsPlus = false;
+			userFriends = new ArrayList<String[]>();
 			messenger("Successfully cleared all tokens and signed out");
 			loginButton.setText("Sign in");
 			loginFlipFlop = 0;
 		}
-		
-//		LoginServiceAsync loginService = GWT.create(LoginService.class);
-//	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-//	      public void onFailure(Throwable error) {
-//	    	  Window.alert("Error loading loginService!");
-//	    	  handleError(error);
-//	      }
-//
-//	      public void onSuccess(LoginInfo result) {
-//	        loginInfo = result;
-//	        if(loginInfo.isLoggedIn()) 
-//	        {
-//	        	// if logged in, set text to sign out
-//	        	
-//	        	 // Set up sign out hyperlink.
-//	        	rootPanel.clear();
-//	        	signOutLink.setHref(loginInfo.getLogoutUrl());
-//	        	loginPanel.add(logoutLabel);
-//		     	loginPanel.add(signOutLink);
-//		     	RootPanel.get().add(loginPanel);
-//	        } 
-//	        else 
-//	        {
-//	        	// otherwise, continue login procedure
-//	        	rootPanel.clear();
-//	        	signInLink.setHref(loginInfo.getLoginUrl());
-//	     	    loginPanel.add(loginLabel);
-//	     	    loginPanel.add(signInLink);
-//	     	    RootPanel.get().add(loginPanel);
-//	        }
-//	 
-//	      }
-//	      
-//	    });
 	}
 	
 	private void GUIsetup()
@@ -430,53 +437,13 @@ public class Rack_City implements EntryPoint {
 		 
 		final Button loginButton = new Button("loginButton");
 		loginButton.setText("Login");
-		
-		//set text correctly
-//		LoginServiceAsync loginService = GWT.create(LoginService.class);
-//	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-//	      public void onFailure(Throwable error) {
-//	    	  Window.alert("Error loading loginService!");
-//	    	  handleError(error);
-//	      }
-//
-//	      public void onSuccess(LoginInfo result) {
-//	        loginInfo = result;
-//	        if(loginInfo.isLoggedIn()) 
-//	        {
-//	        	// if logged in, set text to sign out
-//	        	loginButton.setText("Sign Out");
-//	        } 
-//	        else 
-//	        {
-//	        	loginButton.setText("Sign In");
-//	        }
-//	      }
-//	    });
-	    
+			    
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-//				LoginServiceAsync loginService = GWT.create(LoginService.class);
-//			    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-//			      public void onFailure(Throwable error) {
-//			    	  Window.alert("Error loading loginService!");
-//			    	  handleError(error);
-//			      }
-//
-//			      public void onSuccess(LoginInfo result) {
-//			        loginInfo = result;
-//			        if(loginInfo.isLoggedIn()) 
-//			        {
-//			        	// if logged in, set text to sign out
-//			        	loginButton.setText("Sign Out");			        	
-//			        } 
-//			        else 
-//			        {
-//			        	loginButton.setText("Sign In");
-//			        }
-//			      }
-//			    });
+				
 				plus.initialize(new SimpleEventBus(), new GoogleApiRequestTransport(APPLICATION_NAME, API_KEY));
 				startLoginProcess(plus, loginButton);
+				
 
 			}
 		});
