@@ -7,6 +7,7 @@
 	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gwt-plus-v1-0.3-alpha.jar"/>
 	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/google-oauth-client-1.16.0-rc.jar"/>
 	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gwt-oauth2-0.2-alpha.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Matt/Desktop/dropbox-client-1.5.3.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
