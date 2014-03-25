@@ -159,6 +159,18 @@ public class Rack_City implements EntryPoint {
 		Window.alert(s);
 	}
 	
+	private void deBugMessenger()
+	{
+		String output = "Your Friends: \n";
+		for (int i = 0; i < userFriends.size(); i++)
+		{
+			String[] tmp = userFriends.get(i);
+			output = output + "\nName: " + tmp[0] +" id: "+tmp[1];
+		}
+		messenger(output);
+	}
+	
+	
 	private void getUserFriends()
 	{
 		if (!userToken.isEmpty() && !userEmail.isEmpty())
@@ -198,6 +210,7 @@ public class Rack_City implements EntryPoint {
 										userFriends.add(person);
 									}
 								}
+								deBugMessenger();
 							}
 						}
 						else if (response.getStatusCode() == 400)

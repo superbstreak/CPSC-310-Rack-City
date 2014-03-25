@@ -1,6 +1,5 @@
 package cs310MRAK.rackcity.server;
 
-
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
