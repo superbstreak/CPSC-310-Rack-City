@@ -9,7 +9,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class UserObject {
+public class UserSearchHistoryInstance {
 
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
 		@PrimaryKey
@@ -23,10 +23,18 @@ public class UserObject {
 		private String radius; // "2"
 		@Persistent
 		private String crimeScore; // "5"
-		  
+		@Persistent
+		private Date createDate;
+		
+		//a good way to use constructor
+			public UserSearchHistoryInstance() {
+				this.createDate = new Date();
+			}
 		 
-		public UserObject(String userID, String searchAddress, String searchAddressLatLong, String radius, String crimeScore)
+		 
+		public UserSearchHistoryInstance(String userID, String searchAddress, String searchAddressLatLong, String radius, String crimeScore)
 		{
+			this();
 			this.userID = userID;
 			this.searchAddress = searchAddress;
 			this.searchAddressLatLong = searchAddressLatLong;

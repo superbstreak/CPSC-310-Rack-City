@@ -6,7 +6,8 @@ public interface userServiceAsync {
 		
 		// adder
 		void addUser(String id, String name,  String email, String gender, Boolean isPlus, String propic, AsyncCallback<Void> callback);
-		
+		void addUserSearchHistoryInstance(String userID, String searchAddress,
+				String searchAddressLatLong, String radius, String crimeScore, AsyncCallback<Void> callback);
 		// checker
 		void hasUser(String id, AsyncCallback<Boolean> callback);
 		

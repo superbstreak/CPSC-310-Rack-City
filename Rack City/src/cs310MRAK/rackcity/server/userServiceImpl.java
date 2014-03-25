@@ -164,4 +164,18 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 		return output;
 	}
 	
+	@Override
+	public void addUserSearchHistoryInstance(String userID, String searchAddress, String searchAddressLatLong, String radius, String crimeScore) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			pm.makePersistent(new UserSearchHistoryInstance(userID, searchAddress, searchAddressLatLong, radius, crimeScore));
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+	
 }
