@@ -109,6 +109,16 @@ public class Rack_City implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		
+		// ========== Issue #72 ==========
+//		Dropbox test = new Dropbox();
+//		try {
+//			test.init();
+//		} catch (Exception e) {
+//			System.out.println("dropbox test didn't work: ");
+//			e.printStackTrace();
+//		}
+// 		// Will ask Daniel for help.
+		
 		if (initialsync == 0)
 		{	
 			addtolist();
@@ -361,6 +371,8 @@ public class Rack_City implements EntryPoint {
 		Button searchButton = new Button("searchButton");
 		searchButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				// task 45
+				
 				if(!txtbxAddress.getText().equals("")){
 					if(!radiusCombo.getValue(radiusCombo.getSelectedIndex()).equals("")){
 						if(!crimeCombo.getValue(crimeCombo.getSelectedIndex()).equals("")){
