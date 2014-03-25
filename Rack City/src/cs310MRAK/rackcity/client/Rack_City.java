@@ -5,17 +5,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.api.gwt.client.GoogleApiRequestTransport;
-import com.google.api.gwt.client.OAuth2Login;
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
-import com.google.api.gwt.services.plus.shared.Plus;
-import com.google.api.gwt.services.plus.shared.Plus.ActivitiesContext.ListRequest.Collection;
-import com.google.api.gwt.services.plus.shared.Plus.PeopleContext.GetRequest;
-import com.google.api.gwt.services.plus.shared.Plus.PlusAuthScope;
-import com.google.api.gwt.services.plus.shared.model.Activity;
-import com.google.api.gwt.services.plus.shared.model.ActivityFeed;
-import com.google.api.gwt.services.plus.shared.model.Person;
 import com.google.gwt.core.client.Callback;
 //======================== ^ G+ ============================
 import com.google.gwt.core.client.EntryPoint;
@@ -38,7 +29,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -66,10 +56,6 @@ import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.RequestContext;
-
-import cs310MRAK.rackcity.shared.LoginInfo;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -96,11 +82,9 @@ public class Rack_City implements EntryPoint {
 	  private int loginFlipFlop = 0;
 	  private int loginAttempt = 0;
 	  private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
-	  private static final String AUTH_URL_REVOKE = " https://accounts.google.com/o/oauth2/revoke?token=";
 	  private static final String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
 	  private static final String FRIEND_SCOPE = "https://www.googleapis.com/auth/plus.login";
 	  private static final String EMAIL_SCOPE = "https://www.googleapis.com/auth/plus.profile.emails.read";
-	  private static final String clientSecret = "VjH_CAHvgoq5T0DS5QR2TbEI";
 	  private static final Auth AUTH = Auth.get();
 	  public int w = 0;
 	  // User information
@@ -116,6 +100,7 @@ public class Rack_City implements EntryPoint {
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
 	  private crimeServiceAsync cService = GWT.create(crimeService.class);
+	  private userServiceAsync uService = GWT.create(userService.class);
 	  private int initialsync = 0;
 	/**
 	 * This is the entry point method.
@@ -295,7 +280,9 @@ public class Rack_City implements EntryPoint {
 											userImageURL = js.get("image").isObject().get("url").isString().stringValue();
 											userGender = js.get("gender").isString().stringValue();
 											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
-											 
+											
+											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL);
+											
 											loginButton.setText(userName);
 											getUserFriends();
 										}
@@ -356,6 +343,53 @@ public class Rack_City implements EntryPoint {
 			loginButton.setText("Sign in");
 			loginFlipFlop = 0;
 		}
+	}
+	
+	private void checkUserInfo(final String id, final String name, final String email, final String gender, final Boolean isPlus, final String propic)
+	{
+		if (uService == null) 
+		{
+			uService = GWT.create(userService.class);
+		}
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>()
+		{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-USER)");
+				handleError(error);
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				// TODO Auto-generated method stub
+				if (result == false)
+				{
+					AddUserInfo(id, name, email, gender, isPlus, propic);
+				}
+			}
+		};
+		uService.hasUser(id, callback);
+	}
+	
+	private void AddUserInfo(String id, String name, String email, String gender, Boolean isPlus, String propic)
+	{
+		if (uService == null) 
+		{
+			uService = GWT.create(userService.class);
+		}
+		AsyncCallback<Void> callback = new AsyncCallback<Void>()
+		{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-USER)");
+				handleError(error);
+			}
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		uService.addUser(id, name, email, gender, isPlus, propic, callback);
 	}
 	
 	private void GUIsetup()
