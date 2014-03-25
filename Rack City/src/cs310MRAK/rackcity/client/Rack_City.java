@@ -95,7 +95,8 @@ public class Rack_City implements EntryPoint {
 	  private String userGender = "";
 	  private Boolean userIsPlus = false;
 	  private ArrayList<String[]> userFriends = new ArrayList<String[]>();
-	  private ArrayList<String[]> favRacks = new ArrayList<String[]>();
+	  private ArrayList<BikeRack> favRacks = new ArrayList<BikeRack>();
+	  private ArrayList< ArrayList<String>> favRacksCommon = new ArrayList< ArrayList<String>>();
 	  
 	 // Server stuff
 	  private rackServiceAsync rService = GWT.create(rackService.class);
@@ -473,8 +474,6 @@ public class Rack_City implements EntryPoint {
 		}});
 	}
 	
-	
-
 	/**
 	 * Generates markers for all bike racks based on specified user inputs
 	 * @param address - Street address of user's current location
@@ -837,7 +836,52 @@ public class Rack_City implements EntryPoint {
 		fService.addToFavorite(uid, address, newP, callback);
 	}
 	
+	private void parseFav (final String name, final String uid)
+	{
+		if (fService == null) {
+			fService = GWT.create(RackFavouritesService.class);
+		    }
+		
+		fService.getFavorite(uid, new AsyncCallback<ArrayList<String[]>>()
+			{
+				public void onFailure(Throwable error)
+				{
+					Window.alert("Server Error! (PAR-CRIME)");
+					handleError(error);
+				}
+				@Override
+				public void onSuccess(ArrayList<String[]> result) {
+					// TODO Auto-generated method stub
+					
+					if (uid.equals(userId))	 assignFavresult(result);
+					else compareFriendFav(name, result);
+				}
+			});
+	}
 	
+	private void assignFavresult(ArrayList<String[]> fav)
+	{
+		if (!(fav.isEmpty() || fav == null))
+		{
+			for(int i = 0; i < fav.size(); i++)
+			{
+				//Window.alert("P"+i);
+				String[] temp = fav.get(i);
+				String LL = temp[1].toString();   // string			
+				for (int a = 0; a < listofracks.size(); a++)
+				{
+					if (listofracks.get(a).coordinate.equals(LL))
+					{
+						favRacks.add(listofracks.get(a));
+						 ArrayList<String> tmp = new  ArrayList<String>();
+						favRacksCommon.add(tmp);
+					}
+				}
+				
+			}
+			getCommonFavorites();
+		}
+	}
 	
 	/**
 	 * Called when user log in to determine new or returning
@@ -1135,6 +1179,15 @@ public class Rack_City implements EntryPoint {
 	}
 	// ===================== SERVER ASYNC CALLS ENDS ==========================
 	
+	// FAV procedure
+		// login
+		// parse friends
+		// parse fav
+		// assign fav (gets auto called)
+		// getcommonfav (auto calls)
+		// two lists (favRacks, favRacksCommon)
+		// favRacks (My favorite racks), facRacksCommon (friends who also fav them)
+	
 	// ===================== LOGIN PROCEDURE CALLS ============================
 	
 	 private void handleError(Throwable error) 
@@ -1158,6 +1211,36 @@ public class Rack_City implements EntryPoint {
 		messenger(output);
 	}
 	
+	private void getCommonFavorites()
+	{
+		if (!(userFriends.isEmpty() || userFriends == null))
+		{
+			for (int i = 0; i < userFriends.size(); i++)
+			{
+				String[] tmp = userFriends.get(i);
+				parseFav(tmp[0], tmp[1]);
+			}
+		}
+	}
+	
+	private void compareFriendFav(String name, ArrayList<String[]> result)
+	{
+		if (!(result.isEmpty() || result == null))
+		{
+			for (int i = 0; i < result.size(); i++)
+			{
+				String[] fav = result.get(i);
+				String fLL = fav[1];
+				for (int a = 0; a < favRacks.size(); a++)
+				{
+					if (fLL.equals(favRacks.get(a).getCoordinate()))
+					{
+						favRacksCommon.get(a).add(name);
+					}
+				}
+			}
+		}
+	}
 	
 	private void getUserFriends()
 	{
@@ -1284,7 +1367,6 @@ public class Rack_City implements EntryPoint {
 											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
 											
 											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL);
-											Add2Fav (userId, "YO", LatLng.newInstance(0, 0));
 											loginButton.setText(userName);
 											getUserFriends();
 										}
