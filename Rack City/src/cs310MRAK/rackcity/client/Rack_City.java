@@ -3,6 +3,8 @@ package cs310MRAK.rackcity.client;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.api.gwt.client.GoogleApiRequestTransport;
@@ -20,6 +22,9 @@ import com.google.gwt.core.client.Callback;
 //======================== ^ G+ ============================
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -75,7 +80,8 @@ import cs310MRAK.rackcity.shared.LoginInfo;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Rack_City implements EntryPoint {
-	RootPanel rootPanel;
+	private ListHandler<BikeRack> sortHandler = new ListHandler<BikeRack>(Collections.<BikeRack>emptyList());
+	private RootPanel rootPanel;
 	private MapWidget googleMap = null;
 	private DockPanel dockPanel = null;
 	private Marker currentMarker = null;
@@ -384,17 +390,18 @@ public class Rack_City implements EntryPoint {
 	private void GUIsetup()
 	{
 		rootPanel = RootPanel.get();
-		rootPanel.setSize("1160px", "637px");
+		rootPanel.setSize("1000px", "700px");
 		dockPanel = new DockPanel();
 		rootPanel.add(dockPanel, 10, 0);
-		dockPanel.setSize("1150px", "627px");
+		dockPanel.setSize("1000px", "700px");
 		
 		 //* Filling out the Root and Dock Panels with Horizontal and Absolute Panels
 		 
 		HorizontalPanel leftUserInputPanel = new HorizontalPanel();
+		leftUserInputPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 		dockPanel.add(leftUserInputPanel, DockPanel.WEST);
 		dockPanel.setCellVerticalAlignment(leftUserInputPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		leftUserInputPanel.setSize("200px", "500px");
+		leftUserInputPanel.setSize("200px", "600px");
 		leftUserInputPanel.setBorderWidth(1);
 
 		AbsolutePanel userInputPanel = new AbsolutePanel();
@@ -537,10 +544,95 @@ public class Rack_City implements EntryPoint {
 					currentMarker = null;
 				}
 
-				googleMap.setVisible(false);
-				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
-
-				//TODO INSERT CODE HERE to add the fetched list from the filter class
+				if(currentRackList != null || !currentRackList.isEmpty()){
+					googleMap.setVisible(false);
+					((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
+	
+					//TODO INSERT CODE HERE to add the fetched list from the filter class
+					DataGrid<BikeRack> rackDataGrid = new DataGrid<BikeRack>();
+					rackDataGrid.addColumnSortHandler(sortHandler);
+					rackViewPanel.add(rackDataGrid, 0, 0);
+					rackDataGrid.setSize("700px", "500px");
+					
+					TextColumn<BikeRack> addressCol = new TextColumn<BikeRack>() {
+						@Override
+						public String getValue(BikeRack rack) {
+							return rack.getAddress();
+						}
+					};
+					addressCol.setSortable(true);
+					rackDataGrid.addColumn(addressCol, "Address");
+					sortHandler.setComparator(addressCol, new Comparator<BikeRack>() {
+						public int compare(BikeRack o1, BikeRack o2) {
+							//implement comparator for address
+							return 0;
+						}
+					});
+					
+					
+					TextColumn<BikeRack> coordinatesCol = new TextColumn<BikeRack>() {
+						@Override
+						public String getValue(BikeRack rack) {
+							return rack.getCoordinate().toString();
+						}
+					};
+					rackDataGrid.addColumn(coordinatesCol, "Coordinates");
+					
+					
+					TextColumn<BikeRack> distanceCol = new TextColumn<BikeRack>() {
+						@Override
+						public String getValue(BikeRack rack) {
+							return Double.toString(round(calcLatLngDistance(rack.getCoordinate()), 2));
+						}
+					};
+					distanceCol.setSortable(true);
+					sortHandler.setComparator(distanceCol, new Comparator<BikeRack>() {
+						public int compare(BikeRack o1, BikeRack o2) {
+							//implement comparator for distance
+							return 0;
+						}
+					});
+					rackDataGrid.addColumn(distanceCol, "Distance from you");
+					
+					
+					TextColumn<BikeRack> ratingCol = new TextColumn<BikeRack>() {
+						@Override
+						public String getValue(BikeRack rack) {
+							return Double.toString(rack.getRating());
+						}
+					};
+					ratingCol.setSortable(true);
+					sortHandler.setComparator(ratingCol, new Comparator<BikeRack>() {
+						public int compare(BikeRack o1, BikeRack o2) {
+							//implement comparator for rating
+							return 0;
+						}
+					});
+					ratingCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+					rackDataGrid.addColumn(ratingCol, "Rating");
+					
+					TextColumn<BikeRack> crimeScoreCol = new TextColumn<BikeRack>() {
+						@Override
+						public String getValue(BikeRack rack) {
+							return Integer.toString(rack.getCrimeScore());
+						}
+					};
+					crimeScoreCol.setSortable(true);
+					sortHandler.setComparator(crimeScoreCol, new Comparator<BikeRack>() {
+						public int compare(BikeRack o1, BikeRack o2) {
+							//implement comparator for crime score
+							return 0;
+						}
+					});
+					rackDataGrid.addColumn(crimeScoreCol, "Crime Score");
+					
+					rackDataGrid.setRowData(currentRackList);
+					((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackDataGrid);
+					
+				}
+				
+				
+				/*
 				final ListBox rackList = new ListBox();
 				rackList.addChangeHandler(new ChangeHandler() {
 					public void onChange(ChangeEvent event) {
@@ -566,6 +658,7 @@ public class Rack_City implements EntryPoint {
 						}
 					}
 				});
+				
 				rackList.setSize("700px", "500px");
 				rackList.setVisibleItemCount(10);
 
@@ -576,8 +669,8 @@ public class Rack_City implements EntryPoint {
 								round(calcLatLngDistance(rack.getCoordinate()), 2));
 					}
 				}
+				*/
 				
-				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackList);
 			}
 		});
 		datasheetViewButton.setText("Datasheet View");
