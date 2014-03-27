@@ -1403,7 +1403,7 @@ public class Rack_City implements EntryPoint {
 											userId = js.get("id").isString().stringValue();
 											userImageURL = js.get("image").isObject().get("url").isString().stringValue();
 											userImageURL = userImageURL.substring(0, userImageURL.length() - 2) + "20";
-											System.out.println(userImageURL);
+											//System.out.println(userImageURL);
 											userGender = js.get("gender").isString().stringValue();
 											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
 											
