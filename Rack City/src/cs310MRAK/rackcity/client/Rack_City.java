@@ -587,7 +587,7 @@ public class Rack_City implements EntryPoint {
 					};
 					distanceCol.setSortable(true);
 					sortHandler.setComparator(distanceCol, new Comparator<BikeRack>() {
-						public int compare(BikeRack o1, BikeRack o2) {
+						public int compare(BikeRack r2, BikeRack r1) {
 							//implement comparator for distance
 							return 0;
 						}
