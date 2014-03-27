@@ -4,8 +4,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("grabData")
-public interface FTPservice extends RemoteService{
+public interface URLservice extends RemoteService{
 
-	public void adminConnection();
-	
+public void adminConnection();
+
 }

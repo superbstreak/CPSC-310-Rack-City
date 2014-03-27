@@ -17,20 +17,11 @@
 
   <servlet-mapping>
     <servlet-name>RackFavouritesService</servlet-name>
-    <url-pattern>/rackcity/rackfavouritesservice</url-pattern>
+    <url-pattern>/rack_city/rackfavouritesservice</url-pattern>
   </servlet-mapping>
   
   
    <!-- Servlets !! change to Google+ After Sprint -->
-  <servlet>
-    <servlet-name>loginService</servlet-name>
-    <servlet-class>cs310MRAK.rackcity.server.LoginServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>loginService</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
   
    <!-- Servlets for bike racks -->  
   <servlet>
@@ -44,7 +35,7 @@
     <url-pattern>/rack_city/rack</url-pattern>
   </servlet-mapping>
   
-  <!-- Servlets for bike racks -->  
+  <!-- Servlets for crimes -->  
   <servlet>
     <servlet-name>crimeService</servlet-name>
     <servlet-class>cs310MRAK.rackcity.server.crimeServiceImpl</servlet-class>
@@ -56,22 +47,34 @@
     <url-pattern>/rack_city/crime</url-pattern>
   </servlet-mapping>
   
+    <!-- Servlets for userInfo -->  
+  <servlet>
+    <servlet-name>userService</servlet-name>
+    <servlet-class>cs310MRAK.rackcity.server.userServiceImpl</servlet-class>
+  </servlet>
+ 
+ 
+  <servlet-mapping>
+    <servlet-name>userService</servlet-name>
+    <url-pattern>/rack_city/userinfo</url-pattern>
+  </servlet-mapping>
+  
   
   
   
   <!-- Servlet for FTP Connection. Or maybe we'll have to use dropbox. wtf -->
 
  
-<!--    <servlet> -->
-<!--     <servlet-name>FTPservice</servlet-name> -->
-<!--     <servlet-class>cs310MRAK.rackcity.server.FTPserviceImpl</servlet-class> -->
-<!--      </servlet> -->
+    <servlet> 
+     <servlet-name>URLservice</servlet-name> 
+     <servlet-class>cs310MRAK.rackcity.server.URLserviceImpl</servlet-class> 
+      </servlet> 
  
  
-<!--   <servlet-mapping> -->
-<!--     <servlet-name>FTPservice</servlet-name> -->
-<!--     <url-pattern>/rack_city/grabData</url-pattern> -->
-<!--   </servlet-mapping> -->
+   <servlet-mapping> 
+     <servlet-name>URLservice</servlet-name> 
+     <url-pattern>/rack_city/grabData</url-pattern> 
+   </servlet-mapping> 
   
   
     <!-- https://code.google.com/p/googleappengine/issues/detail?id=8166 -->

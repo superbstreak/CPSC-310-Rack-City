@@ -1,19 +1,15 @@
 package cs310MRAK.rackcity.client;
 
-import com.google.gwt.maps.client.geom.LatLng;
+import java.util.ArrayList;
 import 	com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface RackFavouritesServiceAsync {
 
 	
-	void addFavourite(String rackID, LatLng coordinate,
-			double rating, int rackCount, int crimeScore, AsyncCallback callback);
+	void addToFavorite(String uid, String address, String cooridinate, AsyncCallback<Void> callback);
 	
-	// it's okay to say void even though it's a string array return type, apparently
-	// youtube.com/watch?v=dBZyWq13AQg
-	void getFavourites(AsyncCallback callback);
+	void getFavorite(String uid, AsyncCallback<ArrayList<String[]>> callback);
 	
-	
-	void removeFavourite(String rackID, LatLng coordinate,
-			double rating, int rackCount, int crimeScore, AsyncCallback callback);
+
+	void removeFavorite(String uid, String cooridinate, AsyncCallback<Void> callback);
 }

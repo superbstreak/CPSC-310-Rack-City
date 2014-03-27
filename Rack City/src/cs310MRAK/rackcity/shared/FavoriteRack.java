@@ -1,4 +1,4 @@
-package cs310MRAK.rackcity.server;
+package cs310MRAK.rackcity.shared;
 
 import java.util.Date;
 
@@ -9,50 +9,43 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class Crime{
+public class FavoriteRack{
 	
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private String pos;
+	private String uid;
 	@Persistent
-	private int year;
+	private String Address;
+	@Persistent
+	private String Position;
 	@Persistent
 	private Date createDate;
 	
 	//a good way to use constructor
-		public Crime() {
+		public FavoriteRack() {
 			this.createDate = new Date();
 		}
 	 
 	
-	public Crime(int year, String p)
+	public FavoriteRack(String id, String address, String position)
 	{
 		this();
-		this.year = year;
-		this.pos = p;
+		this.uid = id;
+		this.Address =  address;
+		this.Position = position;
 	}
 	
-	//======== Address
-	public int getYear()
+	public String getUid()
 	{
-		return this.year;
+		return this.uid;
 	}
-	
-	public void setYear(int y)
+	public String getAddress()
 	{
-		this.year = y;
+		return this.Address;
 	}
-	
-	//========= LAtLng
-	public String getLL()
+	public String getPosition()
 	{
-		return this.pos;
+		return this.Position;
 	}
-	
-	public void setLL(String p)
-	{
-		this.pos = p;
-	}
-	
 }
