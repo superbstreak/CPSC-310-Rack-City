@@ -110,14 +110,20 @@ public class Rack_City implements EntryPoint {
 	public void onModuleLoad() {
 		
 		// ========== Issue #72 ==========
-//		
-//		
-//			
-//		
-//			
-//			
-//		
-// 		
+		URLserviceAsync ftpService = GWT.create(URLservice.class);
+		AsyncCallback callback = new AsyncCallback<Void>()
+				{
+					public void onFailure(Throwable error)
+					{
+						Window.alert("Failed URL.");
+						handleError(error);
+					}
+					public void onSuccess(Void ignore)
+					{
+						Window.alert("Success URL");
+					}};
+		ftpService.adminConnection(callback);
+
 		
 		if (initialsync == 0)
 		{	
