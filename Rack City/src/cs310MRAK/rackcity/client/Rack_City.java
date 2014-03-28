@@ -482,13 +482,14 @@ public class Rack_City implements EntryPoint {
 							if(!ratingCombo.getValue(ratingCombo.getSelectedIndex()).equals("")){
 
 								// task 45
-								if(!userEmail.isEmpty()){
+								if(!(userEmail.isEmpty() && userId.isEmpty())){
 									// String userID, String searchAddress, String radius, String crimeScore
 									String userID = userId;
 									String searchAddress = txtbxAddress.getText();
-									String radius = Integer.toString(radiusCombo.getSelectedIndex());
-									String crimeScore = Integer.toString(crimeCombo.getSelectedIndex());
-									System.out.println("userID: "+userID+", searchAddress: "+searchAddress+", radius: "+radius+", crimeScore: "+crimeScore+".");
+									int radius = radiusCombo.getSelectedIndex();
+									int crimeScore = crimeCombo.getSelectedIndex();
+									int rateVal = ratingCombo.getSelectedIndex();
+									AddUserSearchHistory(userID, searchAddress, radius, crimeScore, rateVal);
 								}
 								// now call the function and will need to make  db parse function to call on it 
 
@@ -1129,7 +1130,7 @@ public class Rack_City implements EntryPoint {
 	/**
 	 *call when new user is logged in to G+
 	 */
-	private void AddUserSearchHistory(String userID, String searchAddress, String radius, String crimeScore)
+	private void AddUserSearchHistory(String userID, String searchAddress, int radius, int crimeScore, int rate)
 	{
 		if (uService == null) 
 		{
@@ -1148,7 +1149,7 @@ public class Rack_City implements EntryPoint {
 				// no messages
 			}
 				};
-				uService.addUserSearchHistoryInstance(userID, searchAddress, radius, crimeScore, callback);
+				uService.addUserSearchHistoryInstance(userID, searchAddress, radius, crimeScore, rate, callback);
 	}
 
 	/**
@@ -1642,6 +1643,8 @@ public class Rack_City implements EntryPoint {
 			userGender = "";
 			userIsPlus = false;
 			userFriends = new ArrayList<String[]>();
+			favRacks = new ArrayList<BikeRack>();
+			favRacksCommon = new ArrayList< ArrayList<String>>();
 			messenger("Successfully cleared all tokens and signed out");
 			loginButton.setText("Sign in");
 			loginFlipFlop = 0;

@@ -1,4 +1,4 @@
-package cs310MRAK.rackcity.server;
+package cs310MRAK.rackcity.shared;
 
 import java.util.Date;
 
@@ -18,9 +18,11 @@ public class UserSearchHistoryInstance {
 		@Persistent
 		private String searchAddress; // "vancouver"
 		@Persistent
-		private String radius; // "2"
+		private int radius; // "2"
 		@Persistent
-		private String crimeScore; // "5"
+		private int crimeScore; // "5"
+		@Persistent
+		private int rating;
 		@Persistent
 		private Date createDate;
 		
@@ -30,17 +32,25 @@ public class UserSearchHistoryInstance {
 			}
 		 
 		 
-		public UserSearchHistoryInstance(String userID, String searchAddress, String radius, String crimeScore)
+		public UserSearchHistoryInstance(String userID, String searchAddress, int radius, int crimeScore, int rate)
 		{
 			this();
 			this.userID = userID;
 			this.searchAddress = searchAddress;
 			this.radius = radius;
 			this.crimeScore = crimeScore;
+			this.rating = rate;
 		}
 
-
-
+		public int getRating()
+		{
+			return this.rating;
+		}
+		
+		public void setRating(int rate)
+		{
+			this.rating = rate;
+		}
 
 
 
@@ -80,7 +90,7 @@ public class UserSearchHistoryInstance {
 
 
 
-		public String getRadius() {
+		public int getRadius() {
 			return radius;
 		}
 
@@ -89,7 +99,7 @@ public class UserSearchHistoryInstance {
 
 
 
-		public void setRadius(String radius) {
+		public void setRadius(int radius) {
 			this.radius = radius;
 		}
 
@@ -98,7 +108,7 @@ public class UserSearchHistoryInstance {
 
 
 
-		public String getCrimeScore() {
+		public int getCrimeScore() {
 			return crimeScore;
 		}
 
@@ -107,7 +117,7 @@ public class UserSearchHistoryInstance {
 
 
 
-		public void setCrimeScore(String crimeScore) {
+		public void setCrimeScore(int crimeScore) {
 			this.crimeScore = crimeScore;
 		}
   

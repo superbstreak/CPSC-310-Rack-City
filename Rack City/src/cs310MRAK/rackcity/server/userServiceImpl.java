@@ -11,6 +11,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import cs310MRAK.rackcity.client.userService;
 import cs310MRAK.rackcity.shared.UserInfo;
+import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 
 public class userServiceImpl  extends RemoteServiceServlet implements userService{
 
@@ -165,12 +166,12 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 	}
 	
 	@Override
-	public void addUserSearchHistoryInstance(String userID, String searchAddress, String radius, String crimeScore) {
+	public void addUserSearchHistoryInstance(String userID, String searchAddress, int radius, int crimeScore, int rate) {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = getPersistenceManager();
 		try
 		{
-			pm.makePersistent(new UserSearchHistoryInstance(userID, searchAddress, radius, crimeScore));
+			pm.makePersistent(new UserSearchHistoryInstance(userID, searchAddress, radius, crimeScore, rate));
 		}
 		finally
 		{
