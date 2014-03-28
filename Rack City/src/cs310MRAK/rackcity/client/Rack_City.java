@@ -954,11 +954,11 @@ public class Rack_City implements EntryPoint {
 	 */
 	private BikeRack getRack(LatLng latlng){
 		for (BikeRack rack : currentRackList){
-			if(rack.getCoordinate().equals(latlng)){
+			if(rack.getCoordinate().getLatitude() == latlng.getLatitude() && rack.getCoordinate().getLongitude() == latlng.getLongitude()){
 				return rack;
 			}
 		}
-
+		
 		return null;
 	}
 
