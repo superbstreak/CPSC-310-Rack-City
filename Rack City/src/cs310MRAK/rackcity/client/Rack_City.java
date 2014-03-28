@@ -288,7 +288,10 @@ public class Rack_City implements EntryPoint {
 					TextColumn<BikeRack> coordinatesCol = new TextColumn<BikeRack>() {
 						@Override
 						public String getValue(BikeRack rack) {
-							return rack.getCoordinate().toString();
+							double roundedLat = round(rack.getCoordinate().getLatitude(), 4);
+							double roundedLng = round(rack.getCoordinate().getLongitude(), 4);
+							LatLng roundedCoord = LatLng.newInstance(roundedLat, roundedLng);
+							return roundedCoord.toString();
 						}
 					};
 					rackDataGrid.addColumn(coordinatesCol, "Coordinates");
