@@ -288,10 +288,7 @@ public class Rack_City implements EntryPoint {
 					TextColumn<BikeRack> coordinatesCol = new TextColumn<BikeRack>() {
 						@Override
 						public String getValue(BikeRack rack) {
-							double roundedLat = round(rack.getCoordinate().getLatitude(), 4);
-							double roundedLng = round(rack.getCoordinate().getLongitude(), 4);
-							LatLng roundedCoord = LatLng.newInstance(roundedLat, roundedLng);
-							return roundedCoord.toString();
+							return rack.getCoordinate().toString();
 						}
 					};
 					rackDataGrid.addColumn(coordinatesCol, "Coordinates");
@@ -510,7 +507,7 @@ public class Rack_City implements EntryPoint {
 										Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())),
 										Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
 										Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
-								
+
 								Button showCrimeButton = new Button("showCrimeButton");
 								showCrimeButton.setSize("180px", "30px");
 								if (isCrimeShown) {
@@ -521,6 +518,11 @@ public class Rack_City implements EntryPoint {
 								}
 								showCrimeButton.addClickHandler(new ClickHandler() {
 									public void onClick(ClickEvent event) {
+										for (Crime crime : currentCrimeList) {
+											//System.out.println("Crime Coordinate: " + crime.getCoordinate());
+											hideMarker(crime.getCoordinate(), 3);
+										}
+
 										showOrHideCrimes();
 									}
 
@@ -669,7 +671,7 @@ public class Rack_City implements EntryPoint {
 							//System.out.println("Crime Coordinate: " + crime.getCoordinate());
 							addMarker(crime.getCoordinate(), 3);
 						}
-						
+
 						isCrimeShown = false;
 					}
 				}
@@ -879,42 +881,42 @@ public class Rack_City implements EntryPoint {
 	}
 
 	// google icon file from here: https://sites.google.com/site/gmapicons/
-		// add markers onto the map. Add marker overlay for each latlng within a list, center at address
-		private void hideMarker(LatLng pos, int type)
+	// add markers onto the map. Add marker overlay for each latlng within a list, center at address
+	private void hideMarker(LatLng pos, int type)
+	{
+		if (type == 1)		// search address: ME (blue)
 		{
-			if (type == 1)		// search address: ME (blue)
-			{
-				MarkerOptions markerOptions = MarkerOptions.newInstance();
-				markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));
-				if (!userImageURL.isEmpty() || userImageURL == null)  
-					markerOptions.setIcon(Icon.newInstance(userImageURL));
-				Marker mark = new Marker(pos, markerOptions);
-				googleMap.removeOverlay(mark);
-			}
-			else if (type == 2)		// bike racks: GREEN, !!!!! SHOULD HAVE DIFFERENT COLOR BASED ON RACK#
-			{
-				MarkerOptions markerOptions = MarkerOptions.newInstance();
-				markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_green.png"));
-				Marker mark = new Marker(pos, markerOptions);
-				googleMap.removeOverlay(mark);
-			}
-			else if (type == 3)		// crime place: RED
-			{
-				MarkerOptions markerOptions = MarkerOptions.newInstance();
-				markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_red.png"));
-				Marker mark = new Marker(pos, markerOptions);
-				googleMap.removeOverlay(mark);
-			}
-			/* set listener if the marker is pressed (single)
+			MarkerOptions markerOptions = MarkerOptions.newInstance();
+			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));
+			if (!userImageURL.isEmpty() || userImageURL == null)  
+				markerOptions.setIcon(Icon.newInstance(userImageURL));
+			Marker mark = new Marker(pos, markerOptions);
+			googleMap.removeOverlay(mark);
+		}
+		else if (type == 2)		// bike racks: GREEN, !!!!! SHOULD HAVE DIFFERENT COLOR BASED ON RACK#
+		{
+			MarkerOptions markerOptions = MarkerOptions.newInstance();
+			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_green.png"));
+			Marker mark = new Marker(pos, markerOptions);
+			googleMap.removeOverlay(mark);
+		}
+		else if (type == 3)		// crime place: RED
+		{
+			MarkerOptions markerOptions = MarkerOptions.newInstance();
+			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_red.png"));
+			Marker mark = new Marker(pos, markerOptions);
+			googleMap.removeOverlay(mark);
+		}
+		/* set listener if the marker is pressed (single)
 					mark.addMarkerClickHandler(new MarkerClickHandler() {
 						@Override
 						public void onClick(MarkerClickEvent event) {
 
 						}
 					});
-			 */
-		}
-	
+		 */
+	}
+
 	/**
 	 * Code adapted from http://stackoverflow.com/questions/837872/calculate-distance-in-meters-when-you-know-longitude-and-latitude-in-java
 	 * Takes in a LatLng point and calculates the distance away from the current searched location
