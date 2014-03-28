@@ -1369,7 +1369,7 @@ public class Rack_City implements EntryPoint {
 				//System.out.println("butwhy" + addr+", "+LL+", "+rate+", "+rackN+", "+cs+", "+stolenN);
 				double rateDouble = Double.parseDouble(rate);
 				int intRackN = Integer.parseInt(rackN);
-				int intcs = Integer.parseInt(cs);
+				double intcs = Double.parseDouble(cs);
 				int intstolenN = Integer.parseInt(stolenN);
 				//System.out.println("butwhy" + addr+", "+LL+", "+rateDouble+", "+intRackN+", "+intcs+", "+intstolenN);
 				listofracks.add(new BikeRack (addr, LL, Double.parseDouble(rate), Integer.parseInt(rackN), Integer.parseInt(cs), Integer.parseInt(stolenN)));

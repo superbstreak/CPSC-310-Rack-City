@@ -25,7 +25,7 @@ public class BikeRack {
 	// TODO: will need to add User object to the constructor as well
 	// TODO: make @persistent
 
-	public BikeRack(String address, String coordinate, double rating, int rackCount, int crimeScore, int numberStolenBikes){
+	public BikeRack(String address, String coordinate, double rating, int rackCount, double crimeScore, int numberStolenBikes){
 		this.address = address;
 		this.coordinate = coordinate;
 		this.rating = rating;
