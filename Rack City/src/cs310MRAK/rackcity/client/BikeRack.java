@@ -18,7 +18,7 @@ public class BikeRack {
 	public String coordinate;
 	public double rating;
 	public int rackCount;
-	public int crimeScore;
+	public double crimeScore;
 	private int numberStolenBikes;
 
 
@@ -60,7 +60,7 @@ public class BikeRack {
 		return this.rackCount;
 	}
 
-	public int getCrimeScore() {
+	public double getCrimeScore() {
 		return this.crimeScore;
 	}
 
@@ -72,7 +72,7 @@ public class BikeRack {
 		this.rating = newRating;
 	}
 
-	public void setCrimeScore(int newCrimeScore) {
+	public void setCrimeScore(double newCrimeScore) {
 		this.crimeScore = newCrimeScore;
 	}
 
@@ -80,7 +80,7 @@ public class BikeRack {
 		this.numberStolenBikes++;
 
 		int currNumStolenBikes = this.numberStolenBikes;
-		int currCrimeScore = this.getCrimeScore();
+		double currCrimeScore = this.getCrimeScore();
 		int mod = 10;
 
 		if (currNumStolenBikes % mod == 0

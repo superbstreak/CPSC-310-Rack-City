@@ -328,7 +328,7 @@ public class Rack_City implements EntryPoint {
 					TextColumn<BikeRack> crimeScoreCol = new TextColumn<BikeRack>() {
 						@Override
 						public String getValue(BikeRack rack) {
-							return Integer.toString(rack.getCrimeScore());
+							return Double.toString(round(rack.getCrimeScore(), 1));
 						}
 					};
 					crimeScoreCol.setSortable(true);
