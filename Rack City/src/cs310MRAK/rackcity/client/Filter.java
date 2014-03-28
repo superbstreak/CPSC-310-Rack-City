@@ -28,7 +28,7 @@ public class Filter {
 	 * @param crimeScore
 	 * @return
 	 */
-	public List<BikeRack> getFilteredRackList(LatLng myLocation, double radius, double rating, int crimeScore) {
+	public List<BikeRack> getFilteredRackList(LatLng myLocation, double radius, double rating, double crimeScore) {
 		
 		List<BikeRack> filteredRackList = new ArrayList<BikeRack>();
 		

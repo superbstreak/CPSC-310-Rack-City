@@ -624,7 +624,7 @@ public class Rack_City implements EntryPoint {
 	 * @param crimeScore - Only display racks that have > input crime score
 	 * @param rating - Only display racks that have > input rating
 	 */
-	private void addMapOverlay(final String address, final double radius, final int crimeScore, final double rating){
+	private void addMapOverlay(final String address, final double radius, final double crimeScore, final double rating){
 
 		//Geocodes the address that the user inputs and creates a latlong opbject
 		Geocoder latLongAddress = new Geocoder();
@@ -1151,7 +1151,7 @@ public class Rack_City implements EntryPoint {
 	 * type == 0: REMOVE OPERATION. require LatLng
 	 * type == 1: ADD OPERATION. require all parameters
 	 */
-	private void rackOps(String a, LatLng p, int rn, int s, int cs, int r, int type)
+	private void rackOps(String a, LatLng p, int rn, int s, double cs, double r, int type)
 	{
 		if (type == 0)		// delete rack
 		{
