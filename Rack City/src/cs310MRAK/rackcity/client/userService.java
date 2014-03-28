@@ -1,7 +1,11 @@
 package cs310MRAK.rackcity.client;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+
+import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 
 @RemoteServiceRelativePath("userinfo")
 public interface userService extends RemoteService {
@@ -12,6 +16,9 @@ public interface userService extends RemoteService {
 	
 	// checker 
 	public Boolean hasUser(String id);
+	
+	// getter
+	public ArrayList<UserSearchHistoryInstance> getHistory(String uid);
 	
 	// updater
 	public void changeUserName(String id, String newName);

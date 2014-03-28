@@ -1,5 +1,6 @@
 package cs310MRAK.rackcity.server;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -177,6 +178,30 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 		{
 			pm.close();
 		}
+	}
+
+	@Override
+	public ArrayList<UserSearchHistoryInstance> getHistory(String uid) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		ArrayList<UserSearchHistoryInstance> fin = new ArrayList<UserSearchHistoryInstance>();
+		try
+		{
+			String query = "select from " +  UserSearchHistoryInstance.class.getName();
+			List<UserSearchHistoryInstance> UserSearchHistoryInstances = (List<UserSearchHistoryInstance>) pm.newQuery(query).execute();
+			for (UserSearchHistoryInstance r: UserSearchHistoryInstances)
+			{
+				if (r.getUserID().equals(uid))
+				{
+					fin.add(r);
+				}
+			}
+		}
+		finally
+		{
+			pm.close();
+		}
+		return fin;
 	}
 	
 }

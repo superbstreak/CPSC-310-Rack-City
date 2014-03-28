@@ -61,6 +61,8 @@ import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
 
+import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -104,6 +106,7 @@ public class Rack_City implements EntryPoint {
 	private ArrayList<String[]> userFriends = new ArrayList<String[]>();
 	private ArrayList<BikeRack> favRacks = new ArrayList<BikeRack>();
 	private ArrayList< ArrayList<String>> favRacksCommon = new ArrayList< ArrayList<String>>();
+	private ArrayList<UserSearchHistoryInstance> userHistory = new ArrayList<UserSearchHistoryInstance>();
 
 	// Server stuff
 	private rackServiceAsync rService = GWT.create(rackService.class);
@@ -490,6 +493,10 @@ public class Rack_City implements EntryPoint {
 									int crimeScore = crimeCombo.getSelectedIndex();
 									int rateVal = ratingCombo.getSelectedIndex();
 									AddUserSearchHistory(userID, searchAddress, radius, crimeScore, rateVal);
+								}
+								if(userEmail.isEmpty() && userId.isEmpty()){
+									messenger("Please login to save your precious search history! :P");
+
 								}
 								// now call the function and will need to make  db parse function to call on it 
 
@@ -1151,6 +1158,42 @@ public class Rack_City implements EntryPoint {
 				};
 				uService.addUserSearchHistoryInstance(userID, searchAddress, radius, crimeScore, rate, callback);
 	}
+	
+	private void getUserSearchHistory(String uid)
+	{
+		if (!uid.isEmpty())
+		{
+			//======== PARSE FROM DB =============
+			if (uService == null) {
+				uService = GWT.create(userService.class);
+			}
+
+			uService.getHistory(uid, new AsyncCallback<ArrayList<UserSearchHistoryInstance>>()
+			{
+
+				@Override
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+					messenger("Server ERROR: GET-HISTORY");
+				}
+
+				@Override
+				public void onSuccess(
+						ArrayList<UserSearchHistoryInstance> result) {
+					// TODO Auto-generated method stub
+					assignUserHistory(result);
+				}
+				
+			});
+				
+		}
+	}
+	
+	private void assignUserHistory(ArrayList<UserSearchHistoryInstance> result)
+	{
+		userHistory = new ArrayList<UserSearchHistoryInstance>();
+		userHistory = result;
+	}
 
 	/**
 	 * Call rackOps (Admin only): 
@@ -1640,11 +1683,10 @@ public class Rack_City implements EntryPoint {
 			userToken = "";
 			userId = "";
 			userImageURL = "";
-			userGender = "";
-			userIsPlus = false;
 			userFriends = new ArrayList<String[]>();
 			favRacks = new ArrayList<BikeRack>();
 			favRacksCommon = new ArrayList< ArrayList<String>>();
+			userHistory = new ArrayList<UserSearchHistoryInstance>();
 			messenger("Successfully cleared all tokens and signed out");
 			loginButton.setText("Sign in");
 			loginFlipFlop = 0;

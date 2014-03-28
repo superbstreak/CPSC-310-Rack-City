@@ -1,6 +1,10 @@
 package cs310MRAK.rackcity.client;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 
 public interface userServiceAsync {
 		
@@ -10,6 +14,9 @@ public interface userServiceAsync {
 		
 		// checker
 		void hasUser(String id, AsyncCallback<Boolean> callback);
+		
+		// getter
+		void getHistory (String uid, AsyncCallback<ArrayList<UserSearchHistoryInstance>> callback);
 		
 		// updater
 		void changeUserName(String id, String newName, AsyncCallback<Void> callback);
