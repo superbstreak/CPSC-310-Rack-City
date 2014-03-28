@@ -200,7 +200,7 @@ public class Rack_City implements EntryPoint {
 			public void onClick(ClickEvent event) {
 
 				startLoginProcess(loginButton);
-
+				getUserSearchHistory(userId);
 
 			}
 		});
