@@ -490,8 +490,11 @@ public class Rack_City implements EntryPoint {
 									String userID = userId;
 									String searchAddress = txtbxAddress.getText();
 									int radius = radiusCombo.getSelectedIndex();
-									int crimeScore = crimeCombo.getSelectedIndex();
-									int rateVal = ratingCombo.getSelectedIndex();
+									if (radius == 1) radius = 0;
+									else if (radius == 2)radius = 1;
+									else  if (radius == 3) radius = 2;
+									int crimeScore = crimeCombo.getSelectedIndex() - 1;
+									int rateVal = ratingCombo.getSelectedIndex() - 1;
 									AddUserSearchHistory(userID, searchAddress, radius, crimeScore, rateVal);
 								}
 								if(userEmail.isEmpty() && userId.isEmpty()){
