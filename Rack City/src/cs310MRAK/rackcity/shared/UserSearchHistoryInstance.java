@@ -12,9 +12,10 @@ import javax.jdo.annotations.PrimaryKey;
 public class UserSearchHistoryInstance {
 
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
-		@PrimaryKey
+		
 		@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 		private String userID; // gmail address
+		@PrimaryKey
 		@Persistent
 		private String searchAddress; // "vancouver"
 		@Persistent
@@ -23,6 +24,7 @@ public class UserSearchHistoryInstance {
 		private int crimeScore; // "5"
 		@Persistent
 		private int rating;
+		@PrimaryKey
 		@Persistent
 		private Date createDate;
 		
