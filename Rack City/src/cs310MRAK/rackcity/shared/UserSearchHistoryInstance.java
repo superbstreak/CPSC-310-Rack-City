@@ -8,25 +8,29 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+
+
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class UserSearchHistoryInstance {
 
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
 		
-		@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-		private String userID; // gmail address
 		@PrimaryKey
+		@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+		private String key;
+		@Persistent
+		private String userID; // gmail address
 		@Persistent
 		private String searchAddress; // "vancouver"
+		@Persistent
+		private Date createDate;
 		@Persistent
 		private int radius; // "2"
 		@Persistent
 		private int crimeScore; // "5"
 		@Persistent
 		private int rating;
-		@PrimaryKey
-		@Persistent
-		private Date createDate;
+		
 		
 		//a good way to use constructor
 			public UserSearchHistoryInstance() {
@@ -34,9 +38,10 @@ public class UserSearchHistoryInstance {
 			}
 		 
 		 
-		public UserSearchHistoryInstance(String userID, String searchAddress, int radius, int crimeScore, int rate)
+		public UserSearchHistoryInstance(String key, String userID, String searchAddress, int radius, int crimeScore, int rate)
 		{
 			this();
+			this.key = key;
 			this.userID = userID;
 			this.searchAddress = searchAddress;
 			this.radius = radius;

@@ -32,6 +32,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
@@ -1281,7 +1282,17 @@ public class Rack_City implements EntryPoint {
 				// no messages
 			}
 				};
-				uService.addUserSearchHistoryInstance(userID, searchAddress, radius, crimeScore, rate, callback);
+				String key = null;
+				Random r = null;
+				int secGenA = r.nextInt(9999);
+				int secGenB = r.nextInt(9999);
+				int secGenC = r.nextInt(9999);
+				key = String.valueOf(secGenA);
+				String inputkey = userID + searchAddress + String.valueOf(radius) + String.valueOf(crimeScore) + String.valueOf(rate);
+				key = key + inputkey;
+				key = key.substring(0, key.length()/2) + String.valueOf(secGenB) + key.substring(key.length()/2, key.length());
+				key = key + String.valueOf(secGenC);
+				uService.addUserSearchHistoryInstance(key, userID, searchAddress, radius, crimeScore, rate, callback);
 	}
 	
 	private void getUserSearchHistory(String uid)

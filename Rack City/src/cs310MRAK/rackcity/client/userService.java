@@ -12,7 +12,7 @@ public interface userService extends RemoteService {
 	
 	// adder
 	public void addUser(String id, String name,  String email, String gender, Boolean isPlus, String propic);
-	public void addUserSearchHistoryInstance(String userID, String searchAddress, int radius, int crimeScore, int rate);
+	public void addUserSearchHistoryInstance(String key, String userID, String searchAddress, int radius, int crimeScore, int rate);
 	
 	// checker 
 	public Boolean hasUser(String id);

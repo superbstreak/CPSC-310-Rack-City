@@ -167,12 +167,12 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 	}
 	
 	@Override
-	public void addUserSearchHistoryInstance(String userID, String searchAddress, int radius, int crimeScore, int rate) {
+	public void addUserSearchHistoryInstance(String key, String userID, String searchAddress, int radius, int crimeScore, int rate) {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = getPersistenceManager();
 		try
 		{
-			pm.makePersistent(new UserSearchHistoryInstance(userID, searchAddress, radius, crimeScore, rate));
+			pm.makePersistent(new UserSearchHistoryInstance(key, userID, searchAddress, radius, crimeScore, rate));
 		}
 		finally
 		{
