@@ -1289,6 +1289,9 @@ public class Rack_City implements EntryPoint {
 				int secGenC = r.nextInt(9999);
 				key = String.valueOf(secGenA);
 				String inputkey = userID + searchAddress + String.valueOf(radius) + String.valueOf(crimeScore) + String.valueOf(rate);
+				inputkey = inputkey.trim().toLowerCase();
+				if (inputkey.length() > 20)
+					inputkey = inputkey.substring(0, 20);
 				key = key + inputkey;
 				key = key.substring(0, key.length()/2) + String.valueOf(secGenB) + key.substring(key.length()/2, key.length());
 				key = key + String.valueOf(secGenC);
