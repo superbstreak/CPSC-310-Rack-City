@@ -62,6 +62,7 @@ import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
 
+import cs310MRAK.rackcity.server.Rack;
 import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 
 /**
@@ -95,7 +96,7 @@ public class Rack_City implements EntryPoint {
 	private static final String FRIEND_SCOPE = "https://www.googleapis.com/auth/plus.login";
 	private static final String EMAIL_SCOPE = "https://www.googleapis.com/auth/plus.profile.emails.read";
 	private static final Auth AUTH = Auth.get();
-	public int w = 0;
+	public int refreshCount = 0;
 	// User information
 	private String userEmail = "";
 	private String userName = "";
@@ -145,106 +146,50 @@ public class Rack_City implements EntryPoint {
 			GUIsetup();
 
 	}
-
-	private void GUIsetup()
-	{
+	
+	/**
+	 * Generates the user interface when the program is started
+	 */
+	private void GUIsetup(){
 		rootPanel = RootPanel.get();
 		rootPanel.setSize("1200px", "625px");
 		dockPanel = new DockPanel();
 		rootPanel.add(dockPanel, 10, 0);
 		dockPanel.setSize("1200px", "625px");
 
-		//* Filling out the Root and Dock Panels with Horizontal and Absolute Panels
-		
-		//REFACTOR add to createUserInputPanel();
+		createUserInputPanel();
+		createRackView();
+		createTitlePanel();
+		createRackClickPanel();
+	}
+
+	/**
+	 * Creates the panel on the left of the screen that holds the user input objects
+	 */
+	private void createUserInputPanel(){
 		HorizontalPanel leftUserInputPanel = new HorizontalPanel();
 		leftUserInputPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 		dockPanel.add(leftUserInputPanel, DockPanel.WEST);
 		dockPanel.setCellVerticalAlignment(leftUserInputPanel, HasVerticalAlignment.ALIGN_MIDDLE);
 		leftUserInputPanel.setSize("200px", "546px");
-
+		
 		final AbsolutePanel userInputPanel = new AbsolutePanel();
 		leftUserInputPanel.add(userInputPanel);
 		userInputPanel.setSize("200px", "500px");
-
 		
-		//REFACTOR add to createRackView();
-		VerticalPanel centerRackViewPanel = new VerticalPanel();
-		dockPanel.add(centerRackViewPanel, DockPanel.CENTER);
-		dockPanel.setCellVerticalAlignment(centerRackViewPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		centerRackViewPanel.setSize("700px", "500px");
-
-		final AbsolutePanel rackViewPanel = new AbsolutePanel();
-		centerRackViewPanel.add(rackViewPanel);
-		rackViewPanel.setSize("700px","500px");
-
-		
-		//REFACTOR add to createTitlePanel();
-		VerticalPanel titlePanel = new VerticalPanel();
-		dockPanel.add(titlePanel, DockPanel.NORTH);
-		titlePanel.setSize("700px", "40px");
-
-		final AbsolutePanel titleViewPanel = new AbsolutePanel();
-		titlePanel.add(titleViewPanel);
-		titleViewPanel.setSize("700px","40px");
-
-		
-		//REFACTOR add to createRackClickPanel();
-		HorizontalPanel rightRackClickPanel = new HorizontalPanel();
-		dockPanel.add(rightRackClickPanel, DockPanel.EAST);
-		dockPanel.setCellHorizontalAlignment(rightRackClickPanel, HasHorizontalAlignment.ALIGN_RIGHT);
-		dockPanel.setCellVerticalAlignment(rightRackClickPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		rightRackClickPanel.setSize("250px", "500px");
-
-
-
-		//* Adding UI elements to each panel
-
-		//REFACTOR add to createTitlePanel();
-		final Button loginButton = new Button("loginButton");
-		loginButton.setText("Login");
-
-		loginButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-
-				startLoginProcess(loginButton);
-				getUserSearchHistory(userId);
-
-			}
-		});
-		loginButton.setText("Login");
-		titleViewPanel.add(loginButton, 500, 5);
-
-		//REFACTOR add to createTitlePanel();
-		Button adminButton = new Button("adminButton");
-		adminButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-
-				w++;
-				if (w == 3)
-				{
-					messenger("You are 1 click away from requesting for a refectch!");
-				}
-				if (w == 4)
-				{
-					if (userEmail.equals("robwu15@gmail.com") || userEmail.equals("obedientworker@gmail.com") || userEmail.equals("kevin.david.greer@gmail.com") || userEmail.equals("abhisek.pradhan91@gmail.com"))
-					{
-						messenger("Refetch Request Approved");
-						addtolist();
-					}
-					else
-						// dude, amazing. 
-						messenger("Refetch Request Denied. You are not a registered admin");
-					w = 0;
-				}
-			}
-		});
-		adminButton.setText("Admin");
-		titleViewPanel.add(adminButton, 575, 5);
-
-		
-		//REFACTOR add to createUserInputPanel();
-		final TextBox txtbxAddress = new TextBox();
+		createAddressBox(userInputPanel);
+		createDatasheetViewButton(userInputPanel);
+		createMapViewButton(userInputPanel);
+		createUserLabelsCombos(userInputPanel);
+		createSearchButton(userInputPanel);
+	}
+	
+	/**
+	 * Creates the address text box for user input
+	 * @param userInputPanel
+	 */
+	private void createAddressBox(AbsolutePanel userInputPanel){
+		final TextBox txtbxAddress = new TextBox(); //0
 		txtbxAddress.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if(txtbxAddress.getText().equals("Enter Address Here.")){
@@ -256,10 +201,14 @@ public class Rack_City implements EntryPoint {
 		userInputPanel.add(txtbxAddress, 20, 96);
 		txtbxAddress.setSize("145px", "18px");
 		txtbxAddress.setTabIndex(3);
-
-		
-		
-		Button datasheetViewButton = new Button("datasheetViewButton");
+	}
+	
+	/**
+	 * Creates the datasheet view button and implements the DataGrid and click handlers
+	 * @param userInputPanel
+	 */
+	private void createDatasheetViewButton(AbsolutePanel userInputPanel){
+		final Button datasheetViewButton = new Button("datasheetViewButton"); //1
 		datasheetViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
@@ -274,141 +223,112 @@ public class Rack_City implements EntryPoint {
 					currentMarker = null;
 				}
 
-				if(currentRackList != null || !currentRackList.isEmpty()){
+				if(currentRackList != null && !currentRackList.isEmpty()){
+					
 					googleMap.setVisible(false);
 					((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 
-					//TODO INSERT CODE HERE to add the fetched list from the filter class
-					DataGrid<BikeRack> rackDataGrid = new DataGrid<BikeRack>();
-					rackDataGrid.addColumnSortHandler(sortHandler);
-					rackViewPanel.add(rackDataGrid, 0, 0);
-					rackDataGrid.setSize("700px", "500px");
-
-					TextColumn<BikeRack> addressCol = new TextColumn<BikeRack>() {
-						@Override
-						public String getValue(BikeRack rack) {
-							return rack.getAddress();
-						}
-					};
-					addressCol.setSortable(true);
-					rackDataGrid.addColumn(addressCol, "Address");
-					sortHandler.setComparator(addressCol, new Comparator<BikeRack>() {
-						public int compare(BikeRack o1, BikeRack o2) {
-							//implement comparator for address
-							return 0;
-						}
-					});
-
-
-					TextColumn<BikeRack> coordinatesCol = new TextColumn<BikeRack>() {
-						@Override
-						public String getValue(BikeRack rack) {
-							return rack.getCoordinate().toString();
-						}
-					};
-					rackDataGrid.addColumn(coordinatesCol, "Coordinates");
-
-
-					TextColumn<BikeRack> distanceCol = new TextColumn<BikeRack>() {
-						@Override
-						public String getValue(BikeRack rack) {
-							return Double.toString(round(calcLatLngDistance(rack.getCoordinate()), 2));
-						}
-					};
-					distanceCol.setSortable(true);
-					sortHandler.setComparator(distanceCol, new Comparator<BikeRack>() {
-						public int compare(BikeRack r2, BikeRack r1) {
-							//implement comparator for distance
-							return 0;
-						}
-					});
-					rackDataGrid.addColumn(distanceCol, "Distance from you");
-
-
-					TextColumn<BikeRack> ratingCol = new TextColumn<BikeRack>() {
-						@Override
-						public String getValue(BikeRack rack) {
-							return Double.toString(rack.getRating());
-						}
-					};
-					ratingCol.setSortable(true);
-					sortHandler.setComparator(ratingCol, new Comparator<BikeRack>() {
-						public int compare(BikeRack o1, BikeRack o2) {
-							//implement comparator for rating
-							return 0;
-						}
-					});
-					ratingCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-					rackDataGrid.addColumn(ratingCol, "Rating");
-
-					TextColumn<BikeRack> crimeScoreCol = new TextColumn<BikeRack>() {
-						@Override
-						public String getValue(BikeRack rack) {
-							return Double.toString(round(rack.getCrimeScore(), 1));
-						}
-					};
-					crimeScoreCol.setSortable(true);
-					sortHandler.setComparator(crimeScoreCol, new Comparator<BikeRack>() {
-						public int compare(BikeRack o1, BikeRack o2) {
-							//implement comparator for crime score
-							return 0;
-						}
-					});
-					rackDataGrid.addColumn(crimeScoreCol, "Crime Score");
-
-					rackDataGrid.setRowData(currentRackList);
-					((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackDataGrid);
-
-				}
-
-
-				/*
-				final ListBox rackList = new ListBox();
-				rackList.addChangeHandler(new ChangeHandler() {
-					public void onChange(ChangeEvent event) {
-						String temp = rackList.getValue((rackList.getSelectedIndex())); //gets selected value from listbox
-						String tmpLat = temp.substring(1, temp.indexOf(","));
-						String tmpLng = temp.substring(temp.indexOf(",")+2,temp.length());
-
-						double lat,lng;
-
-						lat = Double.parseDouble(tmpLat);
-						lng = Double.parseDouble(tmpLng);
-
-						if(currentDatasheetItem != null && !currentDatasheetItem.equals(temp)){
-							currentDatasheetItem = temp;
-							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-							clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
-						}else if (currentDatasheetItem.equals(temp)){
-							//do nothing
-						}
-						else{
-							currentDatasheetItem = temp;
-							clickRackDisplayPanel(getRack(LatLng.newInstance(lat, lng)));
-						}
-					}
-				});
-
-				rackList.setSize("700px", "500px");
-				rackList.setVisibleItemCount(10);
-
-				if(currentRackList != null || !currentRackList.isEmpty()){
-					for (BikeRack rack : currentRackList){
-						rackList.addItem("(" + rack.getCoordinate().getLatitude() + ", " + 
-								rack.getCoordinate().getLongitude() + ") " + "Distance from you (km): " + 
-								round(calcLatLngDistance(rack.getCoordinate()), 2));
-					}
-				}
-				 */
-
+					createDataGrid();
+				}else
+					Window.alert("No Bike Racks to display in Datasheet View! Please search again.");
 			}
 		});
 		datasheetViewButton.setText("Datasheet View");
 		userInputPanel.add(datasheetViewButton, 106, 0);
 		datasheetViewButton.setSize("84px", "44px");
 		datasheetViewButton.setTabIndex(2);
+	}
+	
+	/**
+	 * Generates the datagrid in the rack view panel when DataSheetView button is pressed
+	 */
+	private void createDataGrid(){
+		DataGrid<BikeRack> rackDataGrid = new DataGrid<BikeRack>();
+		//need click handler
+		rackDataGrid.addColumnSortHandler(sortHandler);
+		rackDataGrid.setSize("700px", "500px");
 
-		Button mapViewButton = new Button("mapViewButton");
+		TextColumn<BikeRack> addressCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				return rack.getAddress();
+			}
+		};
+		addressCol.setSortable(true);
+		rackDataGrid.addColumn(addressCol, "Address");
+		sortHandler.setComparator(addressCol, new Comparator<BikeRack>() {
+			public int compare(BikeRack o1, BikeRack o2) {
+				//implement comparator for address
+				return 0;
+			}
+		});
+
+
+		TextColumn<BikeRack> coordinatesCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				return rack.getCoordinate().toString();
+			}
+		};
+		rackDataGrid.addColumn(coordinatesCol, "Coordinates");
+
+
+		TextColumn<BikeRack> distanceCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				return Double.toString(round(calcLatLngDistance(rack.getCoordinate()), 2));
+			}
+		};
+		distanceCol.setSortable(true);
+		sortHandler.setComparator(distanceCol, new Comparator<BikeRack>() {
+			public int compare(BikeRack r2, BikeRack r1) {
+				//implement comparator for distance
+				return 0;
+			}
+		});
+		rackDataGrid.addColumn(distanceCol, "Distance from you");
+
+
+		TextColumn<BikeRack> ratingCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				return Double.toString(rack.getRating());
+			}
+		};
+		ratingCol.setSortable(true);
+		sortHandler.setComparator(ratingCol, new Comparator<BikeRack>() {
+			public int compare(BikeRack o1, BikeRack o2) {
+				//implement comparator for rating
+				return 0;
+			}
+		});
+		ratingCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		rackDataGrid.addColumn(ratingCol, "Rating");
+
+		TextColumn<BikeRack> crimeScoreCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				return Double.toString(round(rack.getCrimeScore(), 1));
+			}
+		};
+		crimeScoreCol.setSortable(true);
+		sortHandler.setComparator(crimeScoreCol, new Comparator<BikeRack>() {
+			public int compare(BikeRack o1, BikeRack o2) {
+				//implement comparator for crime score
+				return 0;
+			}
+		});
+		rackDataGrid.addColumn(crimeScoreCol, "Crime Score");
+
+		rackDataGrid.setRowData(currentRackList);
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackDataGrid);
+	}
+	
+	/**
+	 * Generates the MapViewButton and associated click handlers
+	 */
+	private void createMapViewButton(AbsolutePanel userInputPanel){
+		final Button mapViewButton = new Button("mapViewButton"); //3
 		mapViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
@@ -430,7 +350,13 @@ public class Rack_City implements EntryPoint {
 		userInputPanel.add(mapViewButton, 10, 0);
 		mapViewButton.setSize("84px", "44px");
 		mapViewButton.setTabIndex(1);
-
+	}
+	
+	/**
+	 * Generates the combo lists and labels for the user input panel
+	 * @param userInputPanel
+	 */
+	private void createUserLabelsCombos(AbsolutePanel userInputPanel){
 		Label dsntAddressLbl = new Label("Search Destination Address:");
 		dsntAddressLbl.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		userInputPanel.add(dsntAddressLbl, 10, 72);
@@ -440,7 +366,7 @@ public class Rack_City implements EntryPoint {
 		userInputPanel.add(lblFilterResults, 10, 145);
 		lblFilterResults.setSize("147px", "18px");
 
-		final ListBox radiusCombo = new ListBox();
+		final ListBox radiusCombo = new ListBox(); //6
 		radiusCombo.addItem("");
 		radiusCombo.addItem("0.5");
 		radiusCombo.addItem("1");
@@ -456,7 +382,7 @@ public class Rack_City implements EntryPoint {
 		userInputPanel.add(lblCrimeScore, 24, 221);
 		lblCrimeScore.setSize("151px", "18px");
 
-		final ListBox crimeCombo = new ListBox();
+		final ListBox crimeCombo = new ListBox(); //9
 		crimeCombo.addItem("");
 		crimeCombo.addItem("0");
 		crimeCombo.addItem("1");
@@ -472,7 +398,7 @@ public class Rack_City implements EntryPoint {
 		userInputPanel.add(lblRating, 24, 277);
 		lblRating.setSize("151px", "18px");
 
-		final ListBox ratingCombo = new ListBox();
+		final ListBox ratingCombo = new ListBox(); //11
 		ratingCombo.addItem("");
 		ratingCombo.addItem("0");
 		ratingCombo.addItem("1");
@@ -483,37 +409,29 @@ public class Rack_City implements EntryPoint {
 		userInputPanel.add(ratingCombo, 24, 301);
 		ratingCombo.setSize("151px", "22px");
 		ratingCombo.setTabIndex(5);
-
+	}
+	
+	/**
+	 * Generates the search button for the user input panel and associated click handlers
+	 * @param userInputPanel
+	 */
+	private void createSearchButton(final AbsolutePanel userInputPanel){
+		
+		final TextBox txtbxAddress = (TextBox) userInputPanel.getWidget(0);
+		final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(5);
+		final ListBox crimeCombo = (ListBox) userInputPanel.getWidget(8);
+		final ListBox ratingCombo = (ListBox) userInputPanel.getWidget(10);
+		
 		Button searchButton = new Button("searchButton");
 		searchButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-
-
-
-
 				if(!txtbxAddress.getText().equals("")){
 					if(!radiusCombo.getValue(radiusCombo.getSelectedIndex()).equals("")){
 						if(!crimeCombo.getValue(crimeCombo.getSelectedIndex()).equals("")){
 							if(!ratingCombo.getValue(ratingCombo.getSelectedIndex()).equals("")){
 
 								// task 45
-								if(!(userEmail.isEmpty() && userId.isEmpty())){
-									// String userID, String searchAddress, String radius, String crimeScore
-									String userID = userId;
-									String searchAddress = txtbxAddress.getText();
-									int radius = radiusCombo.getSelectedIndex();
-									if (radius == 1) radius = 0;
-									else if (radius == 2)radius = 1;
-									else  if (radius == 3) radius = 2;
-									int crimeScore = crimeCombo.getSelectedIndex() - 1;
-									int rateVal = ratingCombo.getSelectedIndex() - 1;
-									AddUserSearchHistory(userID, searchAddress, radius, crimeScore, rateVal);
-								}
-								if(userEmail.isEmpty() && userId.isEmpty()){
-									messenger("Please login to save your precious search history! :P");
-
-								}
-								// now call the function and will need to make  db parse function to call on it 
+								saveSearchHistory(txtbxAddress, radiusCombo, crimeCombo, ratingCombo);
 
 								googleMap.clearOverlays();
 								currentRackList = null;
@@ -531,43 +449,8 @@ public class Rack_City implements EntryPoint {
 										Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
 										Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
 
-								Button showCrimeButton = new Button("showCrimeButton");
-								showCrimeButton.setSize("180px", "30px");
-								if (isCrimeShown) {
-									showCrimeButton.setText("Hide Crime Locations");
-								}
-								else {
-									showCrimeButton.setText("Show Crime Locations");
-								}
-								showCrimeButton.addClickHandler(new ClickHandler() {
-									public void onClick(ClickEvent event) {
-										for (Crime crime : currentCrimeList) {
-											//System.out.println("Crime Coordinate: " + crime.getCoordinate());
-											hideMarker(crime.getCoordinate(), 3);
-										}
-
-										showOrHideCrimes();
-									}
-
-									private void showOrHideCrimes() {
-										if (!isCrimeShown) {
-											isCrimeShown = true;
-											for (Crime crime : currentCrimeList) {
-												//System.out.println("Crime Coordinate: " + crime.getCoordinate());
-												hideMarker(crime.getCoordinate(), 3);
-											}
-										}
-										else {
-											isCrimeShown = false;
-											for (Crime crime : currentCrimeList) {
-												//System.out.println("Crime Coordinate: " + crime.getCoordinate());
-												addMarker(crime.getCoordinate(), 3);
-											}
-										}
-									}
-								});
-								userInputPanel.add(showCrimeButton, 10, 400);
-
+								showCrimeButton(userInputPanel);
+								
 							}else
 								Window.alert("No Rating selected!");
 						}else
@@ -580,14 +463,223 @@ public class Rack_City implements EntryPoint {
 		});
 		searchButton.setText("Search");
 		userInputPanel.add(searchButton, 118, 348);
-
-		loadGoogleMap();
 	}
+	
+	/**
+	 * Saves search history for specific search (called when search button is pressed)
+	 * @param txtbxAddress
+	 * @param radiusCombo
+	 * @param crimeCombo
+	 * @param ratingCombo
+	 */
+	private void saveSearchHistory(TextBox txtbxAddress, ListBox radiusCombo, ListBox crimeCombo, ListBox ratingCombo){
+		if(!(userEmail.isEmpty() && userId.isEmpty())){
+			// String userID, String searchAddress, String radius, String crimeScore
+			String userID = userId;
+			String searchAddress = txtbxAddress.getText();
+			int radius = radiusCombo.getSelectedIndex();
+			if (radius == 1) radius = 0;
+			else if (radius == 2) radius = 1;
+			else  if (radius == 3) radius = 2;
+			int crimeScore = crimeCombo.getSelectedIndex() - 1;
+			int rateVal = ratingCombo.getSelectedIndex() - 1;
+			AddUserSearchHistory(userID, searchAddress, radius, crimeScore, rateVal);
+		}
+		if(userEmail.isEmpty() && userId.isEmpty()){
+			messenger("Please login to save your precious search history! :P");
 
-	private void loadGoogleMap(){
+		}
+	}
+	
+	/**
+	 * Displays show crime button when search is pressed
+	 * @param userInputPanel
+	 */
+	private void showCrimeButton(AbsolutePanel userInputPanel){
+		Button showCrimeButton = new Button("showCrimeButton");
+		showCrimeButton.setSize("180px", "30px");
+		if (isCrimeShown) {
+			showCrimeButton.setText("Hide Crime Locations");
+		}
+		else {
+			showCrimeButton.setText("Show Crime Locations");
+		}
+		showCrimeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				for (Crime crime : currentCrimeList) {
+					hideMarker(crime.getCoordinate(), 3);
+				}
+
+				if (!isCrimeShown) {
+					isCrimeShown = true;
+					for (Crime crime : currentCrimeList) {
+						hideMarker(crime.getCoordinate(), 3);
+					}
+				}
+				else {
+					isCrimeShown = false;
+					for (Crime crime : currentCrimeList) {
+						addMarker(crime.getCoordinate(), 3);
+					}
+				}
+			}
+		});
+		userInputPanel.add(showCrimeButton, 10, 400);
+	}
+	
+	/**
+	 * Creates the center panel for holding the google map and datasheet views
+	 */
+	private void createRackView(){
+		VerticalPanel centerRackViewPanel = new VerticalPanel();
+		dockPanel.add(centerRackViewPanel, DockPanel.CENTER);
+		dockPanel.setCellVerticalAlignment(centerRackViewPanel, HasVerticalAlignment.ALIGN_MIDDLE);
+		centerRackViewPanel.setSize("700px", "500px");
+
+		final AbsolutePanel rackViewPanel = new AbsolutePanel();
+		centerRackViewPanel.add(rackViewPanel);
+		rackViewPanel.setSize("700px","500px");
+		
+		loadGoogleMap(rackViewPanel);
+	}
+	
+	/**
+	 * Creates the title panel at the top of the page
+	 */
+	private void createTitlePanel(){
+		VerticalPanel titlePanel = new VerticalPanel();
+		dockPanel.add(titlePanel, DockPanel.NORTH);
+		titlePanel.setSize("700px", "40px");
+
+		final AbsolutePanel titleViewPanel = new AbsolutePanel();
+		titlePanel.add(titleViewPanel);
+		titleViewPanel.setSize("700px","40px");
+		
+		createAdminButton(titleViewPanel);
+		createLoginButton(null);
+	}
+	
+	/**
+	 * Creates the login button in the title panel and destroys the logged in button
+	 */
+	private void createLoginButton(Button loggedInButton){
+		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
+		
+		if(loggedInButton != null)
+			titleViewPanel.remove(loggedInButton);
+		
+		final Button loginButton = new Button("loginButton");
+		
+		loginButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+
+				startLoginProcess();
+				getUserSearchHistory(userId);
+				createLoggedInButton(loginButton);
+				
+			}
+		});
+		loginButton.setText("Login");
+		titleViewPanel.add(loginButton, 500, 5);
+	}
+	
+	/**
+	 * Creates the logout button in the title panel and destroys the login button
+	 * @param loginButton
+	 */
+	private void createLoggedInButton(Button loginButton){
+		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
+		titleViewPanel.remove(loginButton);
+		
+		final Button loggedInButton = new Button("loggedInButton");
+		
+		loggedInButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+
+				startLoginProcess();
+				createLoginButton(loggedInButton);
+			}
+		});
+		loggedInButton.setText("Logout");
+		
+		titleViewPanel.add(loggedInButton, 500-(userName.length()*2), 5);
+	}
+	
+	/**
+	 * Creates a text field with the username when logged in
+	 */
+	private void createUserLabel(){
+		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
+		
+		Label userLabel = new Label(userName + ", you are currently logged in.");
+		userLabel.setSize("350px", "10px");
+		
+		titleViewPanel.add(userLabel, 10, 15);
+	}
+	
+	/**
+	 * Destroys the text field with the username in it (called when user logs out)
+	 */
+	private void removeUserLabel(){
+		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
+		
+		for(int i = 0; i < titleViewPanel.getWidgetCount(); i++){
+			if(titleViewPanel.getWidget(i).toString().contains("gwt-Label")){
+				titleViewPanel.remove(i);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * Creates Admin button in the title panel
+	 * @param titleViewPanel
+	 */
+	private void createAdminButton(AbsolutePanel titleViewPanel){
+		Button adminButton = new Button("adminButton");
+		adminButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+
+				refreshCount++;
+				if (refreshCount == 3)
+				{
+					messenger("You are 1 click away from requesting for a refectch!");
+				}
+				if (refreshCount == 4)
+				{
+					if (userEmail.equals("robwu15@gmail.com") || userEmail.equals("obedientworker@gmail.com") || userEmail.equals("kevin.david.greer@gmail.com") || userEmail.equals("abhisek.pradhan91@gmail.com"))
+					{
+						messenger("Refetch Request Approved");
+						addtolist();
+					}
+					else
+						// dude, amazing. 
+						messenger("Refetch Request Denied. You are not a registered admin");
+					refreshCount = 0;
+				}
+			}
+		});
+		adminButton.setText("Admin");
+		titleViewPanel.add(adminButton, 575, 5);
+	}
+	
+	/**
+	 * Creates the holder for the display when a rack is clicked
+	 */
+	private void createRackClickPanel(){
+		HorizontalPanel rightRackClickPanel = new HorizontalPanel();
+		dockPanel.add(rightRackClickPanel, DockPanel.EAST);
+		dockPanel.setCellHorizontalAlignment(rightRackClickPanel, HasHorizontalAlignment.ALIGN_RIGHT);
+		dockPanel.setCellVerticalAlignment(rightRackClickPanel, HasVerticalAlignment.ALIGN_MIDDLE);
+		rightRackClickPanel.setSize("250px", "500px");
+	}
+	
+	/**
+	 * Creates a googleMap object and adds it to the centerPanel
+	 */
+	private void loadGoogleMap(final AbsolutePanel rackViewPanel){
 
 		Maps.loadMapsApi("", "2", false, new Runnable() { public void run() {
-			// This code is used to create lat/long data points
 			LatLng def = LatLng.newInstance(49.249697, -123.139098); //set default
 
 			googleMap = new MapWidget(def, 12);
@@ -633,15 +725,10 @@ public class Rack_City implements EntryPoint {
 			});
 
 			googleMap.setSize("100%", "100%");
-
-			// Add some controls for the zoom level
 			googleMap.addControl(new LargeMapControl());
-
-			// Add the map to the HTML host page
 			final DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
 			dock.addNorth(googleMap, 500);
-			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(dock);
-
+			rackViewPanel.add(dock);
 		}});
 	}
 
@@ -654,7 +741,7 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void addMapOverlay(final String address, final double radius, final double crimeScore, final double rating){
 
-		//Geocodes the address that the user inputs and creates a latlong opbject
+		//Geocodes the address that the user inputs and creates a latlong object
 		Geocoder latLongAddress = new Geocoder();
 		latLongAddress.getLatLng(address, new LatLngCallback() {
 			@Override
@@ -700,7 +787,6 @@ public class Rack_City implements EntryPoint {
 				}
 			}
 		});
-		return;
 	}
 
 	/**
@@ -883,12 +969,12 @@ public class Rack_City implements EntryPoint {
 			
 			if (!userImageURL.isEmpty() || userImageURL == null){
 				icn = Icon.newInstance(userImageURL);
+				icn.setIconAnchor(Point.newInstance(10, 10));
 			}
 			else{
 				icn = Icon.newInstance(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));
+				icn.setIconAnchor(Point.newInstance(6, 20));
 			}
-			
-			icn.setIconAnchor(Point.newInstance(6, 20));
 			markerOptions.setIcon(icn);
 			
 			Marker mark = new Marker(pos, markerOptions);
@@ -1169,7 +1255,12 @@ public class Rack_City implements EntryPoint {
 	}
 
 	/**
-	 *call when new user is logged in to G+
+	 * Adds a user search entry when they are logged in and the search button is pressed
+	 * @param userID
+	 * @param searchAddress
+	 * @param radius
+	 * @param crimeScore
+	 * @param rate
 	 */
 	private void AddUserSearchHistory(String userID, String searchAddress, int radius, int crimeScore, int rate)
 	{
@@ -1619,7 +1710,7 @@ public class Rack_City implements EntryPoint {
 		userToken = t;
 	}
 
-	private void startLoginProcess(final Button loginButton)
+	private void startLoginProcess()
 	{
 		loginAttempt = 0;
 		if (loginFlipFlop == 0)
@@ -1663,8 +1754,8 @@ public class Rack_City implements EntryPoint {
 											userGender = js.get("gender").isString().stringValue();
 											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
 
+											createUserLabel();
 											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL);
-											loginButton.setText(userName);
 											getUserFriends();
 										}
 									}
@@ -1692,7 +1783,6 @@ public class Rack_City implements EntryPoint {
 
 						// ============== on Success ==============
 					}
-					loginButton.setText("Sign Out");
 					loginFlipFlop = 1;
 				}
 
@@ -1722,7 +1812,7 @@ public class Rack_City implements EntryPoint {
 			favRacksCommon = new ArrayList< ArrayList<String>>();
 			userHistory = new ArrayList<UserSearchHistoryInstance>();
 			messenger("Successfully cleared all tokens and signed out");
-			loginButton.setText("Sign in");
+			removeUserLabel();
 			loginFlipFlop = 0;
 		}
 	}
