@@ -53,6 +53,7 @@ import com.google.gwt.maps.client.geocode.LatLngCallback;
 import com.google.gwt.maps.client.geocode.LocationCallback;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.geom.Point;
 import com.google.gwt.maps.client.overlay.Icon;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.MarkerOptions;
@@ -148,24 +149,26 @@ public class Rack_City implements EntryPoint {
 	private void GUIsetup()
 	{
 		rootPanel = RootPanel.get();
-		rootPanel.setSize("1000px", "700px");
+		rootPanel.setSize("1200px", "625px");
 		dockPanel = new DockPanel();
 		rootPanel.add(dockPanel, 10, 0);
-		dockPanel.setSize("1000px", "700px");
+		dockPanel.setSize("1200px", "625px");
 
 		//* Filling out the Root and Dock Panels with Horizontal and Absolute Panels
-
+		
+		//REFACTOR add to createUserInputPanel();
 		HorizontalPanel leftUserInputPanel = new HorizontalPanel();
 		leftUserInputPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 		dockPanel.add(leftUserInputPanel, DockPanel.WEST);
 		dockPanel.setCellVerticalAlignment(leftUserInputPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		leftUserInputPanel.setSize("200px", "600px");
-		leftUserInputPanel.setBorderWidth(1);
+		leftUserInputPanel.setSize("200px", "546px");
 
 		final AbsolutePanel userInputPanel = new AbsolutePanel();
 		leftUserInputPanel.add(userInputPanel);
 		userInputPanel.setSize("200px", "500px");
 
+		
+		//REFACTOR add to createRackView();
 		VerticalPanel centerRackViewPanel = new VerticalPanel();
 		dockPanel.add(centerRackViewPanel, DockPanel.CENTER);
 		dockPanel.setCellVerticalAlignment(centerRackViewPanel, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -175,14 +178,18 @@ public class Rack_City implements EntryPoint {
 		centerRackViewPanel.add(rackViewPanel);
 		rackViewPanel.setSize("700px","500px");
 
+		
+		//REFACTOR add to createTitlePanel();
 		VerticalPanel titlePanel = new VerticalPanel();
 		dockPanel.add(titlePanel, DockPanel.NORTH);
-		titlePanel.setSize("696px", "40px");
+		titlePanel.setSize("700px", "40px");
 
 		final AbsolutePanel titleViewPanel = new AbsolutePanel();
 		titlePanel.add(titleViewPanel);
-		titleViewPanel.setSize("696px","40px");
+		titleViewPanel.setSize("700px","40px");
 
+		
+		//REFACTOR add to createRackClickPanel();
 		HorizontalPanel rightRackClickPanel = new HorizontalPanel();
 		dockPanel.add(rightRackClickPanel, DockPanel.EAST);
 		dockPanel.setCellHorizontalAlignment(rightRackClickPanel, HasHorizontalAlignment.ALIGN_RIGHT);
@@ -193,6 +200,7 @@ public class Rack_City implements EntryPoint {
 
 		//* Adding UI elements to each panel
 
+		//REFACTOR add to createTitlePanel();
 		final Button loginButton = new Button("loginButton");
 		loginButton.setText("Login");
 
@@ -207,7 +215,7 @@ public class Rack_City implements EntryPoint {
 		loginButton.setText("Login");
 		titleViewPanel.add(loginButton, 500, 5);
 
-
+		//REFACTOR add to createTitlePanel();
 		Button adminButton = new Button("adminButton");
 		adminButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -234,6 +242,8 @@ public class Rack_City implements EntryPoint {
 		adminButton.setText("Admin");
 		titleViewPanel.add(adminButton, 575, 5);
 
+		
+		//REFACTOR add to createUserInputPanel();
 		final TextBox txtbxAddress = new TextBox();
 		txtbxAddress.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -247,6 +257,8 @@ public class Rack_City implements EntryPoint {
 		txtbxAddress.setSize("145px", "18px");
 		txtbxAddress.setTabIndex(3);
 
+		
+		
 		Button datasheetViewButton = new Button("datasheetViewButton");
 		datasheetViewButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -658,7 +670,7 @@ public class Rack_City implements EntryPoint {
 				googleMap.setZoomLevel(14);
 				displayRadius(currentAddress, radius);
 
-				addMarker(point, 1);
+				addMarker(currentAddress, 1);
 
 				/*
 				 * The following code should get the appropriate list based on all the preconditions.
@@ -856,28 +868,47 @@ public class Rack_City implements EntryPoint {
 
 	// google icon file from here: https://sites.google.com/site/gmapicons/
 	// add markers onto the map. Add marker overlay for each latlng within a list, center at address
+	/**
+	 * Add markers onto the map. Add marker overlay for each latlng and type submitted.
+	 * google icon file from here: https://sites.google.com/site/gmapicons/
+	 * @param pos - location for marker
+	 * @param type - 1 = Current Location; 2 = racks; 3 = crimes
+	 */
 	private void addMarker(LatLng pos, int type)
 	{
 		if (type == 1)		// search address: ME (blue)
 		{
 			MarkerOptions markerOptions = MarkerOptions.newInstance();
-			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));
-			if (!userImageURL.isEmpty() || userImageURL == null)  
-				markerOptions.setIcon(Icon.newInstance(userImageURL));
+			Icon icn;
+			
+			if (!userImageURL.isEmpty() || userImageURL == null){
+				icn = Icon.newInstance(userImageURL);
+			}
+			else{
+				icn = Icon.newInstance(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));
+			}
+			
+			icn.setIconAnchor(Point.newInstance(6, 20));
+			markerOptions.setIcon(icn);
+			
 			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 2)		// bike racks: GREEN, !!!!! SHOULD HAVE DIFFERENT COLOR BASED ON RACK#
 		{
 			MarkerOptions markerOptions = MarkerOptions.newInstance();
-			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_green.png"));
+			Icon icn = Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_green.png");
+			icn.setIconAnchor(Point.newInstance(6, 20));
+			markerOptions.setIcon(icn);
 			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 3)		// crime place: RED
 		{
 			MarkerOptions markerOptions = MarkerOptions.newInstance();
-			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_red.png"));
+			Icon icn = Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_red.png");
+			icn.setIconAnchor(Point.newInstance(6, 20));
+			markerOptions.setIcon(icn);
 			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
 		}
