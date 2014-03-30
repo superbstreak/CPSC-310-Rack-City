@@ -821,12 +821,15 @@ public class Rack_City implements EntryPoint {
 				{
 					LatLng incident = currentMarker.getLatLng();
 					int numOfStolen = 0;
+					messenger("INCIDENT: "+incident.toString());
 					// Adds to numberStolenBike of the rack in question
 					for (int i = 0; i < currentRackList.size(); i++) 
 					{
 						BikeRack currentRack = currentRackList.get(i);
-						if (currentRack.getCoordinate() == incident) 
+						messenger("INCIDENT ? CURRENT "+currentRack.getCoordinate().toString());
+						if (currentRack.getCoordinate().toString().equals(incident.toString())) 
 						{
+							messenger("INCIDENT == CURRENT "+currentRack.getCoordinate().toString());
 							currentRack.addStolenBike();
 							numOfStolen = currentRack.getNumberStolenBikes();
 							clickRackDisplayPanel(currentRack);
