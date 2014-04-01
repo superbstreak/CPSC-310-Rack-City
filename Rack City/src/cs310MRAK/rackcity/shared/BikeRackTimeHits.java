@@ -1,4 +1,4 @@
-package cs310MRAK.rackcity.server;
+package cs310MRAK.rackcity.shared;
 
 import java.util.Date;
 // yes I know it looks silly..
