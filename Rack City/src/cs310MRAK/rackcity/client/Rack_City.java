@@ -255,14 +255,7 @@ public class Rack_City implements EntryPoint {
 				return rack.getAddress();
 			}
 		};
-		addressCol.setSortable(true);
 		rackDataGrid.addColumn(addressCol, "Address");
-		sortHandler.setComparator(addressCol, new Comparator<BikeRack>() {
-			public int compare(BikeRack o1, BikeRack o2) {
-				//implement comparator for address
-				return 0;
-			}
-		});
 
 
 		TextColumn<BikeRack> coordinatesCol = new TextColumn<BikeRack>() {
@@ -271,6 +264,7 @@ public class Rack_City implements EntryPoint {
 				return rack.getCoordinate().toString();
 			}
 		};
+		coordinatesCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		rackDataGrid.addColumn(coordinatesCol, "Coordinates");
 
 
@@ -281,13 +275,24 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		distanceCol.setSortable(true);
+		distanceCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		sortHandler.setComparator(distanceCol, new Comparator<BikeRack>() {
-			public int compare(BikeRack r2, BikeRack r1) {
+			public int compare(BikeRack rack1, BikeRack rack2) {
 				//implement comparator for distance
-				return 0;
+				
+				double compare = calcLatLngDistance(rack1.getCoordinate()) - calcLatLngDistance(rack2.getCoordinate());
+				
+				System.out.println("Compare #: " + compare);
+				
+				if(compare < 0){
+					return 1;
+				}else if(compare > 0){
+					return -1;
+				}else
+					return 0;
 			}
 		});
-		rackDataGrid.addColumn(distanceCol, "Distance from you");
+		rackDataGrid.addColumn(distanceCol, "Distance From You");
 
 
 		TextColumn<BikeRack> ratingCol = new TextColumn<BikeRack>() {
@@ -319,6 +324,7 @@ public class Rack_City implements EntryPoint {
 				return 0;
 			}
 		});
+		crimeScoreCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackDataGrid.addColumn(crimeScoreCol, "Crime Score");
 
 		rackDataGrid.setRowData(currentRackList);
@@ -871,6 +877,17 @@ public class Rack_City implements EntryPoint {
 		});
 		reportCrimeButton.setText("Report Crime");
 		rackClickPanel.add(reportCrimeButton, 80, 425);
+		
+		final Button checkInButton = new Button("checkInButton");
+		checkInButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				//TODO Insert code that handles check in functionality
+				
+			}
+		});
+		checkInButton.setText("Check-In");
+		rackClickPanel.add(checkInButton, 80, 375);
+		
 
 		//Reverse Geocodes the rack location into an address for the user to see
 		Geocoder latLongAddress = new Geocoder();
