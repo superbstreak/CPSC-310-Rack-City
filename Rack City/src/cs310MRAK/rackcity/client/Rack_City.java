@@ -1167,7 +1167,7 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(Void result) {
-				// TODO Auto-generated method stub
+
 				// no messages
 			}
 				};
@@ -1205,16 +1205,19 @@ public class Rack_City implements EntryPoint {
 			{
 				//Window.alert("P"+i);
 				String[] temp = fav.get(i);
-				String LL = temp[1].toString();   // string			
-				for (int a = 0; a < listofracks.size(); a++)
-				{
-					if (listofracks.get(a).coordinate.equals(LL))
-					{
-						favRacks.add(listofracks.get(a));
-						ArrayList<String> tmp = new  ArrayList<String>();
+				String LL = temp[0].toString();   // string		lat and long of position	
+				
+//				for (int a = 0; a < listofracks.size(); a++)
+//				{
+//					if (listofracks.get(a).coordinate.equals(LL))
+//					{
+				
+//						favRacks.add(listofracks.get(a));
+						ArrayList<String> tmp = new  ArrayList<String>(); 	// 
 						favRacksCommon.add(tmp);
-					}
-				}
+						
+//					}
+//				}
 
 			}
 			getCommonFavorites();
@@ -1606,6 +1609,8 @@ public class Rack_City implements EntryPoint {
 	// getcommonfav (auto calls)
 	// two lists (favRacks, favRacksCommon)
 	// favRacks (My favorite racks), facRacksCommon (friends who also fav them)
+	
+	// TODO: average user ratings of all friends for each bike rack in your favourites.
 
 	// ===================== LOGIN PROCEDURE CALLS ============================
 
