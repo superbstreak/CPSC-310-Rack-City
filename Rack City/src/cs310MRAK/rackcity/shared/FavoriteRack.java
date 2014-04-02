@@ -14,6 +14,8 @@ public class FavoriteRack{
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private String uidaddress;
+	@Persistent
 	private String uid;
 	@Persistent
 	private String Address;
@@ -34,6 +36,7 @@ public class FavoriteRack{
 		this.uid = id;
 		this.Address =  address;
 		this.Position = position;
+		this.uidaddress = address.concat(id);
 	}
 	
 	public String getUid()
@@ -48,4 +51,10 @@ public class FavoriteRack{
 	{
 		return this.Position;
 	}
+	
+	public String getUidAddress()
+	{
+		return this.uidaddress;
+	}
+	
 }

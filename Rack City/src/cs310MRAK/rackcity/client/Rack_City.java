@@ -108,7 +108,7 @@ public class Rack_City implements EntryPoint {
 	private Boolean userIsPlus = false;
 	private ArrayList<String[]> userFriends = new ArrayList<String[]>();
 	private ArrayList<BikeRack> favRacks = new ArrayList<BikeRack>();
-	private ArrayList< ArrayList<String>> favRacksCommon = new ArrayList< ArrayList<String>>();
+	private ArrayList< ArrayList<String[]>> favRacksCommon = new ArrayList< ArrayList<String[]>>();
 	private ArrayList<UserSearchHistoryInstance> userHistory = new ArrayList<UserSearchHistoryInstance>();
 
 	// Server stuff
@@ -657,12 +657,29 @@ public class Rack_City implements EntryPoint {
 					if (userEmail.equals("robwu15@gmail.com") || userEmail.equals("obedientworker@gmail.com") || userEmail.equals("kevin.david.greer@gmail.com") || userEmail.equals("abhisek.pradhan91@gmail.com"))
 					{
 						messenger("Refetch Request Approved");
+						
+						// here we hardcode
+						// MATT
+						Add2Fav ("105344220509568726102", "8679 West Granville St, Vancouver, BC", LatLng.newInstance(49.207418, -123.140782));
+						Add2Fav ("105344220509568726102", "8500 East Cambie, Vancouver, BC", LatLng.newInstance(49.208853, -123.11719399999998));
+						
+						// ROB
+						Add2Fav ("101615897672003440618", "8679 West Granville St, Vancouver, BC", LatLng.newInstance(49.207418, -123.140782));
+
+						
 						addtolist();
+						
 					}
 					else
 						// dude, amazing. 
 						messenger("Refetch Request Denied. You are not a registered admin");
+					//refreshCount = 0;
+				}
+				if (refreshCount == 6){
+					messenger("do I make it here?");
+					printerdebug();
 					refreshCount = 0;
+					messenger("or here?");
 				}
 			}
 		});
@@ -1150,7 +1167,7 @@ public class Rack_City implements EntryPoint {
 
 	/**
 	 *  Called when user add a rack to favorite
-	 */
+	 */ //!!!!!
 	private void Add2Fav (String uid, String address, LatLng pos)
 	{
 		String newP = pos.toString();
@@ -1158,6 +1175,7 @@ public class Rack_City implements EntryPoint {
 		{
 			fService = GWT.create(RackFavouritesService.class);
 		}
+		
 		AsyncCallback<Void> callback = new AsyncCallback<Void>()
 				{
 			public void onFailure(Throwable error)
@@ -1192,7 +1210,7 @@ public class Rack_City implements EntryPoint {
 				// TODO Auto-generated method stub
 
 				if (uid.equals(userId))	 assignFavresult(result);
-				else compareFriendFav(name, result);
+				else compareFriendFav(name, uid, result);
 			}
 				});
 	}
@@ -1213,7 +1231,7 @@ public class Rack_City implements EntryPoint {
 //					{
 				
 //						favRacks.add(listofracks.get(a));
-						ArrayList<String> tmp = new  ArrayList<String>(); 	// 
+						ArrayList<String[]> tmp = new  ArrayList<String[]>(); 	// 
 						favRacksCommon.add(tmp);
 						
 //					}
@@ -1647,19 +1665,21 @@ public class Rack_City implements EntryPoint {
 		}
 	}
 
-	private void compareFriendFav(String name, ArrayList<String[]> result)
+	private void compareFriendFav(String name, String fid, ArrayList<String[]> result)
 	{
 		if (!(result.isEmpty() || result == null))
 		{
 			for (int i = 0; i < result.size(); i++)
 			{
 				String[] fav = result.get(i);
-				String fLL = fav[1];
+				String fLL = fav[0];
 				for (int a = 0; a < favRacks.size(); a++)
 				{
+					messenger("Comparing racks");
 					if (fLL.equals(favRacks.get(a).getCoordinate()))
 					{
-						favRacksCommon.get(a).add(name);
+						String[] ftemp = {name, fid};
+						favRacksCommon.get(a).add(ftemp);
 					}
 				}
 			}
@@ -1706,6 +1726,8 @@ public class Rack_City implements EntryPoint {
 										}
 									}
 									deBugMessenger();
+									// TESTING
+									parseFav(userName, userId);
 								}
 							}
 							else if (response.getStatusCode() == 400)
@@ -1848,11 +1870,35 @@ public class Rack_City implements EntryPoint {
 			userImageURL = "";
 			userFriends = new ArrayList<String[]>();
 			favRacks = new ArrayList<BikeRack>();
-			favRacksCommon = new ArrayList< ArrayList<String>>();
+			favRacksCommon = new ArrayList< ArrayList<String[]>>();
 			userHistory = new ArrayList<UserSearchHistoryInstance>();
 			messenger("Successfully cleared all tokens and signed out");
 			removeUserLabel();
 			loginFlipFlop = 0;
+		}
+	}
+	
+	private void printerdebug()
+	{
+		messenger("how about here?");
+		messenger(favRacksCommon.size()+"");
+		for (int i = 0; i < favRacksCommon.size(); i++)
+		{
+			if (favRacksCommon.size() == 0)
+			{
+				messenger("NULL");
+			}
+			else
+			{
+				messenger(favRacksCommon.get(i).size()+"");
+				for(int j=0; j < favRacksCommon.get(i).size() ; j++){
+					String[] names =  favRacksCommon.get(i).get(j);
+					messenger(j+names[0]+" "+names[1]+" "+names[2]);
+				}
+				
+			}
+			
+			
 		}
 	}
 
