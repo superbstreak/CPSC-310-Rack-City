@@ -1219,6 +1219,7 @@ public class Rack_City implements EntryPoint {
 	{
 		if (!(fav.isEmpty() || fav == null))
 		{
+			messenger("DEBUG: Fav List size: "+fav.size());
 			for(int i = 0; i < fav.size(); i++)
 			{
 				//Window.alert("P"+i);
