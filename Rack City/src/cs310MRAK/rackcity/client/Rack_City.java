@@ -1620,21 +1620,21 @@ public class Rack_City implements EntryPoint {
 		{
 			uService = GWT.create(rackService.class);
 		}
-		uService.addStarRating(uid, addr, pos, rating, new AsyncCallback<Void>(){
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				messenger("ERROR ADD-RATING");
+		
+		
+		AsyncCallback<Void> ratingCallback = new AsyncCallback<Void>()
+		{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-RATE)");
+				handleError(error);
 			}
-
-			@Override
-			public void onSuccess(Void result) {
-				// TODO Auto-generated method stub
-
+			public void onSuccess(Void ignore)
+			{
+				Window.alert("Success. (ADD-RATE)");
 			}
-
-		});
+		};
+		uService.addStarRating(uid, addr, pos, rating, ratingCallback);
 	}
 
 	// type 2: get all user rating on this address
