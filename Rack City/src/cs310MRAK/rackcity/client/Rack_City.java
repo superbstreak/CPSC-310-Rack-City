@@ -1330,12 +1330,12 @@ public class Rack_City implements EntryPoint {
 				{
 			public void onFailure(Throwable error)
 			{
-				Window.alert("Server Error! (RMV-RACK)");
+				Window.alert("Server Error! (ADD-TIME)");
 				handleError(error);
 			}
 			public void onSuccess(Void ignore)
 			{
-				Window.alert("Success (RMV-RACK)");
+				Window.alert("Success (ADD-TIME)");
 			}
 				};
 				
@@ -1716,7 +1716,7 @@ public class Rack_City implements EntryPoint {
 				String fLL = fav[0];
 				for (int a = 0; a < favRacks.size(); a++)
 				{
-					messenger(fLL+" vs Comparing racks?  "+favRacks.get(a).getCoordinate().toString());
+					//messenger(fLL+" vs Comparing racks?  "+favRacks.get(a).getCoordinate().toString());
 					if (fLL.equals(favRacks.get(a).getCoordinate().toString()))
 					{
 						//						friend's rating
@@ -1936,7 +1936,7 @@ public class Rack_City implements EntryPoint {
 				for(int j=0; j < favRacksCommon.get(i).size() ; j++)
 				{				
 					String[] names =  favRacksCommon.get(i).get(j);
-					output = output + "\n POS: "+ favRacks.get(i).getCoordinate().toString() + " Name: " + names[0]+" id: "+names[1]+" Rating: "+names[2];
+					output = output + "\n POS: "+ favRacks.get(i).getCoordinate().toString() + "\nr Name: " + names[0]+" id: "+names[1]+" Rating: "+names[2];
 				} 
 			}
 
