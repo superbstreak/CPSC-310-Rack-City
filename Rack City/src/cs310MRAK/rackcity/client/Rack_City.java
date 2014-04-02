@@ -1665,9 +1665,6 @@ public class Rack_City implements EntryPoint {
 	// getcommonfav (auto calls)
 	// two lists (favRacks, favRacksCommon)
 	// favRacks (My favorite racks), facRacksCommon (friends who also fav them)
-	
-	// TODO: average user ratings of all friends for each bike rack in your favourites.
-
 	// ===================== LOGIN PROCEDURE CALLS ============================
 
 	private void handleError(Throwable error) 
