@@ -12,7 +12,7 @@ public interface userServiceAsync {
 		// adder
 		void addUser(String id, String name,  String email, String gender, Boolean isPlus, String propic, AsyncCallback<Void> callback);
 		void addUserSearchHistoryInstance(String key, String userID, String searchAddress, int radius, int crimeScore, int rate, AsyncCallback<Void> callback);
-		void addStarRating (String userID, String addr, String pos, int starratings, AsyncCallback<Void> callback);
+		void addStarRating (String userID, String addr, String pos, int starratings, AsyncCallback<Void> asyncCAllback);
 		
 		// checker
 		void hasUser(String id, AsyncCallback<Boolean> callback);

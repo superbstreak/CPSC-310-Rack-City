@@ -11,8 +11,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 import cs310MRAK.rackcity.client.rackService;
-import cs310MRAK.rackcity.shared.BikeRackTimeHits;
-import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
+import cs310MRAK.rackcity.shared.BikeRackTimeHit;
+import cs310MRAK.rackcity.shared.Rack;
 
 
 
@@ -124,6 +124,49 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		}
 		return fin.getAddr();
 	}
+	
+	@Override
+	public String getRackTimeHits(String p) {
+		PersistenceManager pm = getPersistenceManager();
+		String rackTimeHits = "";
+		try
+		{
+			String query = "select from " + BikeRackTimeHit.class.getName() + "where pos ==  p";
+			@SuppressWarnings("unchecked")
+			BikeRackTimeHit brth = (BikeRackTimeHit) pm.newQuery(query).execute();
+			rackTimeHits = "[ "+brth.getInterval0to1()+", "
+									  +brth.getInterval1to2()+", "
+									  +brth.getInterval2to3()+", "
+									  +brth.getInterval3to4()+", "
+									  +brth.getInterval4to5()+", "
+									  +brth.getInterval5to6()+", "
+									  +brth.getInterval6to7()+", "
+									  +brth.getInterval7to8()+", "
+									  +brth.getInterval8to9()+", "
+									  +brth.getInterval9to10()+", "
+									  +brth.getInterval10to11()+", "
+									  +brth.getInterval11to12()+", "
+									  +brth.getInterval12to13()+", "
+									  +brth.getInterval13to14()+", "
+									  +brth.getInterval14to15()+", "
+									  +brth.getInterval15to16()+", "
+									  +brth.getInterval16to17()+", "
+									  +brth.getInterval17to18()+", "
+									  +brth.getInterval18to19()+", "
+									  +brth.getInterval19to20()+", "
+									  +brth.getInterval20to21()+", "
+									  +brth.getInterval21to22()+", "
+									  +brth.getInterval22to23()+", "
+									  +brth.getInterval23to24()+" ]";
+									  
+		}
+		finally
+		{
+			pm.close();
+		}
+		return rackTimeHits;
+	}
+
 
 	@Override
 	public int getRackNum(String p) {
@@ -296,7 +339,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		PersistenceManager pm = getPersistenceManager();
 		try
 		{
-			pm.makePersistent(new BikeRackTimeHits(pos, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
+			pm.makePersistent(new BikeRackTimeHit(pos, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
 		}
 		finally
 		{
@@ -310,7 +353,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		PersistenceManager pm = getPersistenceManager();
 		try
 		{
-			BikeRackTimeHits brth = pm.getObjectById(BikeRackTimeHits.class, pos);
+			BikeRackTimeHit brth = pm.getObjectById(BikeRackTimeHit.class, pos);
 			if(whichOne.equals("0to1")) brth.setInterval0to1(timeHits);
 			if(whichOne.equals("1to2")) brth.setInterval1to2(timeHits);
 			if(whichOne.equals("2to3")) brth.setInterval2to3(timeHits);
