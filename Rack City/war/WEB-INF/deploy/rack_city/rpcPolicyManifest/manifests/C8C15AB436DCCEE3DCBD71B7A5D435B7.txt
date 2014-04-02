@@ -1,0 +1,2 @@
+serviceClass: cs310MRAK.rackcity.client.RackFavouritesService
+path: C1E90DEA64236D491FDAD6F83278D0A8.gwt.rpc

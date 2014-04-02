@@ -1,0 +1,2 @@
+serviceClass: cs310MRAK.rackcity.client.userService
+path: 9481C3880192C246A2C42780FB106B56.gwt.rpc
