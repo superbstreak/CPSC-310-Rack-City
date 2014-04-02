@@ -3,7 +3,6 @@ package cs310MRAK.rackcity.client;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -33,8 +32,12 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -45,6 +48,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
 import com.google.gwt.maps.client.geocode.Geocoder;
@@ -68,7 +72,6 @@ import cs310MRAK.rackcity.shared.rackStarRatings;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Rack_City implements EntryPoint {
-	private ListHandler<BikeRack> sortHandler = new ListHandler<BikeRack>(Collections.<BikeRack>emptyList());
 	private RootPanel rootPanel;
 	private MapWidget googleMap = null;
 	private DockPanel dockPanel = null;
@@ -122,7 +125,9 @@ public class Rack_City implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-
+		
+		GUIsetup();
+		
 		// ========== Issue #72 ==========
 		URLserviceAsync ftpService = GWT.create(URLservice.class);
 		AsyncCallback<Void> callback = new AsyncCallback<Void>()
@@ -144,9 +149,6 @@ public class Rack_City implements EntryPoint {
 				addtolist();
 				initialsync = 1;
 			}
-
-			GUIsetup();
-
 	}
 	
 	/**
@@ -154,17 +156,32 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void GUIsetup(){
 		rootPanel = RootPanel.get();
-		rootPanel.setSize("1200px", "625px");
+		rootPanel.setSize("1300px", "700px");
 		dockPanel = new DockPanel();
-		rootPanel.add(dockPanel, 10, 0);
-		dockPanel.setSize("1200px", "625px");
+		rootPanel.add(dockPanel, 10, 100);
+		dockPanel.setSize("1210px", "500px");
 
+		createAppTitle();
 		createUserInputPanel();
 		createRackView();
 		createTitlePanel();
 		createRackClickPanel();
 	}
-
+	
+	private void createAppTitle(){
+		AbsolutePanel appTitlePanel = new AbsolutePanel();
+		appTitlePanel.setSize("1300px", "100px");
+		
+		Label appTitleLbl = new Label("Rack City");
+		appTitleLbl.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		appTitleLbl.setSize("191px", "18px");
+		appTitleLbl.setStyleName("gwt-Title-Label-Style");
+		appTitlePanel.add(appTitleLbl, 500, 0);
+		
+		rootPanel.add(appTitlePanel,0,0);
+		
+	}
+	
 	/**
 	 * Creates the panel on the left of the screen that holds the user input objects
 	 */
@@ -173,7 +190,7 @@ public class Rack_City implements EntryPoint {
 		leftUserInputPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
 		dockPanel.add(leftUserInputPanel, DockPanel.WEST);
 		dockPanel.setCellVerticalAlignment(leftUserInputPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		leftUserInputPanel.setSize("200px", "546px");
+		leftUserInputPanel.setSize("200px", "541px");
 		
 		final AbsolutePanel userInputPanel = new AbsolutePanel();
 		leftUserInputPanel.add(userInputPanel);
@@ -190,19 +207,34 @@ public class Rack_City implements EntryPoint {
 	 * Creates the address text box for user input
 	 * @param userInputPanel
 	 */
-	private void createAddressBox(AbsolutePanel userInputPanel){
-		final TextBox txtbxAddress = new TextBox(); //0
-		txtbxAddress.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				if(txtbxAddress.getText().equals("Enter Address Here.")){
-					txtbxAddress.setText("");
-				}
-			}
-		});
-		txtbxAddress.setText("Enter Address Here.");
-		userInputPanel.add(txtbxAddress, 20, 96);
-		txtbxAddress.setSize("145px", "18px");
-		txtbxAddress.setTabIndex(3);
+	private void createAddressBox(final AbsolutePanel userInputPanel){
+		final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
+		
+		updateSuggestBox(oracle);
+		
+		final SuggestBox suggestBox = new SuggestBox(oracle);
+		suggestBox.getValueBox().addClickHandler(new ClickHandler() {
+		    public void onClick(ClickEvent event) {
+		    	if(suggestBox.getText().equals("Enter Address Here.")){
+		    		suggestBox.setText("");
+	    		}
+		    	updateSuggestBox((MultiWordSuggestOracle) suggestBox.getSuggestOracle());
+		    	
+		      }
+		    });
+		
+		suggestBox.setText("Enter Address Here.");
+		userInputPanel.add(suggestBox, 20, 96);
+		suggestBox.setSize("145px", "18px");
+		suggestBox.setTabIndex(3);
+	}
+	
+	private void updateSuggestBox(MultiWordSuggestOracle oracle){
+		if(!userHistory.isEmpty()){
+		    for(UserSearchHistoryInstance hist : userHistory){
+		      oracle.add(hist.getSearchAddress());
+		    }
+		}
 	}
 	
 	/**
@@ -246,8 +278,9 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void createDataGrid(){
 		DataGrid<BikeRack> rackDataGrid = new DataGrid<BikeRack>();
+		rackDataGrid.setPageSize(100);
+		
 		//need click handler
-		rackDataGrid.addColumnSortHandler(sortHandler);
 		rackDataGrid.setSize("700px", "500px");
 
 		TextColumn<BikeRack> addressCol = new TextColumn<BikeRack>() {
@@ -257,6 +290,7 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		rackDataGrid.addColumn(addressCol, "Address");
+		rackDataGrid.setColumnWidth(addressCol, 125, Unit.PX);
 
 
 		TextColumn<BikeRack> coordinatesCol = new TextColumn<BikeRack>() {
@@ -267,6 +301,7 @@ public class Rack_City implements EntryPoint {
 		};
 		coordinatesCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		rackDataGrid.addColumn(coordinatesCol, "Coordinates");
+		rackDataGrid.setColumnWidth(coordinatesCol, 125, Unit.PX);
 
 
 		TextColumn<BikeRack> distanceCol = new TextColumn<BikeRack>() {
@@ -276,24 +311,10 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		distanceCol.setSortable(true);
+		distanceCol.setDefaultSortAscending(false);
 		distanceCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		sortHandler.setComparator(distanceCol, new Comparator<BikeRack>() {
-			public int compare(BikeRack rack1, BikeRack rack2) {
-				//implement comparator for distance
-				
-				double compare = calcLatLngDistance(rack1.getCoordinate()) - calcLatLngDistance(rack2.getCoordinate());
-				
-				System.out.println("Compare #: " + compare);
-				
-				if(compare < 0){
-					return 1;
-				}else if(compare > 0){
-					return -1;
-				}else
-					return 0;
-			}
-		});
 		rackDataGrid.addColumn(distanceCol, "Distance From You");
+		rackDataGrid.setColumnWidth(distanceCol, 125, Unit.PX);
 
 
 		TextColumn<BikeRack> ratingCol = new TextColumn<BikeRack>() {
@@ -303,14 +324,9 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		ratingCol.setSortable(true);
-		sortHandler.setComparator(ratingCol, new Comparator<BikeRack>() {
-			public int compare(BikeRack o1, BikeRack o2) {
-				//implement comparator for rating
-				return 0;
-			}
-		});
 		ratingCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackDataGrid.addColumn(ratingCol, "Rating");
+		rackDataGrid.setColumnWidth(ratingCol, 75, Unit.PX);
 
 		TextColumn<BikeRack> crimeScoreCol = new TextColumn<BikeRack>() {
 			@Override
@@ -319,16 +335,54 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		crimeScoreCol.setSortable(true);
+		crimeScoreCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		rackDataGrid.addColumn(crimeScoreCol, "Crime Score");
+		rackDataGrid.setColumnWidth(crimeScoreCol, 75, Unit.PX);
+		
+		ListDataProvider<BikeRack> dataProvider = new ListDataProvider<BikeRack>();
+		dataProvider.addDataDisplay(rackDataGrid);
+		
+		List<BikeRack> tmpRacklist = dataProvider.getList();
+		for (BikeRack contact : currentRackList) {
+			tmpRacklist.add(contact);
+	    }
+		
+		ListHandler<BikeRack> sortHandler = new ListHandler<BikeRack>(tmpRacklist);
+		
+		sortHandler.setComparator(distanceCol, new Comparator<BikeRack>() {
+			@Override
+			public int compare(BikeRack rack1, BikeRack rack2) {
+				//implement comparator for distance
+				
+				double compare = calcLatLngDistance(rack1.getCoordinate()) - calcLatLngDistance(rack2.getCoordinate());
+				
+				if(compare < 0){
+					return 1;
+				}else if(compare > 0){
+					return -1;
+				}else{
+					return 0;
+				}
+			}
+		});
+		
+		sortHandler.setComparator(ratingCol, new Comparator<BikeRack>() {
+			@Override
+			public int compare(BikeRack o1, BikeRack o2) {
+				//implement comparator for rating
+				return 0;
+			}
+		});
+		
 		sortHandler.setComparator(crimeScoreCol, new Comparator<BikeRack>() {
+			@Override
 			public int compare(BikeRack o1, BikeRack o2) {
 				//implement comparator for crime score
 				return 0;
 			}
 		});
-		crimeScoreCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		rackDataGrid.addColumn(crimeScoreCol, "Crime Score");
-
-		rackDataGrid.setRowData(currentRackList);
+		
+		rackDataGrid.addColumnSortHandler(sortHandler);	
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackDataGrid);
 	}
 	
@@ -425,7 +479,7 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void createSearchButton(final AbsolutePanel userInputPanel){
 		
-		final TextBox txtbxAddress = (TextBox) userInputPanel.getWidget(0);
+		final SuggestBox txtbxAddress = (SuggestBox) userInputPanel.getWidget(0);
 		final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(5);
 		final ListBox crimeCombo = (ListBox) userInputPanel.getWidget(8);
 		final ListBox ratingCombo = (ListBox) userInputPanel.getWidget(10);
@@ -480,7 +534,7 @@ public class Rack_City implements EntryPoint {
 	 * @param crimeCombo
 	 * @param ratingCombo
 	 */
-	private void saveSearchHistory(TextBox txtbxAddress, ListBox radiusCombo, ListBox crimeCombo, ListBox ratingCombo){
+	private void saveSearchHistory(SuggestBox txtbxAddress, ListBox radiusCombo, ListBox crimeCombo, ListBox ratingCombo){
 		if(!(userEmail.isEmpty() && userId.isEmpty())){
 			// String userID, String searchAddress, String radius, String crimeScore
 			String userID = userId;
@@ -497,6 +551,51 @@ public class Rack_City implements EntryPoint {
 			messenger("Please login to save your precious search history! :P");
 
 		}
+	}
+	
+	/**
+	 * Adds a user search entry when they are logged in and the search button is pressed
+	 * @param userID
+	 * @param searchAddress
+	 * @param radius
+	 * @param crimeScore
+	 * @param rate
+	 */
+	private void AddUserSearchHistory(String userID, String searchAddress, int radius, int crimeScore, int rate)
+	{
+		if (uService == null) 
+		{
+			uService = GWT.create(userService.class);
+		}
+		AsyncCallback<Void> callback = new AsyncCallback<Void>()
+				{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-USER-HISTORY-INSTANCE)");
+				handleError(error);
+			}
+			@Override
+			public void onSuccess(Void result) {
+				// no messages
+			}
+				};
+				String key = null;
+				Random r = null;
+				@SuppressWarnings("static-access")
+				int secGenA = r.nextInt(9999);
+				@SuppressWarnings("static-access")
+				int secGenB = r.nextInt(9999);
+				@SuppressWarnings("static-access")
+				int secGenC = r.nextInt(9999);
+				key = String.valueOf(secGenA);
+				String inputkey = userID + searchAddress + String.valueOf(radius) + String.valueOf(crimeScore) + String.valueOf(rate);
+				inputkey = inputkey.trim().toLowerCase();
+				if (inputkey.length() > 20)
+					inputkey = inputkey.substring(0, 20);
+				key = key + inputkey;
+				key = key.substring(0, key.length()/2) + String.valueOf(secGenB) + key.substring(key.length()/2, key.length());
+				key = key + String.valueOf(secGenC);
+				uService.addUserSearchHistoryInstance(key, userID, searchAddress, radius, crimeScore, rate, callback);
 	}
 	
 	/**
@@ -588,7 +687,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loginButton.setText("Login");
-		titleViewPanel.add(loginButton, 500, 5);
+		titleViewPanel.add(loginButton, 585, 5);
 	}
 	
 	/**
@@ -610,7 +709,7 @@ public class Rack_City implements EntryPoint {
 		});
 		loggedInButton.setText("Logout");
 		
-		titleViewPanel.add(loggedInButton, 500-(userName.length()*2), 5);
+		titleViewPanel.add(loggedInButton, 580, 5);
 	}
 	
 	/**
@@ -675,7 +774,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		adminButton.setText("Admin");
-		titleViewPanel.add(adminButton, 575, 5);
+		titleViewPanel.add(adminButton, 640, 5);
 	}
 	
 	/**
@@ -1278,51 +1377,6 @@ public class Rack_City implements EntryPoint {
 	}
 
 	/**
-	 * Adds a user search entry when they are logged in and the search button is pressed
-	 * @param userID
-	 * @param searchAddress
-	 * @param radius
-	 * @param crimeScore
-	 * @param rate
-	 */
-	private void AddUserSearchHistory(String userID, String searchAddress, int radius, int crimeScore, int rate)
-	{
-		if (uService == null) 
-		{
-			uService = GWT.create(userService.class);
-		}
-		AsyncCallback<Void> callback = new AsyncCallback<Void>()
-				{
-			public void onFailure(Throwable error)
-			{
-				Window.alert("Server Error! (ADD-USER-HISTORY-INSTANCE)");
-				handleError(error);
-			}
-			@Override
-			public void onSuccess(Void result) {
-				// no messages
-			}
-				};
-				String key = null;
-				Random r = null;
-				@SuppressWarnings("static-access")
-				int secGenA = r.nextInt(9999);
-				@SuppressWarnings("static-access")
-				int secGenB = r.nextInt(9999);
-				@SuppressWarnings("static-access")
-				int secGenC = r.nextInt(9999);
-				key = String.valueOf(secGenA);
-				String inputkey = userID + searchAddress + String.valueOf(radius) + String.valueOf(crimeScore) + String.valueOf(rate);
-				inputkey = inputkey.trim().toLowerCase();
-				if (inputkey.length() > 20)
-					inputkey = inputkey.substring(0, 20);
-				key = key + inputkey;
-				key = key.substring(0, key.length()/2) + String.valueOf(secGenB) + key.substring(key.length()/2, key.length());
-				key = key + String.valueOf(secGenC);
-				uService.addUserSearchHistoryInstance(key, userID, searchAddress, radius, crimeScore, rate, callback);
-	}
-
-	/**
 	 * Will only use for admin button to massively load a bikeracktimehit object for every bike rack initially. Just to get them in the datastore.
 	 */
 	private void addBikeRackTimeHit(String pos){
@@ -1362,21 +1416,13 @@ public class Rack_City implements EntryPoint {
 
 				@Override
 				public void onSuccess(
-						ArrayList<UserSearchHistoryInstance> result) {
-					assignUserHistory(result);
-				}
-				
+					ArrayList<UserSearchHistoryInstance> result) {
+						userHistory = result;
+					}
 			});
-				
 		}
 	}
 	
-	private void assignUserHistory(ArrayList<UserSearchHistoryInstance> result)
-	{
-		userHistory = new ArrayList<UserSearchHistoryInstance>();
-		userHistory = result;
-	}
-
 	/**
 	 * Call rackOps (Admin only): 
 	 * type == 1: ADD OPERATION. require all parameters
