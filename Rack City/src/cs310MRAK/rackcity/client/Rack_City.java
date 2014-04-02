@@ -2045,6 +2045,38 @@ public class Rack_City implements EntryPoint {
 		return output;
 	}
 
+	public void calculateNewAvg(String address, String position, ArrayList<rackStarRatings> todorating)
+	{
+		int occurance = 0;
+		int subtotal = 0;
+		double output = 0;
+		for (int r = 0;  r< todorating.size(); r++)
+		{
+			occurance ++;
+			subtotal += todorating.get(r).getRating();
+		}
+		output = subtotal/occurance;
+		
+		// update local!
+		int i = 0;
+		while (i < listofracks.size())
+		{
+			if (listofracks.get(i).getAddress().equals(address) && listofracks.get(i).getCoordinate().toString().equals(position))
+			{
+				if (output != listofracks.get(i).getRating())
+				{
+					BikeRack br = listofracks.get(i);
+					listofracks.get(i).setRating(output);
+					// server update calls
+					rackOps(br.getAddress(), br.getCoordinate(), br.getRackCount(), br.getNumberStolenBikes(), br.getCrimeScore(), output, 2);
+				}
+				
+				break;
+			}
+			i++;
+		}		
+	}
+
 	public static ArrayList<Crime> getCrimeData()
 	{
 		return listofcrimes;
