@@ -659,27 +659,18 @@ public class Rack_City implements EntryPoint {
 						messenger("Refetch Request Approved");
 						
 						// here we hardcode
-						// MATT
-						Add2Fav ("105344220509568726102", "8679 West Granville St, Vancouver, BC", LatLng.newInstance(49.207418, -123.140782));
-						Add2Fav ("105344220509568726102", "8500 East Cambie, Vancouver, BC", LatLng.newInstance(49.208853, -123.11719399999998));
-						
-						// ROB
-						Add2Fav ("101615897672003440618", "8679 West Granville St, Vancouver, BC", LatLng.newInstance(49.207418, -123.140782));
 
+						messenger("do I make it here?");
+						printerdebug();
+						messenger("or here?");
 						
-						addtolist();
+						//addtolist();
 						
 					}
 					else
 						// dude, amazing. 
 						messenger("Refetch Request Denied. You are not a registered admin");
-					//refreshCount = 0;
-				}
-				if (refreshCount == 6){
-					messenger("do I make it here?");
-					printerdebug();
 					refreshCount = 0;
-					messenger("or here?");
 				}
 			}
 		});
@@ -1212,10 +1203,9 @@ public class Rack_City implements EntryPoint {
 				if (uid.equals(userId))	 assignFavresult(result);
 				else compareFriendFav(name, uid, result);
 			}
-				});
+		});
 	}
 
-	@SuppressWarnings("unused")
 	private void assignFavresult(ArrayList<String[]> fav)
 	{
 		if (!(fav.isEmpty() || fav == null))
@@ -1227,17 +1217,17 @@ public class Rack_City implements EntryPoint {
 				String[] temp = fav.get(i);
 				String LL = temp[0].toString();   // string		lat and long of position	
 				
-//				for (int a = 0; a < listofracks.size(); a++)
-//				{
-//					if (listofracks.get(a).coordinate.equals(LL))
-//					{
+				for (int a = 0; a < listofracks.size(); a++)
+				{
+					if (listofracks.get(a).getCoordinate().toString().equals(LL))
+					{
 				
-//						favRacks.add(listofracks.get(a));
+						favRacks.add(listofracks.get(a));
 						ArrayList<String[]> tmp = new  ArrayList<String[]>(); 	// 
 						favRacksCommon.add(tmp);
 						
-//					}
-//				}
+					}
+				}
 
 			}
 			getCommonFavorites();
