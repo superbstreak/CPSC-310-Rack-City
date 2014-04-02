@@ -11,6 +11,8 @@ public interface rackServiceAsync {
 	void updateCS(String p, double score, AsyncCallback<Void> callback);
 	void updateStolen(String p, int steal, AsyncCallback<Void> callback);
 	void updateRate(String p, double rating, AsyncCallback<Void> callback);
+	void addBikeRackTimeHit(String pos, AsyncCallback<Void> callback);
+
 	
 	// getters
 	void getAddress(String p, AsyncCallback<String> callback);
