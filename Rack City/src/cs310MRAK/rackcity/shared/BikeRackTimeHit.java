@@ -9,7 +9,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class BikeRackTimeHits {
+public class BikeRackTimeHit {
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -63,7 +63,7 @@ public class BikeRackTimeHits {
 	@Persistent
 	private	int	interval23to24;
 
-	public BikeRackTimeHits(String pos, 
+	public BikeRackTimeHit(String pos, 
 			int	interval0to1,
 			int	interval1to2,
 			int	interval2to3,

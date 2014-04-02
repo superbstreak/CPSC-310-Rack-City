@@ -20,6 +20,8 @@ public interface rackService extends RemoteService {
 	public int getStolen(String p);
 	public double getCS(String p);
 	public double getRate(String p);
+	public String getRackTimeHits(String p);
+
 	
 	// parser
 	public ArrayList<String[]> getRacks();

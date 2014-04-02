@@ -21,6 +21,7 @@ public interface rackServiceAsync {
 	void getStolen(String p, AsyncCallback<Integer> callback);
 	void getCS(String p, AsyncCallback<Double> callback);
 	void getRate(String p, AsyncCallback<Double> callback);
+	void getRackTimeHits(String p, AsyncCallback<String> callback);
 	
 	// parser
 	void getRacks(AsyncCallback<ArrayList<String[]>> callback);
