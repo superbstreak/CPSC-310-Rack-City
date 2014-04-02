@@ -1644,15 +1644,25 @@ public class Rack_City implements EntryPoint {
 		});
 	}
 	
+	// type 2: get all user rating on this address
+	private void getALLRatingATpos(String uid, String addr, String pos)
+	{
+		if (uService == null)
+		{
+			uService = GWT.create(userService.class);
+		}
+		//uService.getStarRating(uid, addr, pos, 2, callback);
+	}
 	
 	private void getFriendRatings(String fid, String addr, String pos, final String[] person)
 	{
 		// parse friend rating ASYNC CALL		
 		if (uService == null)
 		{
-			uService = GWT.create(rackService.class);
+			uService = GWT.create(userService.class);
 		}
-
+		
+		// type 3: get this user's rating for THIS RACK ONLY
 		uService.getStarRating(fid, addr, pos, 3, new AsyncCallback<ArrayList<rackStarRatings>>()
 			{
 				public void onFailure(Throwable error)

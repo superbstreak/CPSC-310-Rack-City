@@ -12,7 +12,6 @@ import javax.jdo.PersistenceManagerFactory;
 
 import cs310MRAK.rackcity.client.rackService;
 import cs310MRAK.rackcity.shared.BikeRackTimeHits;
-import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 
 
 
