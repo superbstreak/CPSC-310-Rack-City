@@ -1,10 +1,7 @@
 package cs310MRAK.rackcity.client;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-
-import com.google.gwt.maps.client.geom.LatLng;
 
 public class Parser {
 

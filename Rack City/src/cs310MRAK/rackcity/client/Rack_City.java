@@ -18,8 +18,6 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.Request;
@@ -63,7 +61,6 @@ import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
 
-import cs310MRAK.rackcity.server.Rack;
 import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 
 /**
@@ -88,7 +85,9 @@ public class Rack_City implements EntryPoint {
 	//	private static final Logger LOG = Logger.getLogger(Rack_City.class.getName());
 	// google+ login stuff ------ S2 ---------
 	private static final String CLIENT_ID = "146858113551-ktl431gm3sbkrvid1khqrlvh1afclct4.apps.googleusercontent.com";
+	@SuppressWarnings("unused")
 	private static final String API_KEY = "AIzaSyCeb8Iws1UqI8caz2aHJee_JtTTiNdqqAY";
+	@SuppressWarnings("unused")
 	private static final String APPLICATION_NAME = "cs310rackcity";
 	private int loginFlipFlop = 0;
 	private int loginAttempt = 0;
@@ -109,6 +108,7 @@ public class Rack_City implements EntryPoint {
 	private ArrayList<String[]> userFriends = new ArrayList<String[]>();
 	private ArrayList<BikeRack> favRacks = new ArrayList<BikeRack>();
 	private ArrayList< ArrayList<String[]>> favRacksCommon = new ArrayList< ArrayList<String[]>>();
+	@SuppressWarnings("unused")
 	private ArrayList<UserSearchHistoryInstance> userHistory = new ArrayList<UserSearchHistoryInstance>();
 
 	// Server stuff
@@ -124,7 +124,7 @@ public class Rack_City implements EntryPoint {
 
 		// ========== Issue #72 ==========
 		URLserviceAsync ftpService = GWT.create(URLservice.class);
-		AsyncCallback callback = new AsyncCallback<Void>()
+		AsyncCallback<Void> callback = new AsyncCallback<Void>()
 				{
 			public void onFailure(Throwable error)
 			{
@@ -865,7 +865,7 @@ public class Rack_City implements EntryPoint {
 						rService = GWT.create(rackService.class);
 					}
 					reportCrimeButton.setEnabled(false);
-					AsyncCallback callback = new AsyncCallback<Void>()
+					AsyncCallback<Void> callback = new AsyncCallback<Void>()
 							{
 						public void onFailure(Throwable error)
 						{
@@ -1215,6 +1215,7 @@ public class Rack_City implements EntryPoint {
 				});
 	}
 
+	@SuppressWarnings("unused")
 	private void assignFavresult(ArrayList<String[]> fav)
 	{
 		if (!(fav.isEmpty() || fav == null))
@@ -1326,8 +1327,11 @@ public class Rack_City implements EntryPoint {
 				};
 				String key = null;
 				Random r = null;
+				@SuppressWarnings("static-access")
 				int secGenA = r.nextInt(9999);
+				@SuppressWarnings("static-access")
 				int secGenB = r.nextInt(9999);
+				@SuppressWarnings("static-access")
 				int secGenC = r.nextInt(9999);
 				key = String.valueOf(secGenA);
 				String inputkey = userID + searchAddress + String.valueOf(radius) + String.valueOf(crimeScore) + String.valueOf(rate);
@@ -1381,6 +1385,7 @@ public class Rack_City implements EntryPoint {
 	 * type == 0: REMOVE OPERATION. require LatLng
 	 * type == 1: ADD OPERATION. require all parameters
 	 */
+	@SuppressWarnings("unused")
 	private void rackOps(String a, LatLng p, int rn, int s, double cs, double r, int type)
 	{
 		if (type == 0)		// delete rack
@@ -1389,7 +1394,7 @@ public class Rack_City implements EntryPoint {
 			if (rService == null) {
 				rService = GWT.create(rackService.class);
 			}
-			AsyncCallback callback = new AsyncCallback<Void>()
+			AsyncCallback<Void> callback = new AsyncCallback<Void>()
 					{
 				public void onFailure(Throwable error)
 				{
@@ -1411,7 +1416,7 @@ public class Rack_City implements EntryPoint {
 			if (rService == null) {
 				rService = GWT.create(rackService.class);
 			}
-			AsyncCallback callback = new AsyncCallback<Void>()
+			AsyncCallback<Void> callback = new AsyncCallback<Void>()
 					{
 				public void onFailure(Throwable error)
 				{
@@ -1432,7 +1437,7 @@ public class Rack_City implements EntryPoint {
 			if (rService == null) {
 				rService = GWT.create(rackService.class);
 			}
-			AsyncCallback callback = new AsyncCallback<Void>()
+			AsyncCallback<Void> callback = new AsyncCallback<Void>()
 					{
 				public void onFailure(Throwable error)
 				{
@@ -1455,6 +1460,7 @@ public class Rack_City implements EntryPoint {
 	 * type == 0: REMOVE OPERATION. require LatLng
 	 * type == 1: ADD OPERATION. require all parameters
 	 */
+	@SuppressWarnings("unused")
 	private void crimeOps (int i, LatLng p, int type)
 	{
 		//cService = GWT.create(crimeService.class);
@@ -1578,6 +1584,7 @@ public class Rack_City implements EntryPoint {
 	/**
 	 * Called automagically by parseRack
 	 */
+	@SuppressWarnings("unused")
 	private void assignrackOutput (ArrayList<String[]> result)
 	{
 
@@ -1698,6 +1705,7 @@ public class Rack_City implements EntryPoint {
 				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
 				try 
 				{
+					@SuppressWarnings("unused")
 					Request request = builder.sendRequest(null, new RequestCallback() {
 						@SuppressWarnings("deprecation")
 						@Override
@@ -1791,6 +1799,7 @@ public class Rack_City implements EntryPoint {
 						RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
 						try 
 						{
+							@SuppressWarnings("unused")
 							Request request = builder.sendRequest(null, new RequestCallback() {
 								@SuppressWarnings("deprecation")
 								@Override
@@ -1860,6 +1869,7 @@ public class Rack_City implements EntryPoint {
 		else
 		{		
 			String url = "https://www.google.com/accounts/Logout?continue";	
+			@SuppressWarnings("unused")
 			final AuthRequest req = new AuthRequest(url, CLIENT_ID);
 			AUTH.clearAllTokens();
 			com.google.gwt.user.client.Window.open(url, "_blank", "");

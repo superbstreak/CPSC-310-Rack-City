@@ -2,7 +2,6 @@ package cs310MRAK.rackcity.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
@@ -20,10 +19,7 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 	 * 
 	 */
 	private static final long serialVersionUID = -8733888600485828222L;
-	
-	//private static final long serialVersionUID = 1L;
-	private static final Logger LOG = Logger.getLogger(userServiceImpl.class.getName());
-		 
+			 
 	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	
 	@Override
@@ -121,8 +117,10 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 		// TODO Auto-generated method stub
 		PersistenceManager pm = getPersistenceManager();
 		try {
+			@SuppressWarnings("unused")
 			long deleteCount = 0;	
 			String query = "select from " + UserInfo.class.getName();
+			@SuppressWarnings("unchecked")
 			List<UserInfo> Users = (List<UserInfo>) pm.newQuery(query).execute();
 			for (UserInfo r: Users)
 			{
@@ -150,6 +148,7 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 		Boolean output = false;
 		try {	
 			String query = "select from " + UserInfo.class.getName();
+			@SuppressWarnings("unchecked")
 			List<UserInfo> Users = (List<UserInfo>) pm.newQuery(query).execute();
 			for (UserInfo r: Users)
 			{
@@ -188,6 +187,7 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 		try
 		{
 			String query = "select from " +  UserSearchHistoryInstance.class.getName();
+			@SuppressWarnings("unchecked")
 			List<UserSearchHistoryInstance> UserSearchHistoryInstances = (List<UserSearchHistoryInstance>) pm.newQuery(query).execute();
 			for (UserSearchHistoryInstance r: UserSearchHistoryInstances)
 			{

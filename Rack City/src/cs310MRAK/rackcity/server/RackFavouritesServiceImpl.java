@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
 
-import cs310MRAK.rackcity.client.BikeRack;
 import cs310MRAK.rackcity.client.RackFavouritesService;
 import cs310MRAK.rackcity.shared.FavoriteRack;
 
@@ -23,6 +20,7 @@ public class RackFavouritesServiceImpl extends RemoteServiceServlet implements R
 	 */
 	private static final long serialVersionUID = -932652595470237815L;
 
+	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(RackFavouritesServiceImpl.class.getName());
 	 
 	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
@@ -42,6 +40,7 @@ public class RackFavouritesServiceImpl extends RemoteServiceServlet implements R
 		try
 		{	
 			String query = "select from " + FavoriteRack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<FavoriteRack> FavoriteRacks = (List<FavoriteRack>) pm.newQuery(query).execute();
 			for (FavoriteRack r: FavoriteRacks)
 			{
@@ -69,6 +68,7 @@ public class RackFavouritesServiceImpl extends RemoteServiceServlet implements R
 		PersistenceManager pm = getPersistenceManager();
 		try {
 			String query = "select from " +FavoriteRack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<FavoriteRack> FavoriteRacks = (List<FavoriteRack>) pm.newQuery(query).execute();
 			for (FavoriteRack r: FavoriteRacks)
 			{

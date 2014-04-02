@@ -4,14 +4,12 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import cs310MRAK.rackcity.client.rackService;
 
 
@@ -24,6 +22,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 	private static final long serialVersionUID = 1205162297094536429L;
 
 	//private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(rackServiceImpl.class.getName());
 	 
 	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
@@ -107,6 +106,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		try
 		{
 			String query = "select from " + Rack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
 			for (Rack r: Racks)
 			{
@@ -131,6 +131,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		try
 		{
 			String query = "select from " + Rack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
 			for (Rack r: Racks)
 			{
@@ -155,6 +156,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		try
 		{
 			String query = "select from " + Rack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
 			for (Rack r: Racks)
 			{
@@ -179,6 +181,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		try
 		{
 			String query = "select from " + Rack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
 			for (Rack r: Racks)
 			{
@@ -203,6 +206,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		try
 		{
 			String query = "select from " + Rack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
 			for (Rack r: Racks)
 			{
@@ -224,8 +228,10 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		// TODO Auto-generated method stub
 		PersistenceManager pm = getPersistenceManager();
 		try {
+			@SuppressWarnings("unused")
 			long deleteCount = 0;	
 			String query = "select from " + Rack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
 			for (Rack r: Racks)
 			{
@@ -256,6 +262,7 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		try
 		{	
 			String query = "select from " + Rack.class.getName();
+			@SuppressWarnings("unchecked")
 			List<Rack> Racks = (List<Rack>) pm.newQuery(query).execute();
 			for (Rack r: Racks)
 			{
