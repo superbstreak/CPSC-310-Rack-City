@@ -822,16 +822,9 @@ public class Rack_City implements EntryPoint {
 		final Button reportCrimeButton = new Button("reportCrimeButton");
 		reportCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//TODO INSERT CODE HERE to handle when user wants to report a crime
-				// TODO: stolenBikesServiceAsync !!!
-				// pesudo
-				// Get value from server with request (LatLng)
-				// add one (value += 1)
-				// update server update (LatLng, value)
-
 				//=====================================================================
 				// Check login status using login service.
-				if(!userEmail.isEmpty()) //TODO loginInfo.isLoggedIn() 
+				if(!userEmail.isEmpty())  
 				{
 					LatLng incident = currentMarker.getLatLng();
 					int numOfStolen = 0;
@@ -1198,7 +1191,6 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(ArrayList<String[]> result) {
-				// TODO Auto-generated method stub
 
 				if (uid.equals(userId))	 assignFavresult(result);
 				else compareFriendFav(name, uid, result);
@@ -1253,7 +1245,6 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(Boolean result) {
-				// TODO Auto-generated method stub
 				if (result == false)
 				{
 					AddUserInfo(id, name, email, gender, isPlus, propic);
@@ -1281,7 +1272,6 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(Void result) {
-				// TODO Auto-generated method stub
 				// no messages
 			}
 				};
@@ -1311,7 +1301,6 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(Void result) {
-				// TODO Auto-generated method stub
 				// no messages
 			}
 				};
@@ -1348,14 +1337,12 @@ public class Rack_City implements EntryPoint {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
 					messenger("Server ERROR: GET-HISTORY");
 				}
 
 				@Override
 				public void onSuccess(
 						ArrayList<UserSearchHistoryInstance> result) {
-					// TODO Auto-generated method stub
 					assignUserHistory(result);
 				}
 				
@@ -1516,7 +1503,6 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(ArrayList<String[]> result) {
-				// TODO Auto-generated method stub
 				Window.alert("Success. (PAR-CRIME)");
 				assignCrimeOutput(result);
 			}
@@ -1564,7 +1550,6 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(ArrayList<String[]> result) {
-				// TODO Auto-generated method stub
 				Window.alert("Success. (PAR-RACK)");
 				assignrackOutput(result);
 			}
@@ -1782,7 +1767,6 @@ public class Rack_City implements EntryPoint {
 					//Window.alert("Got an OAuth token:\n" + token + "\n"+ "Token expires in " + AUTH.expiresIn(req) + " ms\n");
 					if (!token.isEmpty())
 					{
-						//TODO token recived, start api access
 						saveToken(token);
 						// ============== on Success ==============
 						String url = "https://www.googleapis.com/plus/v1/people/me?access_token=" + token;
