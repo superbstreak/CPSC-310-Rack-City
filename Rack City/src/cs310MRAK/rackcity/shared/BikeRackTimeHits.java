@@ -1,6 +1,6 @@
 package cs310MRAK.rackcity.shared;
 
-import java.util.Date;
+
 // yes I know it looks silly..
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
