@@ -80,7 +80,10 @@ public class Rack_City implements EntryPoint {
 	private static ArrayList<BikeRack> listofracks = null;
 	private static ArrayList<Crime> listofcrimes = null;
 	boolean filter = false;
-	boolean isCrimeShown = false;
+	boolean isCrimeShown = true;
+	boolean isRackShown = true;
+	private ArrayList<Marker> crimeMarkerList = null;
+	private ArrayList<Marker> rackMarkerList = null;
 	//private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	//	private static final Logger LOG = Logger.getLogger(Rack_City.class.getName());
 	// google+ login stuff ------ S2 ---------
@@ -147,7 +150,7 @@ public class Rack_City implements EntryPoint {
 			GUIsetup();
 
 	}
-	
+
 	/**
 	 * Generates the user interface when the program is started
 	 */
@@ -173,18 +176,18 @@ public class Rack_City implements EntryPoint {
 		dockPanel.add(leftUserInputPanel, DockPanel.WEST);
 		dockPanel.setCellVerticalAlignment(leftUserInputPanel, HasVerticalAlignment.ALIGN_MIDDLE);
 		leftUserInputPanel.setSize("200px", "546px");
-		
+
 		final AbsolutePanel userInputPanel = new AbsolutePanel();
 		leftUserInputPanel.add(userInputPanel);
 		userInputPanel.setSize("200px", "500px");
-		
+
 		createAddressBox(userInputPanel);
 		createDatasheetViewButton(userInputPanel);
 		createMapViewButton(userInputPanel);
 		createUserLabelsCombos(userInputPanel);
 		createSearchButton(userInputPanel);
 	}
-	
+
 	/**
 	 * Creates the address text box for user input
 	 * @param userInputPanel
@@ -203,7 +206,7 @@ public class Rack_City implements EntryPoint {
 		txtbxAddress.setSize("145px", "18px");
 		txtbxAddress.setTabIndex(3);
 	}
-	
+
 	/**
 	 * Creates the datasheet view button and implements the DataGrid and click handlers
 	 * @param userInputPanel
@@ -225,7 +228,7 @@ public class Rack_City implements EntryPoint {
 				}
 
 				if(currentRackList != null && !currentRackList.isEmpty()){
-					
+
 					googleMap.setVisible(false);
 					((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 
@@ -239,7 +242,7 @@ public class Rack_City implements EntryPoint {
 		datasheetViewButton.setSize("84px", "44px");
 		datasheetViewButton.setTabIndex(2);
 	}
-	
+
 	/**
 	 * Generates the datagrid in the rack view panel when DataSheetView button is pressed
 	 */
@@ -279,11 +282,11 @@ public class Rack_City implements EntryPoint {
 		sortHandler.setComparator(distanceCol, new Comparator<BikeRack>() {
 			public int compare(BikeRack rack1, BikeRack rack2) {
 				//implement comparator for distance
-				
+
 				double compare = calcLatLngDistance(rack1.getCoordinate()) - calcLatLngDistance(rack2.getCoordinate());
-				
+
 				System.out.println("Compare #: " + compare);
-				
+
 				if(compare < 0){
 					return 1;
 				}else if(compare > 0){
@@ -330,7 +333,7 @@ public class Rack_City implements EntryPoint {
 		rackDataGrid.setRowData(currentRackList);
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackDataGrid);
 	}
-	
+
 	/**
 	 * Generates the MapViewButton and associated click handlers
 	 */
@@ -358,7 +361,7 @@ public class Rack_City implements EntryPoint {
 		mapViewButton.setSize("84px", "44px");
 		mapViewButton.setTabIndex(1);
 	}
-	
+
 	/**
 	 * Generates the combo lists and labels for the user input panel
 	 * @param userInputPanel
@@ -417,18 +420,18 @@ public class Rack_City implements EntryPoint {
 		ratingCombo.setSize("151px", "22px");
 		ratingCombo.setTabIndex(5);
 	}
-	
+
 	/**
 	 * Generates the search button for the user input panel and associated click handlers
 	 * @param userInputPanel
 	 */
 	private void createSearchButton(final AbsolutePanel userInputPanel){
-		
+
 		final TextBox txtbxAddress = (TextBox) userInputPanel.getWidget(0);
 		final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(5);
 		final ListBox crimeCombo = (ListBox) userInputPanel.getWidget(8);
 		final ListBox ratingCombo = (ListBox) userInputPanel.getWidget(10);
-		
+
 		Button searchButton = new Button("searchButton");
 		searchButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -457,7 +460,8 @@ public class Rack_City implements EntryPoint {
 										Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
 
 								showCrimeButton(userInputPanel);
-								
+								showRackButton(userInputPanel);
+
 							}else
 								Window.alert("No Rating selected!");
 						}else
@@ -471,7 +475,7 @@ public class Rack_City implements EntryPoint {
 		searchButton.setText("Search");
 		userInputPanel.add(searchButton, 118, 348);
 	}
-	
+
 	/**
 	 * Saves search history for specific search (called when search button is pressed)
 	 * @param txtbxAddress
@@ -497,7 +501,7 @@ public class Rack_City implements EntryPoint {
 
 		}
 	}
-	
+
 	/**
 	 * Displays show crime button when search is pressed
 	 * @param userInputPanel
@@ -508,32 +512,60 @@ public class Rack_City implements EntryPoint {
 		if (isCrimeShown) {
 			showCrimeButton.setText("Hide Crime Locations");
 		}
-		else {
+		else if (!isCrimeShown) {
 			showCrimeButton.setText("Show Crime Locations");
 		}
 		showCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				for (Crime crime : currentCrimeList) {
-					hideMarker(crime.getCoordinate(), 3);
-				}
-
-				if (!isCrimeShown) {
-					isCrimeShown = true;
-					for (Crime crime : currentCrimeList) {
-						hideMarker(crime.getCoordinate(), 3);
+				if (isCrimeShown) {
+					for (Marker mark : crimeMarkerList) {
+						mark.setVisible(false);
 					}
-				}
-				else {
 					isCrimeShown = false;
-					for (Crime crime : currentCrimeList) {
-						addMarker(crime.getCoordinate(), 3);
+				}
+				else if (!isCrimeShown) {
+					for (Marker mark : crimeMarkerList) {
+						mark.setVisible(true);
 					}
+					isCrimeShown = true;
 				}
 			}
 		});
 		userInputPanel.add(showCrimeButton, 10, 400);
 	}
-	
+
+	/**
+	 * Displays show rack button when search is pressed
+	 * @param userInputPanel
+	 */
+	private void showRackButton(AbsolutePanel userInputPanel){
+		Button showRackButton = new Button("showRackButton");
+		showRackButton.setSize("180px", "30px");
+		if (isRackShown) {
+			showRackButton.setText("Hide Rack Locations");
+		}
+		else if (!isRackShown) {
+			showRackButton.setText("Show Rack Locations");
+		}
+		showRackButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				if (isRackShown) {
+					for (Marker mark : rackMarkerList) {
+						mark.setVisible(false);
+					}
+					isRackShown = false;
+				}
+				else if (!isRackShown) {
+					for (Marker mark : rackMarkerList) {
+						mark.setVisible(true);
+					}
+					isRackShown = true;
+				}
+			}
+		});
+		userInputPanel.add(showRackButton, 10, 440);
+	}
+
 	/**
 	 * Creates the center panel for holding the google map and datasheet views
 	 */
@@ -546,10 +578,10 @@ public class Rack_City implements EntryPoint {
 		final AbsolutePanel rackViewPanel = new AbsolutePanel();
 		centerRackViewPanel.add(rackViewPanel);
 		rackViewPanel.setSize("700px","500px");
-		
+
 		loadGoogleMap(rackViewPanel);
 	}
-	
+
 	/**
 	 * Creates the title panel at the top of the page
 	 */
@@ -561,35 +593,35 @@ public class Rack_City implements EntryPoint {
 		final AbsolutePanel titleViewPanel = new AbsolutePanel();
 		titlePanel.add(titleViewPanel);
 		titleViewPanel.setSize("700px","40px");
-		
+
 		createAdminButton(titleViewPanel);
 		createLoginButton(null);
 	}
-	
+
 	/**
 	 * Creates the login button in the title panel and destroys the logged in button
 	 */
 	private void createLoginButton(Button loggedInButton){
 		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
-		
+
 		if(loggedInButton != null)
 			titleViewPanel.remove(loggedInButton);
-		
+
 		final Button loginButton = new Button("loginButton");
-		
+
 		loginButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
 				startLoginProcess();
 				getUserSearchHistory(userId);
 				createLoggedInButton(loginButton);
-				
+
 			}
 		});
 		loginButton.setText("Login");
 		titleViewPanel.add(loginButton, 500, 5);
 	}
-	
+
 	/**
 	 * Creates the logout button in the title panel and destroys the login button
 	 * @param loginButton
@@ -597,9 +629,9 @@ public class Rack_City implements EntryPoint {
 	private void createLoggedInButton(Button loginButton){
 		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
 		titleViewPanel.remove(loginButton);
-		
+
 		final Button loggedInButton = new Button("loggedInButton");
-		
+
 		loggedInButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
@@ -608,28 +640,28 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loggedInButton.setText("Logout");
-		
+
 		titleViewPanel.add(loggedInButton, 500-(userName.length()*2), 5);
 	}
-	
+
 	/**
 	 * Creates a text field with the username when logged in
 	 */
 	private void createUserLabel(){
 		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
-		
+
 		Label userLabel = new Label(userName + ", you are currently logged in.");
 		userLabel.setSize("350px", "10px");
-		
+
 		titleViewPanel.add(userLabel, 10, 15);
 	}
-	
+
 	/**
 	 * Destroys the text field with the username in it (called when user logs out)
 	 */
 	private void removeUserLabel(){
 		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
-		
+
 		for(int i = 0; i < titleViewPanel.getWidgetCount(); i++){
 			if(titleViewPanel.getWidget(i).toString().contains("gwt-Label")){
 				titleViewPanel.remove(i);
@@ -637,7 +669,7 @@ public class Rack_City implements EntryPoint {
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates Admin button in the title panel
 	 * @param titleViewPanel
@@ -657,15 +689,15 @@ public class Rack_City implements EntryPoint {
 					if (userEmail.equals("robwu15@gmail.com") || userEmail.equals("obedientworker@gmail.com") || userEmail.equals("kevin.david.greer@gmail.com") || userEmail.equals("abhisek.pradhan91@gmail.com"))
 					{
 						messenger("Refetch Request Approved");
-						
+
 						// here we hardcode
 
 						messenger("do I make it here?");
 						printerdebug();
 						messenger("or here?");
-						
+
 						//addtolist();
-						
+
 					}
 					else
 						// dude, amazing. 
@@ -677,7 +709,7 @@ public class Rack_City implements EntryPoint {
 		adminButton.setText("Admin");
 		titleViewPanel.add(adminButton, 575, 5);
 	}
-	
+
 	/**
 	 * Creates the holder for the display when a rack is clicked
 	 */
@@ -688,7 +720,7 @@ public class Rack_City implements EntryPoint {
 		dockPanel.setCellVerticalAlignment(rightRackClickPanel, HasVerticalAlignment.ALIGN_MIDDLE);
 		rightRackClickPanel.setSize("250px", "500px");
 	}
-	
+
 	/**
 	 * Creates a googleMap object and adds it to the centerPanel
 	 */
@@ -878,17 +910,17 @@ public class Rack_City implements EntryPoint {
 		});
 		reportCrimeButton.setText("Report Crime");
 		rackClickPanel.add(reportCrimeButton, 80, 425);
-		
+
 		final Button checkInButton = new Button("checkInButton");
 		checkInButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO Insert code that handles check in functionality
-				
+
 			}
 		});
 		checkInButton.setText("Check-In");
 		rackClickPanel.add(checkInButton, 80, 375);
-		
+
 
 		//Reverse Geocodes the rack location into an address for the user to see
 		Geocoder latLongAddress = new Geocoder();
@@ -988,7 +1020,7 @@ public class Rack_City implements EntryPoint {
 		{
 			MarkerOptions markerOptions = MarkerOptions.newInstance();
 			Icon icn;
-			
+
 			if (!userImageURL.isEmpty() || userImageURL == null){
 				icn = Icon.newInstance(userImageURL);
 				icn.setIconAnchor(Point.newInstance(10, 10));
@@ -998,7 +1030,7 @@ public class Rack_City implements EntryPoint {
 				icn.setIconAnchor(Point.newInstance(6, 20));
 			}
 			markerOptions.setIcon(icn);
-			
+
 			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
 		}
@@ -1009,6 +1041,7 @@ public class Rack_City implements EntryPoint {
 			icn.setIconAnchor(Point.newInstance(6, 20));
 			markerOptions.setIcon(icn);
 			Marker mark = new Marker(pos, markerOptions);
+			rackMarkerList.add(mark);
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 3)		// crime place: RED
@@ -1018,6 +1051,7 @@ public class Rack_City implements EntryPoint {
 			icn.setIconAnchor(Point.newInstance(6, 20));
 			markerOptions.setIcon(icn);
 			Marker mark = new Marker(pos, markerOptions);
+			crimeMarkerList.add(mark);
 			googleMap.addOverlay(mark);
 		}
 		/* set listener if the marker is pressed (single)
@@ -1027,43 +1061,6 @@ public class Rack_City implements EntryPoint {
 
 					}
 				});
-		 */
-	}
-
-	// google icon file from here: https://sites.google.com/site/gmapicons/
-	// add markers onto the map. Add marker overlay for each latlng within a list, center at address
-	private void hideMarker(LatLng pos, int type)
-	{
-		if (type == 1)		// search address: ME (blue)
-		{
-			MarkerOptions markerOptions = MarkerOptions.newInstance();
-			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));
-			if (!userImageURL.isEmpty() || userImageURL == null)  
-				markerOptions.setIcon(Icon.newInstance(userImageURL));
-			Marker mark = new Marker(pos, markerOptions);
-			googleMap.removeOverlay(mark);
-		}
-		else if (type == 2)		// bike racks: GREEN, !!!!! SHOULD HAVE DIFFERENT COLOR BASED ON RACK#
-		{
-			MarkerOptions markerOptions = MarkerOptions.newInstance();
-			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_green.png"));
-			Marker mark = new Marker(pos, markerOptions);
-			googleMap.removeOverlay(mark);
-		}
-		else if (type == 3)		// crime place: RED
-		{
-			MarkerOptions markerOptions = MarkerOptions.newInstance();
-			markerOptions.setIcon(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_red.png"));
-			Marker mark = new Marker(pos, markerOptions);
-			googleMap.removeOverlay(mark);
-		}
-		/* set listener if the marker is pressed (single)
-					mark.addMarkerClickHandler(new MarkerClickHandler() {
-						@Override
-						public void onClick(MarkerClickEvent event) {
-
-						}
-					});
 		 */
 	}
 
@@ -1108,7 +1105,7 @@ public class Rack_City implements EntryPoint {
 				return rack;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -1159,7 +1156,7 @@ public class Rack_City implements EntryPoint {
 		{
 			fService = GWT.create(RackFavouritesService.class);
 		}
-		
+
 		AsyncCallback<Void> callback = new AsyncCallback<Void>()
 				{
 			public void onFailure(Throwable error)
@@ -1195,7 +1192,7 @@ public class Rack_City implements EntryPoint {
 				if (uid.equals(userId))	 assignFavresult(result);
 				else compareFriendFav(name, uid, result);
 			}
-		});
+				});
 	}
 
 	private void assignFavresult(ArrayList<String[]> fav)
@@ -1208,16 +1205,16 @@ public class Rack_City implements EntryPoint {
 				//Window.alert("P"+i);
 				String[] temp = fav.get(i);
 				String LL = temp[0].toString();   // string		lat and long of position	
-				
+
 				for (int a = 0; a < listofracks.size(); a++)
 				{
 					if (listofracks.get(a).getCoordinate().toString().equals(LL))
 					{
-				
+
 						favRacks.add(listofracks.get(a));
 						ArrayList<String[]> tmp = new  ArrayList<String[]>(); 	// 
 						favRacksCommon.add(tmp);
-						
+
 					}
 				}
 
@@ -1322,7 +1319,7 @@ public class Rack_City implements EntryPoint {
 				key = key + String.valueOf(secGenC);
 				uService.addUserSearchHistoryInstance(key, userID, searchAddress, radius, crimeScore, rate, callback);
 	}
-	
+
 	private void getUserSearchHistory(String uid)
 	{
 		if (!uid.isEmpty())
@@ -1333,7 +1330,7 @@ public class Rack_City implements EntryPoint {
 			}
 
 			uService.getHistory(uid, new AsyncCallback<ArrayList<UserSearchHistoryInstance>>()
-			{
+					{
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -1345,12 +1342,12 @@ public class Rack_City implements EntryPoint {
 						ArrayList<UserSearchHistoryInstance> result) {
 					assignUserHistory(result);
 				}
-				
-			});
-				
+
+					});
+
 		}
 	}
-	
+
 	private void assignUserHistory(ArrayList<UserSearchHistoryInstance> result)
 	{
 		userHistory = new ArrayList<UserSearchHistoryInstance>();
@@ -1610,7 +1607,7 @@ public class Rack_City implements EntryPoint {
 	// getcommonfav (auto calls)
 	// two lists (favRacks, favRacksCommon)
 	// favRacks (My favorite racks), facRacksCommon (friends who also fav them)
-	
+
 	// TODO: average user ratings of all friends for each bike rack in your favourites.
 
 	// ===================== LOGIN PROCEDURE CALLS ============================
@@ -1862,7 +1859,7 @@ public class Rack_City implements EntryPoint {
 			loginFlipFlop = 0;
 		}
 	}
-	
+
 	private void printerdebug()
 	{
 		messenger("how about here?");
@@ -1880,10 +1877,10 @@ public class Rack_City implements EntryPoint {
 					String[] names =  favRacksCommon.get(i).get(j);
 					messenger(j+names[0]+" "+names[1]+" "+names[2]);
 				}
-				
+
 			}
-			
-			
+
+
 		}
 	}
 
