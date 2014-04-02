@@ -62,6 +62,7 @@ import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
 
 import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
+import cs310MRAK.rackcity.shared.rackStarRatings;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -1619,43 +1620,39 @@ public class Rack_City implements EntryPoint {
 		parseCrime();
 	}
 	
-	private void getFriendRatings(String fid, String pos)
+	
+	private void getFriendRatings(String fid, String addr, String pos, final String[] person)
 	{
-		// parse friend rating ASYNC CALL
-		int frating = 0;
-		
-		
-		
-		
-		
-		// get the position, where to add the friend data
-		if (favRacksCommon != null && !favRacksCommon.isEmpty() && !favRacks.isEmpty() && favRacks != null)
+		// parse friend rating ASYNC CALL		
+		if (uService == null)
 		{
-			for (int a = 0; a < favRacksCommon.size(); a++)
+			uService = GWT.create(rackService.class);
+		}
+
+		uService.getStarRating(fid, addr, pos, 3, new AsyncCallback<ArrayList<rackStarRatings>>()
 			{
-				if (favRacks.get(a).getCoordinate().toString().equals(pos))
+				public void onFailure(Throwable error)
 				{
-					for (int b = 0; b < favRacksCommon.get(a).size(); b++)
+					Window.alert("Server Error! (PAR-STAR-3)");
+					handleError(error);
+				}
+	
+				@Override
+				public void onSuccess(ArrayList<rackStarRatings> result) 
+				{
+					// assign ratings
+					int rating = result.get(0).getRating();
+					if (rating != 0)
 					{
-						String[] person = favRacksCommon.get(a).get(b);
-						if (person[2].equals(fid))
-						{
-							// assign ratings
-							if (frating != 0)
-							{
-								// add it to the fav common list
-								person[2] = String.valueOf(frating);
-							}
-							else
-							{
+						// add it to the fav common list
+						person[2] = String.valueOf(rating);
+					}
+					else
+					{
 								// do nothing
-							}
-						}
 					}
 				}
-			}
-		}
-		
+			});
 	}
 		
 	// ===================== SERVER ASYNC CALLS ENDS ==========================
@@ -1693,6 +1690,23 @@ public class Rack_City implements EntryPoint {
 		}
 		messenger(output);
 	}
+	
+	private void assignFriendRating(int arrayRACK, String fid)
+	{
+		// get the position, where to add the friend data
+		if (favRacksCommon != null && !favRacksCommon.isEmpty() && !favRacks.isEmpty() && favRacks != null)
+		{
+			for (int b = 0; b < favRacksCommon.get(arrayRACK).size(); b++)
+			{
+				String[] person = favRacksCommon.get(arrayRACK).get(b);
+				if (person[1].equals(fid))
+				{
+					BikeRack brtemp =favRacks.get(arrayRACK);
+					getFriendRatings(fid, brtemp.getAddress(), brtemp.getCoordinate().toString(), person);
+				}
+			}
+		}
+	}
 
 	private void getCommonFavorites()
 	{
@@ -1720,8 +1734,9 @@ public class Rack_City implements EntryPoint {
 					if (fLL.equals(favRacks.get(a).getCoordinate().toString()))
 					{
 						//						friend's rating
-						String[] ftemp = {name, fid, "0"};		
+						String[] ftemp = {name, fid, "0"};
 						favRacksCommon.get(a).add(ftemp);
+						assignFriendRating (a, fid);
 					}
 				}
 			}
@@ -1924,7 +1939,7 @@ public class Rack_City implements EntryPoint {
 	
 	private void printerdebug()
 	{
-		String output = "Friends who also like the same rack: \n";
+		String output = "Friends who also liked the same rack: \n";
 		for (int i = 0; i < favRacksCommon.size(); i++)
 		{
 			if (favRacksCommon.size() == 0)
@@ -1936,7 +1951,7 @@ public class Rack_City implements EntryPoint {
 				for(int j=0; j < favRacksCommon.get(i).size() ; j++)
 				{				
 					String[] names =  favRacksCommon.get(i).get(j);
-					output = output + "\n POS: "+ favRacks.get(i).getCoordinate().toString() + "\nr Name: " + names[0]+" id: "+names[1]+" Rating: "+names[2];
+					output = output + "\n POS: "+ favRacks.get(i).getCoordinate().toString() + "\n Name: " + names[0]+" id: "+names[1]+" Rating: "+names[2];
 				} 
 			}
 
@@ -1945,7 +1960,22 @@ public class Rack_City implements EntryPoint {
 	}
 
 	// ====================== LOGIN PROCEDURE CALLS END ======================
-
+	public double getFavAverageRating (int arrayRACKpos)
+	{
+		double output = 0;
+		int friendcount = 0;
+		int RatingsubTotal = 0;
+		for (int i = 0; i < favRacksCommon.get(arrayRACKpos).size(); i++)
+		{
+			String[] person = favRacksCommon.get(arrayRACKpos).get(i);
+			RatingsubTotal += Integer.parseInt(person[2]);
+			friendcount += 1;
+		}
+		output = RatingsubTotal/friendcount;
+		
+		return output;
+	}
+	
 	public static ArrayList<Crime> getCrimeData()
 	{
 		return listofcrimes;

@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
+import cs310MRAK.rackcity.shared.rackStarRatings;
 
 @RemoteServiceRelativePath("userinfo")
 public interface userService extends RemoteService {
@@ -13,12 +14,14 @@ public interface userService extends RemoteService {
 	// adder
 	public void addUser(String id, String name,  String email, String gender, Boolean isPlus, String propic);
 	public void addUserSearchHistoryInstance(String key, String userID, String searchAddress, int radius, int crimeScore, int rate);
+	public void addStarRating(String userID, String addr, String pos, int starratings);
 	
 	// checker 
 	public Boolean hasUser(String id);
 	
 	// getter
 	public ArrayList<UserSearchHistoryInstance> getHistory(String uid);
+	public ArrayList<rackStarRatings> getStarRating(String userID , String addr, String pos, int type);
 	
 	// updater
 	public void changeUserName(String id, String newName);

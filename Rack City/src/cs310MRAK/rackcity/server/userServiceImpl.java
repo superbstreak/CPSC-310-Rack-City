@@ -12,6 +12,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import cs310MRAK.rackcity.client.userService;
 import cs310MRAK.rackcity.shared.UserInfo;
 import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
+import cs310MRAK.rackcity.shared.rackStarRatings;
 
 public class userServiceImpl  extends RemoteServiceServlet implements userService{
 
@@ -194,6 +195,70 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 				if (r.getUserID().equals(uid))
 				{
 					fin.add(r);
+				}
+			}
+		}
+		finally
+		{
+			pm.close();
+		}
+		return fin;
+	}
+
+	@Override
+	public void addStarRating(String userID, String addr, String pos, int starratings) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			pm.makePersistent(new rackStarRatings(userID, addr, pos, starratings));
+		}
+		finally
+		{
+			pm.close();
+		}
+		
+	}
+
+	@Override
+	public ArrayList<rackStarRatings> getStarRating(String userID, String addr, String pos, int type) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		ArrayList<rackStarRatings> fin = new ArrayList<rackStarRatings>();
+		try
+		{
+			String query = "select from " +  rackStarRatings.class.getName();
+			@SuppressWarnings("unchecked")
+			List<rackStarRatings> StarRatings = (List<rackStarRatings>) pm.newQuery(query).execute();
+			String primarykey = addr+userID;
+			if (type == 1)				// get user rating on all position
+			{
+				for (rackStarRatings r: StarRatings)
+				{
+					if (r.getUid().equals(userID))
+					{
+						fin.add(r);
+					}
+				}
+			}
+			else if (type == 2)			// get all ratings on this address
+			{
+				for (rackStarRatings r: StarRatings)
+				{
+					if (r.getAddress().equals(addr))
+					{
+						fin.add(r);
+					}
+				}
+			}
+			else if (type == 3)			// get user rating on this postion
+			{
+				for (rackStarRatings r: StarRatings)
+				{
+					if (r.getUidAddress().equals(primarykey))
+					{
+						fin.add(r);
+					}
 				}
 			}
 		}
