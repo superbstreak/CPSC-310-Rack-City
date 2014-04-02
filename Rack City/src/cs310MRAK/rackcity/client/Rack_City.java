@@ -86,8 +86,8 @@ public class Rack_City implements EntryPoint {
 	boolean filter = false;
 	//boolean isCrimeShown = true;
 	//boolean isRackShown = true;
-	private ArrayList<Marker> crimeMarkerList = null;
-	private ArrayList<Marker> rackMarkerList = null;
+	//private ArrayList<Marker> crimeMarkerList = null;
+	//private ArrayList<Marker> rackMarkerList = null;
 	//private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	//	private static final Logger LOG = Logger.getLogger(Rack_City.class.getName());
 	// google+ login stuff ------ S2 ---------
@@ -1134,7 +1134,7 @@ public class Rack_City implements EntryPoint {
 			icn.setIconAnchor(Point.newInstance(6, 20));
 			markerOptions.setIcon(icn);
 			Marker mark = new Marker(pos, markerOptions);
-			rackMarkerList.add(mark);
+		//	rackMarkerList.add(mark);
 			googleMap.addOverlay(mark);
 		}
 		else if (type == 3)		// crime place: RED
@@ -1144,7 +1144,7 @@ public class Rack_City implements EntryPoint {
 			icn.setIconAnchor(Point.newInstance(6, 20));
 			markerOptions.setIcon(icn);
 			Marker mark = new Marker(pos, markerOptions);
-			crimeMarkerList.add(mark);
+		//	crimeMarkerList.add(mark);
 			googleMap.addOverlay(mark);
 		}
 		/* set listener if the marker is pressed (single)
