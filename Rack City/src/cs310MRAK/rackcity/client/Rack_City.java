@@ -1657,8 +1657,7 @@ public class Rack_City implements EntryPoint {
 		parseCrime();
 	}
 
-	//TODO add it to the start thingy
-	private void submituserRating (String uid, String addr, String pos, int rating)
+	private void submituserRating (final String uid, final String addr, final String pos, int rating)
 	{
 		if (uService == null)
 		{
@@ -1676,21 +1675,39 @@ public class Rack_City implements EntryPoint {
 			public void onSuccess(Void ignore)
 			{
 				Window.alert("Success. (ADD-RATE)");
+				getALLRatingATpos (uid, addr, pos);
 			}
 		};
 		uService.addStarRating(uid, addr, pos, rating, ratingCallback);
 	}
 
 	// type 2: get all user rating on this address
-	private void getALLRatingATpos(String uid, String addr, String pos)
+	private void getALLRatingATpos(String uid, final String addr, final String pos)
 	{
 		if (uService == null)
 		{
 			uService = GWT.create(userService.class);
 		}
 		
-		//uService.getStarRating(uid, addr, pos, 2, callback);
+		uService.getStarRating(uid, addr, pos, 2, new AsyncCallback<ArrayList<rackStarRatings>>()
+			{
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("Server Error! (PAR-STAR-2)");
+					handleError(caught);
+				}
+
+				@Override
+				public void onSuccess(ArrayList<rackStarRatings> result) {
+					if (result != null)
+					{
+						calculateNewAvg(addr, pos, result);
+					}
+				}
+			});
 	}
+
 
 	private void getFriendRatings(String fid, String addr, String pos, final String[] person)
 	{
