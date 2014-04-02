@@ -1597,6 +1597,46 @@ public class Rack_City implements EntryPoint {
 		parseRack();
 		parseCrime();
 	}
+	
+	private void getFriendRatings(String fid, String pos)
+	{
+		// parse friend rating ASYNC CALL
+		int frating = 0;
+		
+		
+		
+		
+		
+		// get the position, where to add the friend data
+		if (favRacksCommon != null && !favRacksCommon.isEmpty() && !favRacks.isEmpty() && favRacks != null)
+		{
+			for (int a = 0; a < favRacksCommon.size(); a++)
+			{
+				if (favRacks.get(a).getCoordinate().toString().equals(pos))
+				{
+					for (int b = 0; b < favRacksCommon.get(a).size(); b++)
+					{
+						String[] person = favRacksCommon.get(a).get(b);
+						if (person[2].equals(fid))
+						{
+							// assign ratings
+							if (frating != 0)
+							{
+								// add it to the fav common list
+								person[3] = String.valueOf(frating);
+							}
+							else
+							{
+								// do nothing
+							}
+						}
+					}
+				}
+			}
+		}
+		
+	}
+		
 	// ===================== SERVER ASYNC CALLS ENDS ==========================
 
 	// FAV procedure
@@ -1658,7 +1698,8 @@ public class Rack_City implements EntryPoint {
 					messenger("Comparing racks");
 					if (fLL.equals(favRacks.get(a).getCoordinate()))
 					{
-						String[] ftemp = {name, fid};
+						//						friend's rating
+						String[] ftemp = {name, fid, "0"};		
 						favRacksCommon.get(a).add(ftemp);
 					}
 				}
