@@ -659,11 +659,8 @@ public class Rack_City implements EntryPoint {
 						messenger("Refetch Request Approved");
 						
 						// here we hardcode
-
-						messenger("do I make it here?");
+						messenger("Refetch Currently disabled due to busy traffic");
 						printerdebug();
-						messenger("or here?");
-						
 						//addtolist();
 						
 					}
@@ -828,15 +825,15 @@ public class Rack_City implements EntryPoint {
 				{
 					LatLng incident = currentMarker.getLatLng();
 					int numOfStolen = 0;
-					messenger("INCIDENT: "+incident.toString());
+					//messenger("INCIDENT: "+incident.toString());
 					// Adds to numberStolenBike of the rack in question
 					for (int i = 0; i < currentRackList.size(); i++) 
 					{
 						BikeRack currentRack = currentRackList.get(i);
-						messenger("INCIDENT ? CURRENT "+currentRack.getCoordinate().toString());
+						//messenger("INCIDENT ? CURRENT "+currentRack.getCoordinate().toString());
 						if (currentRack.getCoordinate().toString().equals(incident.toString())) 
 						{
-							messenger("INCIDENT == CURRENT "+currentRack.getCoordinate().toString());
+							//messenger("INCIDENT == CURRENT "+currentRack.getCoordinate().toString());
 							currentRack.addStolenBike();
 							numOfStolen = currentRack.getNumberStolenBikes();
 							clickRackDisplayPanel(currentRack);
@@ -1202,7 +1199,6 @@ public class Rack_City implements EntryPoint {
 	{
 		if (!(fav.isEmpty() || fav == null))
 		{
-			messenger("DEBUG: Fav List size: "+fav.size());
 			for(int i = 0; i < fav.size(); i++)
 			{
 				//Window.alert("P"+i);
@@ -1626,7 +1622,7 @@ public class Rack_City implements EntryPoint {
 							if (frating != 0)
 							{
 								// add it to the fav common list
-								person[3] = String.valueOf(frating);
+								person[2] = String.valueOf(frating);
 							}
 							else
 							{
@@ -1698,8 +1694,8 @@ public class Rack_City implements EntryPoint {
 				String fLL = fav[0];
 				for (int a = 0; a < favRacks.size(); a++)
 				{
-					messenger("Comparing racks");
-					if (fLL.equals(favRacks.get(a).getCoordinate()))
+					messenger(fLL+" vs Comparing racks?  "+favRacks.get(a).getCoordinate().toString());
+					if (fLL.equals(favRacks.get(a).getCoordinate().toString()))
 					{
 						//						friend's rating
 						String[] ftemp = {name, fid, "0"};		
@@ -1906,26 +1902,23 @@ public class Rack_City implements EntryPoint {
 	
 	private void printerdebug()
 	{
-		messenger("how about here?");
-		messenger(favRacksCommon.size()+"");
+		String output = "Friends who also like the same rack: \n";
 		for (int i = 0; i < favRacksCommon.size(); i++)
 		{
 			if (favRacksCommon.size() == 0)
 			{
-				messenger("NULL");
+				messenger("No common rack");
 			}
 			else
 			{
-				messenger(favRacksCommon.get(i).size()+"");
-				for(int j=0; j < favRacksCommon.get(i).size() ; j++){
+				for(int j=0; j < favRacksCommon.get(i).size() ; j++)
+				{				
 					String[] names =  favRacksCommon.get(i).get(j);
-					messenger(j+names[0]+" "+names[1]+" "+names[2]);
+					output = output + "\n POS: "+ favRacks.get(i).getCoordinate().toString() + " Name: " + names[0]+" id: "+names[1]+" Rating: "+names[2];
 				}
-				
 			}
-			
-			
 		}
+		messenger(output);
 	}
 
 	// ====================== LOGIN PROCEDURE CALLS END ======================
