@@ -27,4 +27,5 @@ public interface rackService extends RemoteService {
 	// remove
 	public void removeRack(String pos);
 	public void addBikeRackTimeHit(String pos);
+	public void updateBikeRackTimeHit(String pos, int timeHits, String whichOne);
 }

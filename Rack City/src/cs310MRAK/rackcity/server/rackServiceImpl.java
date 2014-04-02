@@ -304,6 +304,45 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		}
 	}
 	
+	@Override
+	public void updateBikeRackTimeHit(String pos, int timeHits, String whichOne) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			BikeRackTimeHits brth = pm.getObjectById(BikeRackTimeHits.class, pos);
+			if(whichOne.equals("0to1")) brth.setInterval0to1(timeHits);
+			if(whichOne.equals("1to2")) brth.setInterval1to2(timeHits);
+			if(whichOne.equals("2to3")) brth.setInterval2to3(timeHits);
+			if(whichOne.equals("3to4")) brth.setInterval3to4(timeHits);
+			if(whichOne.equals("4to5")) brth.setInterval4to5(timeHits);
+			if(whichOne.equals("5to6")) brth.setInterval5to6(timeHits);
+			if(whichOne.equals("6to7")) brth.setInterval6to7(timeHits);
+			if(whichOne.equals("7to8")) brth.setInterval7to8(timeHits);
+			if(whichOne.equals("8to9")) brth.setInterval8to9(timeHits);
+			if(whichOne.equals("9to10")) brth.setInterval9to10(timeHits);
+			if(whichOne.equals("10to11")) brth.setInterval10to11(timeHits);
+			if(whichOne.equals("11to12")) brth.setInterval11to12(timeHits);
+			if(whichOne.equals("12to13")) brth.setInterval12to13(timeHits);
+			if(whichOne.equals("13to14")) brth.setInterval13to14(timeHits);
+			if(whichOne.equals("14to15")) brth.setInterval14to15(timeHits);
+			if(whichOne.equals("15to16")) brth.setInterval15to16(timeHits);
+			if(whichOne.equals("16to17")) brth.setInterval16to17(timeHits);
+			if(whichOne.equals("17to18")) brth.setInterval17to18(timeHits);
+			if(whichOne.equals("18to19")) brth.setInterval18to19(timeHits);
+			if(whichOne.equals("19to20")) brth.setInterval19to20(timeHits);
+			if(whichOne.equals("20to21")) brth.setInterval20to21(timeHits);
+			if(whichOne.equals("21to22")) brth.setInterval21to22(timeHits);
+			if(whichOne.equals("22to23")) brth.setInterval22to23(timeHits);
+			if(whichOne.equals("23to24")) brth.setInterval23to24(timeHits);
+
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+	
 
 	
 	
