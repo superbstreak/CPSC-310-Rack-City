@@ -1620,6 +1620,30 @@ public class Rack_City implements EntryPoint {
 		parseCrime();
 	}
 	
+	//TODO add it to the start thingy
+	private void submituserRating (String uid, String addr, String pos, int rating)
+	{
+		if (uService == null)
+		{
+			uService = GWT.create(rackService.class);
+		}
+		uService.addStarRating(uid, addr, pos, rating, new AsyncCallback<Void>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				messenger("ERROR ADD-RATING");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+	}
+	
 	
 	private void getFriendRatings(String fid, String addr, String pos, final String[] person)
 	{
