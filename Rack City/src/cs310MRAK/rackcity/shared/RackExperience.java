@@ -1,4 +1,4 @@
-package cs310MRAK.rackcity.server;
+package cs310MRAK.rackcity.shared;
 
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -13,6 +13,10 @@ public class RackExperience {
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
 		@PrimaryKey
 		@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+		private String posUid;
+		@Persistent
+		private String uid;
+		@Persistent
 		private String pos;
 		@Persistent
 		private String experience;
@@ -21,10 +25,12 @@ public class RackExperience {
 		 
 		  
 		 
-		public RackExperience(String pos, String e)
+		public RackExperience(String pos, String e, String uid)
 		{
 			this.pos = pos;
 			this.experience = e;
+			this.uid = uid;
+			this.posUid = pos.concat(uid);
 		}
   
  
@@ -44,6 +50,18 @@ public class RackExperience {
 		}
  
  
+		
+		
+		public String getUid() {
+			return uid;
+		}
+ 
+  
+ 
+ 
+		public void setUid(String uid) {
+			this.pos = uid;
+		}
     
  
  

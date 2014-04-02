@@ -1,4 +1,4 @@
-package cs310MRAK.rackcity.server;
+package cs310MRAK.rackcity.shared;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;

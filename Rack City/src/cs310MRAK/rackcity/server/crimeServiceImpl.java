@@ -11,6 +11,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 import cs310MRAK.rackcity.client.crimeService;
+import cs310MRAK.rackcity.shared.Crime;
 
 
 
