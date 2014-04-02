@@ -1644,6 +1644,7 @@ public class Rack_City implements EntryPoint {
 		{
 			uService = GWT.create(userService.class);
 		}
+		
 		//uService.getStarRating(uid, addr, pos, 2, callback);
 	}
 
@@ -1983,8 +1984,8 @@ public class Rack_City implements EntryPoint {
 		messenger(output);
 	}
 
-	// ====================== LOGIN PROCEDURE CALLS END ======================
-	public double getFavAverageRating (int arrayRACKpos)
+	// ====================== LOGIN PROCEDURE CALLS END ======================	
+	public double getFRIENDAverageRating (int arrayRACKpos)
 	{
 		double output = 0;
 		int friendcount = 0;
