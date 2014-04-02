@@ -11,6 +11,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 import cs310MRAK.rackcity.client.rackService;
+import cs310MRAK.rackcity.shared.BikeRackTimeHits;
+import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 
 
 
@@ -288,9 +290,21 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 
 	
 	
+	@Override
+	public void addBikeRackTimeHit(String pos) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			pm.makePersistent(new BikeRackTimeHits(pos, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0));
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
 	
-	
-	
+
 	
 	
 	

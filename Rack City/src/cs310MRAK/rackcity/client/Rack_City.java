@@ -695,6 +695,9 @@ public class Rack_City implements EntryPoint {
 						messenger("do I make it here?");
 						printerdebug();
 						messenger("or here?");
+						
+						addBikeRackTimeHit("49.284176, -123.106037");
+
 
 						//addtolist();
 
@@ -1320,6 +1323,27 @@ public class Rack_City implements EntryPoint {
 				uService.addUserSearchHistoryInstance(key, userID, searchAddress, radius, crimeScore, rate, callback);
 	}
 
+	/**
+	 * Will only use for admin button to massively load a bikeracktimehit object for every bike rack initially. Just to get them in the datastore.
+	 */
+	private void addBikeRackTimeHit(String pos){
+		
+		AsyncCallback<Void> callback = new AsyncCallback<Void>()
+				{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (RMV-RACK)");
+				handleError(error);
+			}
+			public void onSuccess(Void ignore)
+			{
+				Window.alert("Success (RMV-RACK)");
+			}
+				};
+				
+				rService.addBikeRackTimeHit(pos, callback);
+	}
+	
 	private void getUserSearchHistory(String uid)
 	{
 		if (!uid.isEmpty())
@@ -1356,7 +1380,6 @@ public class Rack_City implements EntryPoint {
 
 	/**
 	 * Call rackOps (Admin only): 
-	 * type == 0: REMOVE OPERATION. require LatLng
 	 * type == 1: ADD OPERATION. require all parameters
 	 */
 	@SuppressWarnings("unused")
