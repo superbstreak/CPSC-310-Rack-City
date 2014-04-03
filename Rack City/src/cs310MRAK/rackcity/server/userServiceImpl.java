@@ -279,16 +279,15 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 			String query = "select from " +  UserInfo.class.getName();
 			@SuppressWarnings("unchecked")
 			List<UserInfo> UserInfos = (List<UserInfo>) pm.newQuery(query).execute();
-			int i = 0;
-			while (i < UserInfos.size())
+			
+			for (UserInfo r: UserInfos)
 			{
-				if (UserInfos.get(i).getId().equals(uid))
+				if (r.getId().equals(uid))
 				{
-					fin.add(UserInfos.get(i));
-					break;
+					fin.add(r);
 				}
-				i++;
 			}
+			
 		}
 		finally
 		{

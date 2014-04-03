@@ -1646,7 +1646,7 @@ public class Rack_City implements EntryPoint {
 				{
 			public void onFailure(Throwable error)
 			{
-				Window.alert("Server Error! (PAR-CRIME)");
+				Window.alert("Server Error! (PAR-USER)");
 				handleError(error);
 			}
 
