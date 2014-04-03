@@ -1016,6 +1016,25 @@ public class Rack_City implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				//TODO Insert code that handles check in functionality
 
+				if (rService == null) 
+				{
+					rService = GWT.create(rackService.class);
+				}
+				AsyncCallback<String> callback = new AsyncCallback<String>()
+						{
+					public void onFailure(Throwable error)
+					{
+						Window.alert("Server Error! (getBikeRackTimeHits)");
+						handleError(error);
+					}
+					@Override
+					public void onSuccess(String result) {
+						
+							Window.alert("Server Success! (getBikeRackTimeHits): " + result);
+					}
+						};
+				
+				rService.getRackTimeHits("49.284176, -123.106037", callback);
 			}
 		});
 		checkInButton.setText("Check-In");
