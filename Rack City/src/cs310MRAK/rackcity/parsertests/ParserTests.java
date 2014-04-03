@@ -1,4 +1,4 @@
-package parsertests;
+package cs310MRAK.rackcity.parsertests;
 
 import static org.junit.Assert.*;
 
