@@ -5,8 +5,26 @@
 		<p>http://cs310rackcity.appspot.com/</p>
 		<p>http://www.youtube.com/watch?v=_P1wcF_XBlE</p>
 		<p>http://tutorials.jenkov.com/java-servlets/httpservlet.html</p>
-		<p><u>Completed Tasks</u>: #73, #36, #31, #30, #29, #28, #27, #26, #25, #20</p>
-		<p><u>ToDo Tasks</u>: #37, #35, #34, #33, #32, #24</p>
+<p>#70    5 </p>
+<p>#68    1 </p>
+<p>#66   >= 0.5 </p>
+<p>#65    5 </p>
+<p>#64    4 </p>
+<p>#63    5 </p>
+<p>#59    2 </p>
+<p>#56   =< 3 </p>
+<p>#55   =< 0.5 </p>
+<p>#54   =< 0.5 </p>
+<p>#53   =< 0.5 </p>
+<p>#52   =< 0.5 </p>
+<p>#51   =< 0.5 </p>
+<p>#50   =< 0.5 </p>
+<p>#49   =< 0.5 </p>
+<p>#48   =< 0.5 </p>
+
+<p> if our time estimations are correct, at minimum the project will take 22.5 hours </p>
+<p> at maximum, it would take 29.5 hours or more. </p>
+<br>
 		<p>- <a href="https://github.com/UBC-CPSC-310-2013W2/M-RAK-Consulting-GruWP/wiki/February-27,-2014-Minute-Meeting-Minutes">February-27, 2014 Minute Meeting Minutes </a></p><hr>
 		<p>- <a href="https://github.com/UBC-CPSC-310-2013W2/M-RAK-Consulting-GruWP/wiki/Minute-Meeting-Minutes-March-18th">March-18, 2014 Minute Meeting Minutes </a></p><hr>
 		<p><a href="http://data.vancouver.ca/datacatalogue/bikeRacks.htm" target="_blank">Rack Data</a>, <a href="http://data.vancouver.ca/datacatalogue/crime-data.htm" target="_blank">Crime Data</a></p>
