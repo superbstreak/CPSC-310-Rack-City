@@ -63,6 +63,10 @@ public class BikeRack {
 	public double getCrimeScore() {
 		return this.crimeScore;
 	}
+	
+	public String getScoordinate() {
+		return this.coordinate;
+	}
 
 	public int getNumberStolenBikes(){
 		return numberStolenBikes;
@@ -74,6 +78,10 @@ public class BikeRack {
 
 	public void setCrimeScore(double newCrimeScore) {
 		this.crimeScore = newCrimeScore;
+	}
+
+	public void setScoordinate(String coordinate) {
+		this.coordinate = coordinate;
 	}
 
 	public void addStolenBike() {
