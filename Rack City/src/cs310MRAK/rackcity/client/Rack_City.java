@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import com.google.api.gwt.oauth2.client.Auth;
@@ -1084,8 +1085,54 @@ public class Rack_City implements EntryPoint {
 				
 						// *^*^*^
 						LatLng pos2 = rack.getCoordinate();
-						int timeHitsInput = 1;
-						String whichOne = "10to11";
+
+						String problem = currentRackTimeHits;
+						
+						String problemWithoutLeftBrack = problem.replace("[", "");
+						String problemWithoutRightAndLeftBranch = problemWithoutLeftBrack.replace("]", "");
+						String problemAlsoWithoutSpace = problemWithoutRightAndLeftBranch.replace(" ", "");
+						
+						String[] problemArray = problemAlsoWithoutSpace.split(",");
+						
+						// there are 24 elements
+						// to access the last one, it's [23]
+						// can also think of 0to1 as 24to1. That is, 11:59pm -> | 12am.. 12:02 am.. 12:58 am -> 1:00 am
+						// And 0%24 = 24%24
+						// so either way, if I is 24 or 0 at 12am, it will work
+						
+						Date date = new Date();
+						int hourInt = date.getHours();
+						
+						String w = problemArray[hourInt % 24];
+						int output = Integer.parseInt(w);
+						
+						int timeHitsInput = output + 1;
+					
+						String whichOne = "";
+						if(hourInt == 0) whichOne = "0to1";
+						if(hourInt == 1) whichOne = "1to2";
+						if(hourInt == 2) whichOne = "2to3";
+						if(hourInt == 3) whichOne = "3to4";
+						if(hourInt == 4) whichOne = "4to5";
+						if(hourInt == 5) whichOne = "5to6";
+						if(hourInt == 6) whichOne = "6to7";
+						if(hourInt == 7) whichOne = "7to8";
+						if(hourInt == 8) whichOne = "8to9";
+						if(hourInt == 9) whichOne = "9to10";
+						if(hourInt == 10) whichOne = "10to11";
+						if(hourInt == 11) whichOne = "11to12";
+						if(hourInt == 12) whichOne = "12to13";
+						if(hourInt == 13) whichOne = "13to14";
+						if(hourInt == 14) whichOne = "14to15";
+						if(hourInt == 15) whichOne = "15to16";
+						if(hourInt == 16) whichOne = "16to17";
+						if(hourInt == 17) whichOne = "17to18";
+						if(hourInt == 18) whichOne = "18to19";
+						if(hourInt == 19) whichOne = "19to20";
+						if(hourInt == 20) whichOne = "20to21";
+						if(hourInt == 21) whichOne = "21to22";
+						if(hourInt == 22) whichOne = "22to23";
+						if(hourInt == 23) whichOne = "23to24";
 						
 				//rService.getRackTimeHits("49.284176, -123.106037", callback);
 				rService.updateBikeRackTimeHit(pos2.toString(), timeHitsInput, whichOne, callback);
