@@ -964,14 +964,16 @@ public class Rack_City implements EntryPoint {
 					// Adds to numberStolenBike of the rack in question
 					
 					int i = 0;
+					BikeRack currentRack = null;
 					while (i < currentRackList.size())
 					{
-						BikeRack currentRack = currentRackList.get(i);
+						currentRack = currentRackList.get(i);
 						//messenger("INCIDENT ? CURRENT "+currentRack.getCoordinate().toString());
 						if (currentRack.getCoordinate().toString().equals(incident.toString())) 
 						{
 							//messenger("INCIDENT == CURRENT "+currentRack.getCoordinate().toString());
 							currentRack.addStolenBike();
+							//messenger ("new crimescore: "+currentRack.getCrimeScore());
 							numOfStolen = currentRack.getNumberStolenBikes();
 							clickRackDisplayPanel(currentRack);
 							break;
@@ -999,6 +1001,8 @@ public class Rack_City implements EntryPoint {
 
 						//rService.getStolen(newp, callback);
 						rService.updateStolen(newp, numOfStolen, callback);
+						if (currentRack != null)
+							rackOps(currentRack.getAddress(), currentRack.getCoordinate(), currentRack.getRackCount(), currentRack.getNumberStolenBikes(),	currentRack.getCrimeScore(), currentRack.getRating(), 3);
 						reportCrimeButton.setEnabled(true);
 						//Window.alert(" Reported!");
 				} 
