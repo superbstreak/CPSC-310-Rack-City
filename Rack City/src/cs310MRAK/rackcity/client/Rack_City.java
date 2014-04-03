@@ -1642,20 +1642,19 @@ public class Rack_City implements EntryPoint {
 			uService = GWT.create(userService.class);
 		}
 		
-		AsyncCallback<ArrayList<UserInfo>> callback = new AsyncCallback<ArrayList<UserInfo>>()
+		uService.getUser(id, new AsyncCallback<ArrayList<UserInfo>>()
 				{
 			public void onFailure(Throwable error)
 			{
-				Window.alert("Server Error! (PAR-USER)");
+				Window.alert("Server Error! (PAR-CRIME)");
 				handleError(error);
 			}
 
 			@Override
-			public void onSuccess(ArrayList<UserInfo> result)
-			{
-				assignUserInfo(result);				
-			}};
-			uService.getUser(id, callback);
+			public void onSuccess(ArrayList<UserInfo> result) {
+				// TODO Auto-generated method stub
+				assignUserInfo(result);		
+			}});
 	}
 	
 	private void assignUserInfo(ArrayList<UserInfo> result)
