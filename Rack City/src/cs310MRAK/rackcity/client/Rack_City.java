@@ -1590,7 +1590,7 @@ public class Rack_City implements EntryPoint {
 				{
 			public void onFailure(Throwable error)
 			{
-				Window.alert("Server Error! (ADD-USER)");
+				Window.alert("Server Error! (HAS-USER)");
 				handleError(error);
 			}
 			@Override
@@ -1646,7 +1646,7 @@ public class Rack_City implements EntryPoint {
 				{
 			public void onFailure(Throwable error)
 			{
-				Window.alert("Server Error! (ADD-USER)");
+				Window.alert("Server Error! (PAR-USER)");
 				handleError(error);
 			}
 
@@ -1655,7 +1655,7 @@ public class Rack_City implements EntryPoint {
 			{
 				assignUserInfo(result);				
 			}};
-				uService.getUser(id, callback);;
+			uService.getUser(id, callback);
 	}
 	
 	private void assignUserInfo(ArrayList<UserInfo> result)
