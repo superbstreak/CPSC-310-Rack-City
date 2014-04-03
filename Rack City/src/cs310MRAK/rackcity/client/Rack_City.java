@@ -1352,7 +1352,7 @@ public class Rack_City implements EntryPoint {
 	 * Called when user log in to determine new or returning
 	 */
 	// search tag: &^%%
-	private void checkUserInfo(final String id, final String name, final String email, final String gender, final Boolean isPlus, final String propic)
+	private void checkUserInfo(final String id, final String name, final String email, final String gender, final Boolean isPlus, final String propic, final String favBike, final String bikeName, final String bikeColor)
 	{
 		if (uService == null) 
 		{
@@ -1369,7 +1369,7 @@ public class Rack_City implements EntryPoint {
 			public void onSuccess(Boolean result) {
 				if (result == false)
 				{
-					AddUserInfo(id, name, email, gender, isPlus, propic);
+					AddUserInfo(id, name, email, gender, isPlus, propic, favBike, bikeName, bikeColor);
 				}
 			}
 				};
@@ -1379,7 +1379,7 @@ public class Rack_City implements EntryPoint {
 	/**
 	 *call when new user is logged in to G+
 	 */
-	private void AddUserInfo(String id, String name, String email, String gender, Boolean isPlus, String propic)
+	private void AddUserInfo(String id, String name, String email, String gender, Boolean isPlus, String propic, String favBike, String bikeName, String bikeColor)
 	{
 		if (uService == null) 
 		{
@@ -1397,7 +1397,7 @@ public class Rack_City implements EntryPoint {
 				// no messages
 			}
 				};
-				uService.addUser(id, name, email, gender, isPlus, propic, callback);
+				uService.addUser(id, name, email, gender, isPlus, propic, favBike, bikeName, bikeColor, callback);
 	}
 
 	/**
@@ -1474,6 +1474,7 @@ public class Rack_City implements EntryPoint {
 					};
 					rService.removeRack(newp, callback);
 		}
+		
 
 		// !@#
 		if (type == 1)
@@ -1988,13 +1989,13 @@ public class Rack_City implements EntryPoint {
 											userName = js.get("displayName").isString().stringValue();
 											userId = js.get("id").isString().stringValue();
 											userImageURL = js.get("image").isObject().get("url").isString().stringValue();
-											userImageURL = userImageURL.substring(0, userImageURL.length() - 2) + "20";
+											userImageURL = userImageURL.substring(0, userImageURL.length() - 2) + "30";
 											//System.out.println(userImageURL);
 											userGender = js.get("gender").isString().stringValue();
 											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
 
 											createUserLabel();
-											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL);
+											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL, "", "", "");
 											getUserFriends();
 										}
 									}
@@ -2056,6 +2057,7 @@ public class Rack_City implements EntryPoint {
 			loginFlipFlop = 0;
 		}
 	}
+	
 
 	private void printerdebug()
 	{

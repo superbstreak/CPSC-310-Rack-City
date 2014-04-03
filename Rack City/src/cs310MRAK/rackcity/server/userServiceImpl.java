@@ -24,12 +24,12 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 	private static final PersistenceManagerFactory PMF = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	
 	@Override
-	public void addUser( String id, String name, String email, String gender, Boolean isPlus, String propic) {
+	public void addUser( String id, String name, String email, String gender, Boolean isPlus, String propic, String favbike, String bikename, String bcolor) {
 		// TODO Auto-generated method stub
 		PersistenceManager pm = getPersistenceManager();
 		try
 		{
-			pm.makePersistent(new UserInfo(id, name, email, gender, isPlus, propic));
+			pm.makePersistent(new UserInfo(id, name, email, gender, isPlus, propic, favbike, bikename, bcolor));
 		}
 	
 		finally
@@ -260,6 +260,34 @@ public class userServiceImpl  extends RemoteServiceServlet implements userServic
 						fin.add(r);
 					}
 				}
+			}
+		}
+		finally
+		{
+			pm.close();
+		}
+		return fin;
+	}
+
+	@Override
+	public ArrayList<UserInfo> getUser(String uid) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		ArrayList<UserInfo> fin = new ArrayList<UserInfo>();
+		try
+		{
+			String query = "select from " +  UserInfo.class.getName();
+			@SuppressWarnings("unchecked")
+			List<UserInfo> UserInfos = (List<UserInfo>) pm.newQuery(query).execute();
+			int i = 0;
+			while (i < UserInfos.size())
+			{
+				if (UserInfos.get(i).getId().equals(uid))
+				{
+					fin.add(UserInfos.get(i));
+					break;
+				}
+				i++;
 			}
 		}
 		finally

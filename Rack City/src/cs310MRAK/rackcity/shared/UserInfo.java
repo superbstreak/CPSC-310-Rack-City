@@ -26,6 +26,12 @@ public class UserInfo{
 	@Persistent
 	private String proPicURL;
 	@Persistent
+	private String favBike;
+	@Persistent
+	private String bikeName;
+	@Persistent
+	private String bikeColor;
+	@Persistent
 	private Date createDate;
 	
 	//a good way to use constructor
@@ -33,7 +39,7 @@ public class UserInfo{
 			this.createDate = new Date();
 		}
 	 
-	public UserInfo(String id, String name, String email, String gender, Boolean isplus, String url)
+	public UserInfo(String id, String name, String email, String gender, Boolean isplus, String url, String favbike, String bikename, String bikecolor)
 	{
 		this();
 		this.Id = id;
@@ -42,6 +48,36 @@ public class UserInfo{
 		this.Gender = gender;
 		this.isPlus = isplus;
 		this.proPicURL = url;
+		this.favBike = favbike;
+		this.bikeName = bikename;
+		this.bikeColor = bikecolor;
+	}
+	
+	public String getFavBike()
+	{
+		return this.favBike;
+	}
+	public void setFavBike(String f)
+	{
+		this.favBike = f;
+	}
+	
+	public String getbikeColor()
+	{
+		return this.bikeColor;
+	}
+	public void setbikeColor(String bc)
+	{
+		this.bikeColor = bc;
+	}
+	
+	public String getbikeName()
+	{
+		return this.bikeName;
+	}
+	public void setBikeName(String b)
+	{
+		this.bikeName = b;
 	}
 	
 	public String getId()

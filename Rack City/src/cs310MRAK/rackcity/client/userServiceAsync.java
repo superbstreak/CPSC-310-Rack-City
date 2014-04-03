@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import cs310MRAK.rackcity.shared.UserInfo;
 import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 import cs310MRAK.rackcity.shared.rackStarRatings;
 
 public interface userServiceAsync {
 		
 		// adder
-		void addUser(String id, String name,  String email, String gender, Boolean isPlus, String propic, AsyncCallback<Void> callback);
+		void addUser(String id, String name,  String email, String gender, Boolean isPlus, String propic, String fbike, String bikename, String bcolor, AsyncCallback<Void> callback);
 		void addUserSearchHistoryInstance(String key, String userID, String searchAddress, int radius, int crimeScore, int rate, AsyncCallback<Void> callback);
 		void addStarRating (String userID, String addr, String pos, int starratings, AsyncCallback<Void> asyncCAllback);
 		
@@ -18,6 +19,7 @@ public interface userServiceAsync {
 		void hasUser(String id, AsyncCallback<Boolean> callback);
 		
 		// getter
+		void getUser (String uid, AsyncCallback<ArrayList<UserInfo>> callback);
 		void getHistory (String uid, AsyncCallback<ArrayList<UserSearchHistoryInstance>> callback);
 		void getStarRating(String userID , String addr, String pos,int type, AsyncCallback<ArrayList<rackStarRatings>> callback);
 		
