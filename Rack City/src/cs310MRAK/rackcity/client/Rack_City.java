@@ -29,6 +29,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
@@ -129,8 +130,6 @@ public class Rack_City implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 
-		GUIsetup();
-
 		// ========== Issue #72 ==========
 		URLserviceAsync ftpService = GWT.create(URLservice.class);
 		AsyncCallback<Void> callback = new AsyncCallback<Void>()
@@ -157,7 +156,9 @@ public class Rack_City implements EntryPoint {
 	/**
 	 * Generates the user interface when the program is started
 	 */
+	@SuppressWarnings("deprecation")
 	private void GUIsetup(){
+		DOM.removeChild(RootPanel.getBodyElement(), DOM.getElementById("loading"));
 		rootPanel = RootPanel.get();
 		rootPanel.setSize("1300px", "700px");
 		dockPanel = new DockPanel();
@@ -1591,6 +1592,7 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(ArrayList<String[]> result) {
+				GUIsetup();
 				Window.alert("Success. (PAR-CRIME)");
 				assignCrimeOutput(result);
 			}
