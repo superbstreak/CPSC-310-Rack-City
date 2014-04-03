@@ -962,7 +962,9 @@ public class Rack_City implements EntryPoint {
 					int numOfStolen = 0;
 					//messenger("INCIDENT: "+incident.toString());
 					// Adds to numberStolenBike of the rack in question
-					for (int i = 0; i < currentRackList.size(); i++) 
+					
+					int i = 0;
+					while (i < currentRackList.size())
 					{
 						BikeRack currentRack = currentRackList.get(i);
 						//messenger("INCIDENT ? CURRENT "+currentRack.getCoordinate().toString());
@@ -972,7 +974,9 @@ public class Rack_City implements EntryPoint {
 							currentRack.addStolenBike();
 							numOfStolen = currentRack.getNumberStolenBikes();
 							clickRackDisplayPanel(currentRack);
+							break;
 						}
+						i++;
 					}
 					// =============== UPDATE STOLEN BIKE ON DATASTORE ==================
 					String newp = incident.toString();
@@ -1432,7 +1436,7 @@ public class Rack_City implements EntryPoint {
 				@Override
 				public void onSuccess(
 						ArrayList<UserSearchHistoryInstance> result) {
-					userHistory = result;
+						userHistory = result;
 				}
 					});
 		}
