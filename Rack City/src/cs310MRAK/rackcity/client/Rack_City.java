@@ -116,6 +116,7 @@ public class Rack_City implements EntryPoint {
 	private ArrayList<String[]> userFriends = new ArrayList<String[]>();
 	private ArrayList<BikeRack> favRacks = new ArrayList<BikeRack>();
 	private ArrayList< ArrayList<String[]>> favRacksCommon = new ArrayList< ArrayList<String[]>>();
+	private String currentRackPos = "";
 	private String currentRackTimeHits = "";
 
 	@SuppressWarnings("unused")
@@ -943,7 +944,7 @@ public class Rack_City implements EntryPoint {
 	 * Method called when a rack on a map is clicked.
 	 * Displays the 'Report Crime' button and title of rack in a panel on the right of the page
 	 */
-	private void clickRackDisplayPanel(BikeRack rack){
+	private void clickRackDisplayPanel(final BikeRack rack){
 
 
 		if(rack == null){
@@ -975,13 +976,9 @@ public class Rack_City implements EntryPoint {
 			}
 				};
 
-				String pos = rack.getScoordinate();
 				LatLng pos2 = rack.getCoordinate();
 				
-				messenger(pos+" vs " + pos2.getLatitude()+", "+ pos2.getLongitude());
-				rService.getRackTimeHits(pos, callback);
-
-				//rService.getRackTimeHits("49.284176, -123.106037", callback);
+				rService.getRackTimeHits(pos2.toString(), callback);
 
 		final AbsolutePanel rackClickPanel = new AbsolutePanel();
 		((HorizontalPanel) dockPanel.getWidget(3)).clear();
@@ -1070,7 +1067,7 @@ public class Rack_City implements EntryPoint {
 				{
 					rService = GWT.create(rackService.class);
 				}
-				AsyncCallback<String> callback = new AsyncCallback<String>()
+				AsyncCallback<Void> callback = new AsyncCallback<Void>()
 						{
 					public void onFailure(Throwable error)
 					{
@@ -1078,13 +1075,18 @@ public class Rack_City implements EntryPoint {
 						handleError(error);
 					}
 					@Override
-					public void onSuccess(String result) {
-							Window.alert("Server Success! (getBikeRackTimeHits): " + result);
+					public void onSuccess(Void result) {
+							Window.alert("Server Success! It was updated.");
 					}
 						};
 				
-				rService.getRackTimeHits("49.284176, -123.106037", callback);
-				
+						// *^*^*^
+						LatLng pos2 = rack.getCoordinate();
+						int timeHitsInput = 1;
+						String whichOne = "10to11";
+						
+				//rService.getRackTimeHits("49.284176, -123.106037", callback);
+				rService.updateBikeRackTimeHit(pos2.toString(), timeHitsInput, whichOne, callback);
 			}
 		});
 		checkInButton.setText("Check-In");
@@ -1139,7 +1141,7 @@ public class Rack_City implements EntryPoint {
 		
 		Label timeHits = new Label("Rack time hits: " + this.currentRackTimeHits);
 		timeHits.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		rackClickPanel.add(timeHits, 0, 378);
+		rackClickPanel.add(timeHits, 0, 358);
 		timeHits.setSize("250px", "54px");
 		// &!&!&!&
 		
