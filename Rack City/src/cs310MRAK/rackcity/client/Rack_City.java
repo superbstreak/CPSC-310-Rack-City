@@ -66,6 +66,7 @@ import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
 
+import cs310MRAK.rackcity.shared.UserInfo;
 import cs310MRAK.rackcity.shared.UserSearchHistoryInstance;
 import cs310MRAK.rackcity.shared.rackStarRatings;
 
@@ -118,8 +119,9 @@ public class Rack_City implements EntryPoint {
 	private ArrayList< ArrayList<String[]>> favRacksCommon = new ArrayList< ArrayList<String[]>>();
 	private String currentRackPos = "";
 	private String currentRackTimeHits = "";
-
-	@SuppressWarnings("unused")
+	String favBike = "";
+	String bikeName = "";
+	String bikeColor = "";
 	private ArrayList<UserSearchHistoryInstance> userHistory = new ArrayList<UserSearchHistoryInstance>();
 
 	// Server stuff
@@ -1424,13 +1426,17 @@ public class Rack_City implements EntryPoint {
 				{
 					AddUserInfo(id, name, email, gender, isPlus, propic, favBike, bikeName, bikeColor);
 				}
+				else if (result == true)
+				{
+					parseUserInfo(id);
+				}
 			}
 				};
 				uService.hasUser(id, callback);
 	}
 
 	/**
-	 *call when new user is logged in to G+
+	 *call when new user is logged in to G+ or want to change information
 	 */
 	private void AddUserInfo(String id, String name, String email, String gender, Boolean isPlus, String propic, String favBike, String bikeName, String bikeColor)
 	{
@@ -1452,7 +1458,41 @@ public class Rack_City implements EntryPoint {
 				};
 				uService.addUser(id, name, email, gender, isPlus, propic, favBike, bikeName, bikeColor, callback);
 	}
+	
+	/**
+	 *  for the profile page
+	 */
+	private void parseUserInfo(String id)
+	{
+		if (uService == null) 
+		{
+			uService = GWT.create(userService.class);
+		}
+		
+		AsyncCallback<ArrayList<UserInfo>> callback = new AsyncCallback<ArrayList<UserInfo>>()
+				{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (ADD-USER)");
+				handleError(error);
+			}
 
+			@Override
+			public void onSuccess(ArrayList<UserInfo> result)
+			{
+				assignUserInfo(result);				
+			}};
+				uService.getUser(id, callback);;
+	}
+	
+	private void assignUserInfo(ArrayList<UserInfo> result)
+	{
+		UserInfo me = result.get(0);
+		favBike = me.getFavBike();
+		bikeName = me.getbikeName();
+		bikeColor = me.getbikeColor();
+	}
+	
 	/**
 	 * Will only use for admin button to massively load a bikeracktimehit object for every bike rack initially. Just to get them in the datastore.
 	 */
@@ -1504,7 +1544,6 @@ public class Rack_City implements EntryPoint {
 	 * Call rackOps (Admin only): 
 	 * type == 1: ADD OPERATION. require all parameters
 	 */
-	@SuppressWarnings("unused")
 	private void rackOps(String a, LatLng p, int rn, int s, double cs, double r, int type)
 	{
 		if (type == 0)		// delete rack
@@ -2105,6 +2144,10 @@ public class Rack_City implements EntryPoint {
 			favRacks = new ArrayList<BikeRack>();
 			favRacksCommon = new ArrayList< ArrayList<String[]>>();
 			userHistory = new ArrayList<UserSearchHistoryInstance>();
+			favBike = "";
+			bikeName = "";
+			bikeColor = "";
+			
 			messenger("Successfully cleared all tokens and signed out");
 			removeUserLabel();
 			loginFlipFlop = 0;
