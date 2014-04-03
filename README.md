@@ -5,22 +5,23 @@
 		<p>http://cs310rackcity.appspot.com/</p>
 		<p>http://www.youtube.com/watch?v=_P1wcF_XBlE</p>
 		<p>http://tutorials.jenkov.com/java-servlets/httpservlet.html</p>
-<p>#70    5 </p>
-<p>#68    1 </p>
-<p>#66   >= 0.5 </p>
-<p>#65    5 </p>
-<p>#64    4 </p>
-<p>#63    5 </p>
-<p>#59    2 </p>
-<p>#56   =< 3 </p>
-<p>#55   =< 0.5 </p>
-<p>#54   =< 0.5 </p>
-<p>#53   =< 0.5 </p>
-<p>#52   =< 0.5 </p>
-<p>#51   =< 0.5 </p>
-<p>#50   =< 0.5 </p>
-<p>#49   =< 0.5 </p>
-<p>#48   =< 0.5 </p>
+<p>Task #70    5 hours </p>
+<p>Task #68    1 hours </p>
+<p>Task #66   more than 0.5 hours </p>
+<p>Task #65    5 hours </p>
+<p>Task #64    4 hours </p>
+<p>Task #63    5 hours </p>
+<p>Task #59    2 hours </p>
+<p>Task #56   less than 3 hours </p>
+<p>Task #55   less than 0.5 hours </p>
+<p>Task #54   less than 0.5 hours </p>
+<p>Task #53   less than 0.5 hours </p>
+<p>Task #52   less than 0.5 hours </p>
+<p>Task #51   less than 0.5 hours </p>
+<p>Task #50   less than 0.5 hours </p>
+<p>Task #49   less than 0.5 hours </p>
+<p>Task #48   less than 0.5 hours </p>
+
 
 <p> if our time estimations are correct, at minimum the project will take 22.5 hours </p>
 <p> at maximum, it would take 29.5 hours or more. </p>
