@@ -13,6 +13,8 @@ import com.google.gwt.core.client.Callback;
 //======================== ^ G+ ============================
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
@@ -37,6 +39,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -187,9 +191,66 @@ public class Rack_City implements EntryPoint {
 		appTitleLbl.setSize("191px", "18px");
 		appTitleLbl.setStyleName("gwt-Title-Label-Style");
 		appTitlePanel.add(appTitleLbl, 500, 0);
-
+		
+		MenuBar menuBar = new MenuBar();
+		menuBar.addStyleName("gwt-MenuBar");
+		menuBar.addItem("Map View", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onMapViewClick();
+		    }
+		});
+		
+		
+		menuBar.addItem("DataSheet View", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onDatasheetViewClick();
+		    }
+		});
+		
+		
+		appTitlePanel.add(menuBar,10,50);
 		rootPanel.add(appTitlePanel,0,0);
 
+	}
+	
+	private void onMapViewClick(){
+		
+		if(currentDatasheetItem != null){
+			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+			currentDatasheetItem = null;
+		}
+
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
+
+		final DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
+		dock.addNorth(googleMap, 500);
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(dock);
+		googleMap.setVisible(true);
+	}
+	
+	
+	private void onDatasheetViewClick(){
+		if(currentAddress == null){
+			Window.alert("No Address searched! Please search an address first before entering DataSheet view.");
+			return;
+		}
+
+		if(currentMarker != null){
+			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+			((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
+			currentMarker = null;
+		}
+
+		if(currentRackList != null && !currentRackList.isEmpty()){
+
+			googleMap.setVisible(false);
+			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
+
+			createDataGrid();
+		}else
+			Window.alert("No Bike Racks to display in Datasheet View! Please search again.");
 	}
 
 	/**
@@ -207,8 +268,6 @@ public class Rack_City implements EntryPoint {
 		userInputPanel.setSize("200px", "500px");
 
 		createAddressBox(userInputPanel);
-		createDatasheetViewButton(userInputPanel);
-		createMapViewButton(userInputPanel);
 		createUserLabelsCombos(userInputPanel);
 		createSearchButton(userInputPanel);
 	}
@@ -245,42 +304,6 @@ public class Rack_City implements EntryPoint {
 				oracle.add(hist.getSearchAddress());
 			}
 		}
-	}
-
-	/**
-	 * Creates the datasheet view button and implements the DataGrid and click handlers
-	 * @param userInputPanel
-	 */
-	private void createDatasheetViewButton(AbsolutePanel userInputPanel){
-		final Button datasheetViewButton = new Button("datasheetViewButton"); //1
-		datasheetViewButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-
-				if(currentAddress == null){
-					Window.alert("No Address searched! Please search an address first before entering DataSheet view.");
-					return;
-				}
-
-				if(currentMarker != null){
-					((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-					((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
-					currentMarker = null;
-				}
-
-				if(currentRackList != null && !currentRackList.isEmpty()){
-
-					googleMap.setVisible(false);
-					((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
-
-					createDataGrid();
-				}else
-					Window.alert("No Bike Racks to display in Datasheet View! Please search again.");
-			}
-		});
-		datasheetViewButton.setText("Datasheet View");
-		userInputPanel.add(datasheetViewButton, 106, 0);
-		datasheetViewButton.setSize("84px", "44px");
-		datasheetViewButton.setTabIndex(2);
 	}
 
 	/**
@@ -397,34 +420,6 @@ public class Rack_City implements EntryPoint {
 	}
 
 	/**
-	 * Generates the MapViewButton and associated click handlers
-	 */
-	private void createMapViewButton(AbsolutePanel userInputPanel){
-		final Button mapViewButton = new Button("mapViewButton"); //3
-		mapViewButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-
-				if(currentDatasheetItem != null){
-					((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-					currentDatasheetItem = null;
-				}
-
-				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
-
-				final DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
-				dock.addNorth(googleMap, 500);
-				((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(dock);
-				googleMap.setVisible(true);
-
-			}
-		});
-		mapViewButton.setText("Map View");
-		userInputPanel.add(mapViewButton, 10, 0);
-		mapViewButton.setSize("84px", "44px");
-		mapViewButton.setTabIndex(1);
-	}
-
-	/**
 	 * Generates the combo lists and labels for the user input panel
 	 * @param userInputPanel
 	 */
@@ -489,9 +484,9 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void createSearchButton(final AbsolutePanel userInputPanel){
 		final SuggestBox txtbxAddress = (SuggestBox) userInputPanel.getWidget(0);
-		final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(5);
-		final ListBox crimeCombo = (ListBox) userInputPanel.getWidget(8);
-		final ListBox ratingCombo = (ListBox) userInputPanel.getWidget(10);
+		final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(3);
+		final ListBox crimeCombo = (ListBox) userInputPanel.getWidget(6);
+		final ListBox ratingCombo = (ListBox) userInputPanel.getWidget(8);
 
 		Button searchButton = new Button("searchButton");
 		searchButton.addClickHandler(new ClickHandler() {
@@ -643,25 +638,43 @@ public class Rack_City implements EntryPoint {
 	 * Displays show rack button when search is pressed
 	 * @param userInputPanel
 	 */
-	private void showRackButton(AbsolutePanel userInputPanel){
+	private void showRackButton(final AbsolutePanel userInputPanel){
 		Button showRackButton = new Button("showRackButton");
+		showRackButton.setText("Hide Rack Locations");
 		showRackButton.setSize("180px", "30px");
-		if (isRackShown) {
-			showRackButton.setText("Hide Rack Locations");
-		}
-		else if (!isRackShown) {
-			showRackButton.setText("Show Rack Locations");
-		}
 		showRackButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isRackShown) {
 					currentRackList.clear();
 					isRackShown = false;
+					
+					googleMap.clearOverlays();
+					
+					final SuggestBox txtbxAddress = (SuggestBox) userInputPanel.getWidget(0);
+					final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(3);
+					final Button showRackButton = (Button) userInputPanel.getWidget(11);
+					
+					addMapOverlay(txtbxAddress.getText(), 
+							Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), -1, -1);
+					
+					showRackButton.setText("Show Rack Locations");
 				}
 				else if (!isRackShown) {
-					for (BikeRack rack : savedRackList) {
-						currentRackList.add(rack);
-					}
+					googleMap.clearOverlays();
+					
+					final SuggestBox txtbxAddress = (SuggestBox) userInputPanel.getWidget(0);
+					final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(3);
+					final ListBox crimeCombo = (ListBox) userInputPanel.getWidget(6);
+					final ListBox ratingCombo = (ListBox) userInputPanel.getWidget(8);
+					final Button showRackButton = (Button) userInputPanel.getWidget(11);
+					
+					addMapOverlay(txtbxAddress.getText(), 
+							Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())),
+							Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
+							Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
+					
+					showRackButton.setText("Hide Rack Locations");
+					
 					isRackShown = true;
 				}
 			}
