@@ -3,8 +3,8 @@
 		<title>Bike Rack App: Rack City</title>
 		<p><u>Product link:</u></p>
 		<p>http://cs310rackcity.appspot.com/</p>
-		<p>http://www.youtube.com/watch?v=_P1wcF_XBlE</p>
-		<p>http://tutorials.jenkov.com/java-servlets/httpservlet.html</p>
+<p><b> if our time estimations are correct, at minimum the project will take 22.5 hours </b> </p>
+<p><b> at maximum, it would take 29.5 hours or more. </b></p>
 <p>Task #70    5 hours </p>
 <p>Task #68    1 hours </p>
 <p>Task #66   more than 0.5 hours </p>
@@ -23,8 +23,7 @@
 <p>Task #48   less than 0.5 hours </p>
 
 
-<p> if our time estimations are correct, at minimum the project will take 22.5 hours </p>
-<p> at maximum, it would take 29.5 hours or more. </p>
+
 <br>
 		<p>- <a href="https://github.com/UBC-CPSC-310-2013W2/M-RAK-Consulting-GruWP/wiki/February-27,-2014-Minute-Meeting-Minutes">February-27, 2014 Minute Meeting Minutes </a></p><hr>
 		<p>- <a href="https://github.com/UBC-CPSC-310-2013W2/M-RAK-Consulting-GruWP/wiki/Minute-Meeting-Minutes-March-18th">March-18, 2014 Minute Meeting Minutes </a></p><hr>
