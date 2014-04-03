@@ -44,6 +44,8 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.TabBar;
+import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -55,6 +57,9 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.NoSelectionModel;
+import com.google.gwt.view.client.RangeChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
 import com.google.gwt.maps.client.geocode.Geocoder;
@@ -172,7 +177,7 @@ public class Rack_City implements EntryPoint {
 		rootPanel = RootPanel.get();
 		rootPanel.setSize("1300px", "700px");
 		dockPanel = new DockPanel();
-		rootPanel.add(dockPanel, 10, 100);
+		rootPanel.add(dockPanel, 10, 150);
 		dockPanel.setSize("1210px", "500px");
 
 		createAppTitle();
@@ -184,7 +189,7 @@ public class Rack_City implements EntryPoint {
 
 	private void createAppTitle(){
 		AbsolutePanel appTitlePanel = new AbsolutePanel();
-		appTitlePanel.setSize("1300px", "100px");
+		appTitlePanel.setSize("1300px", "150px");
 
 		Label appTitleLbl = new Label("Rack City");
 		appTitleLbl.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -194,23 +199,37 @@ public class Rack_City implements EntryPoint {
 		
 		MenuBar menuBar = new MenuBar();
 		menuBar.addStyleName("gwt-MenuBar");
-		menuBar.addItem("Map View", new ScheduledCommand() {
+		menuBar.setSize("400px", "35px");
+		
+		MenuItem mapView = new MenuItem("Map View", new ScheduledCommand() {
 		    @Override
 		    public void execute() {
 		    	onMapViewClick();
 		    }
 		});
+		mapView.setSize("66px", "20px");
+		mapView.addStyleName("gwt-MenuItem");
+		menuBar.addItem(mapView);
 		
-		
-		menuBar.addItem("DataSheet View", new ScheduledCommand() {
+		MenuItem dataSheetView = new MenuItem("DataSheet View", new ScheduledCommand() {
 		    @Override
 		    public void execute() {
 		    	onDatasheetViewClick();
 		    }
 		});
+		dataSheetView.setSize("107px", "20px");
+		menuBar.addItem(dataSheetView);
 		
+		MenuItem favView = new MenuItem("Favorites View", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onFavoritesViewClick();
+		    }
+		});
+		favView.setSize("100px", "20px");
+		menuBar.addItem(favView);
 		
-		appTitlePanel.add(menuBar,10,50);
+		appTitlePanel.add(menuBar,10,100);
 		rootPanel.add(appTitlePanel,0,0);
 
 	}
@@ -251,6 +270,75 @@ public class Rack_City implements EntryPoint {
 			createDataGrid();
 		}else
 			Window.alert("No Bike Racks to display in Datasheet View! Please search again.");
+	}
+	
+	private void onFavoritesViewClick(){
+		if(userId.equals("")){
+			Window.alert("You are not logged in. Please login.");
+			return;
+		}
+
+		if(currentMarker != null){
+			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+			((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
+			currentMarker = null;
+		}
+
+		if(!favRacks.isEmpty()){
+
+			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
+
+			createFavoritesGrid();
+		}else
+			Window.alert("You have no favorites!");
+	}
+	
+	private void createFavoritesGrid(){
+		DataGrid<BikeRack> favoritesDataGrid = new DataGrid<BikeRack>();
+		favoritesDataGrid.setPageSize(100);
+
+		//need click handler
+		favoritesDataGrid.setSize("700px", "500px");
+		
+		TextColumn<BikeRack> ratingCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				return rack.getRating() + "/5";
+			}
+		};
+		favoritesDataGrid.addColumn(ratingCol, "Rating");
+		favoritesDataGrid.setColumnWidth(ratingCol, 30, Unit.PCT);
+
+
+		ListDataProvider<BikeRack> dataProvider = new ListDataProvider<BikeRack>();
+		dataProvider.addDataDisplay(favoritesDataGrid);
+
+		List<BikeRack> tmpFavlist = dataProvider.getList();
+		for (BikeRack rack : favRacks) {
+			tmpFavlist.add(rack);
+		}
+
+		ListHandler<BikeRack> sortHandler = new ListHandler<BikeRack>(tmpFavlist);
+
+		sortHandler.setComparator(ratingCol, new Comparator<BikeRack>() {
+			@Override
+			public int compare(BikeRack o1, BikeRack o2) {
+				
+				double rating1 = o1.getRating();
+				double rating2 = o2.getRating();
+				
+				if(rating1 > rating2){
+					return 1;
+				}else if(rating1 < rating2){
+					return -1;
+				}
+				
+				return 0;
+			}
+		});
+
+		favoritesDataGrid.addColumnSortHandler(sortHandler);	
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(favoritesDataGrid);
 	}
 
 	/**
@@ -293,7 +381,7 @@ public class Rack_City implements EntryPoint {
 		});
 
 		suggestBox.setText("Enter Address Here.");
-		userInputPanel.add(suggestBox, 20, 96);
+		userInputPanel.add(suggestBox, 20, 24);
 		suggestBox.setSize("145px", "18px");
 		suggestBox.setTabIndex(3);
 	}
@@ -315,7 +403,7 @@ public class Rack_City implements EntryPoint {
 
 		//need click handler
 		rackDataGrid.setSize("700px", "500px");
-
+		
 		TextColumn<BikeRack> addressCol = new TextColumn<BikeRack>() {
 			@Override
 			public String getValue(BikeRack rack) {
@@ -323,7 +411,7 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		rackDataGrid.addColumn(addressCol, "Address");
-		rackDataGrid.setColumnWidth(addressCol, 125, Unit.PX);
+		rackDataGrid.setColumnWidth(addressCol, 25, Unit.PCT);
 
 
 		TextColumn<BikeRack> coordinatesCol = new TextColumn<BikeRack>() {
@@ -334,7 +422,7 @@ public class Rack_City implements EntryPoint {
 		};
 		coordinatesCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		rackDataGrid.addColumn(coordinatesCol, "Coordinates");
-		rackDataGrid.setColumnWidth(coordinatesCol, 125, Unit.PX);
+		rackDataGrid.setColumnWidth(coordinatesCol, 20, Unit.PCT);
 
 
 		TextColumn<BikeRack> distanceCol = new TextColumn<BikeRack>() {
@@ -347,7 +435,7 @@ public class Rack_City implements EntryPoint {
 		distanceCol.setDefaultSortAscending(false);
 		distanceCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackDataGrid.addColumn(distanceCol, "Distance From You");
-		rackDataGrid.setColumnWidth(distanceCol, 125, Unit.PX);
+		rackDataGrid.setColumnWidth(distanceCol, 25, Unit.PCT);
 
 
 		TextColumn<BikeRack> ratingCol = new TextColumn<BikeRack>() {
@@ -359,7 +447,7 @@ public class Rack_City implements EntryPoint {
 		ratingCol.setSortable(true);
 		ratingCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackDataGrid.addColumn(ratingCol, "Rating");
-		rackDataGrid.setColumnWidth(ratingCol, 75, Unit.PX);
+		rackDataGrid.setColumnWidth(ratingCol, 12, Unit.PCT);
 
 		TextColumn<BikeRack> crimeScoreCol = new TextColumn<BikeRack>() {
 			@Override
@@ -370,7 +458,7 @@ public class Rack_City implements EntryPoint {
 		crimeScoreCol.setSortable(true);
 		crimeScoreCol.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackDataGrid.addColumn(crimeScoreCol, "Crime Score");
-		rackDataGrid.setColumnWidth(crimeScoreCol, 75, Unit.PX);
+		rackDataGrid.setColumnWidth(crimeScoreCol, 18, Unit.PCT);
 
 		ListDataProvider<BikeRack> dataProvider = new ListDataProvider<BikeRack>();
 		dataProvider.addDataDisplay(rackDataGrid);
@@ -402,7 +490,15 @@ public class Rack_City implements EntryPoint {
 		sortHandler.setComparator(ratingCol, new Comparator<BikeRack>() {
 			@Override
 			public int compare(BikeRack o1, BikeRack o2) {
-				//implement comparator for rating
+				double rating1 = o1.getRating();
+				double rating2 = o2.getRating();
+				
+				if(rating1 > rating2){
+					return 1;
+				}else if(rating1 < rating2){
+					return -1;
+				}
+				
 				return 0;
 			}
 		});
@@ -410,11 +506,28 @@ public class Rack_City implements EntryPoint {
 		sortHandler.setComparator(crimeScoreCol, new Comparator<BikeRack>() {
 			@Override
 			public int compare(BikeRack o1, BikeRack o2) {
-				//implement comparator for crime score
+				double crime1 = o1.getCrimeScore();
+				double crime2 = o2.getCrimeScore();
+				
+				if(crime1 > crime2){
+					return 1;
+				}else if(crime1 < crime2){
+					return -1;
+				}
+				
 				return 0;
 			}
 		});
 
+		final NoSelectionModel<BikeRack> selectionModel = new NoSelectionModel<BikeRack>();
+	    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+	                @Override
+	                public void onSelectionChange(SelectionChangeEvent event) {
+	                	clickRackDisplayPanel(selectionModel.getLastSelectedObject());
+	                }
+	            });
+	    rackDataGrid.setSelectionModel(selectionModel);
+		
 		rackDataGrid.addColumnSortHandler(sortHandler);	
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(rackDataGrid);
 	}
@@ -426,11 +539,11 @@ public class Rack_City implements EntryPoint {
 	private void createUserLabelsCombos(AbsolutePanel userInputPanel){
 		Label dsntAddressLbl = new Label("Search Destination Address:");
 		dsntAddressLbl.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		userInputPanel.add(dsntAddressLbl, 10, 72);
+		userInputPanel.add(dsntAddressLbl, 10, 0);
 		dsntAddressLbl.setSize("191px", "18px");
 
 		Label lblFilterResults = new Label("Filter Results:");
-		userInputPanel.add(lblFilterResults, 10, 145);
+		userInputPanel.add(lblFilterResults, 10, 73);
 		lblFilterResults.setSize("147px", "18px");
 
 		final ListBox radiusCombo = new ListBox(); //6
@@ -438,15 +551,15 @@ public class Rack_City implements EntryPoint {
 		radiusCombo.addItem("0.5");
 		radiusCombo.addItem("1");
 		radiusCombo.addItem("2");
-		userInputPanel.add(radiusCombo, 24, 193);
+		userInputPanel.add(radiusCombo, 24, 120);
 		radiusCombo.setSize("151px", "22px");
 		radiusCombo.setTabIndex(4);
 
 		Label lblRadius = new Label("Radius (km):");
-		userInputPanel.add(lblRadius, 24, 169);
+		userInputPanel.add(lblRadius, 24, 97);
 
 		Label lblCrimeScore = new Label("Crime Score <=:");
-		userInputPanel.add(lblCrimeScore, 24, 221);
+		userInputPanel.add(lblCrimeScore, 24, 149);
 		lblCrimeScore.setSize("151px", "18px");
 
 		final ListBox crimeCombo = new ListBox(); //9
@@ -457,12 +570,12 @@ public class Rack_City implements EntryPoint {
 		crimeCombo.addItem("3");
 		crimeCombo.addItem("4");
 		crimeCombo.addItem("5");
-		userInputPanel.add(crimeCombo, 24, 245);
+		userInputPanel.add(crimeCombo, 24, 173);
 		crimeCombo.setSize("151px", "22px");
 		crimeCombo.setTabIndex(5);
 
 		Label lblRating = new Label("Rating >=:");
-		userInputPanel.add(lblRating, 24, 277);
+		userInputPanel.add(lblRating, 24, 205);
 		lblRating.setSize("151px", "18px");
 
 		final ListBox ratingCombo = new ListBox(); //11
@@ -473,7 +586,7 @@ public class Rack_City implements EntryPoint {
 		ratingCombo.addItem("3");
 		ratingCombo.addItem("4");
 		ratingCombo.addItem("5");
-		userInputPanel.add(ratingCombo, 24, 301);
+		userInputPanel.add(ratingCombo, 24, 229);
 		ratingCombo.setSize("151px", "22px");
 		ratingCombo.setTabIndex(5);
 	}
@@ -491,7 +604,7 @@ public class Rack_City implements EntryPoint {
 		Button searchButton = new Button("searchButton");
 		searchButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if(!txtbxAddress.getText().equals("")){
+				if(!txtbxAddress.getText().equals("") && !txtbxAddress.getText().equals("Enter Address Here.")){
 					if(!radiusCombo.getValue(radiusCombo.getSelectedIndex()).equals("")){
 						if(!crimeCombo.getValue(crimeCombo.getSelectedIndex()).equals("")){
 							if(!ratingCombo.getValue(ratingCombo.getSelectedIndex()).equals("")){
@@ -531,7 +644,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		searchButton.setText("Search");
-		userInputPanel.add(searchButton, 118, 348);
+		userInputPanel.add(searchButton, 118, 276);
 	}
 
 	/**
@@ -632,7 +745,7 @@ public class Rack_City implements EntryPoint {
 				}
 			}
 		});
-		userInputPanel.add(showCrimeButton, 10, 400);
+		userInputPanel.add(showCrimeButton, 10, 328);
 	}
 	/**
 	 * Displays show rack button when search is pressed
@@ -679,7 +792,7 @@ public class Rack_City implements EntryPoint {
 				}
 			}
 		});
-		userInputPanel.add(showRackButton, 10, 440);
+		userInputPanel.add(showRackButton, 10, 368);
 	}
 
 	/**
@@ -709,7 +822,7 @@ public class Rack_City implements EntryPoint {
 		final AbsolutePanel titleViewPanel = new AbsolutePanel();
 		titlePanel.add(titleViewPanel);
 		titleViewPanel.setSize("700px","40px");
-
+		
 		createAdminButton(titleViewPanel);
 		createLoginButton(null);
 	}
@@ -1266,7 +1379,7 @@ public class Rack_City implements EntryPoint {
 
 			if (!userImageURL.isEmpty() || userImageURL == null){
 				icn = Icon.newInstance(userImageURL);
-				icn.setIconAnchor(Point.newInstance(10, 10));
+				icn.setIconAnchor(Point.newInstance(15, 15));
 			}
 			else{
 				icn = Icon.newInstance(Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png"));

@@ -47,3 +47,23 @@ h1 {
 	margin: 40px 0px 70px;
 	text-align: center;
 }
+
+.gwt-MenuBar
+{
+    border                      :   2px solid #000;
+    background-color            :   #FFF;
+    margin                      :   0 auto;
+    padding                     :   1px;
+}
+
+.gwt-MenuBar .gwt-MenuItem-selected
+{
+    background-color            :   #000;
+}
+
+.gwt-MenuItem
+{
+    margin                      :   0 auto;
+    font-size                   :   50%;
+    background-color            :   #000;
+}
