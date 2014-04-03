@@ -13,6 +13,7 @@ import javax.jdo.PersistenceManagerFactory;
 import cs310MRAK.rackcity.client.rackService;
 import cs310MRAK.rackcity.shared.BikeRackTimeHits;
 import cs310MRAK.rackcity.shared.Rack;
+import cs310MRAK.rackcity.shared.RackExperience;
 
 
 
@@ -356,6 +357,51 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 		{
 			pm.close();
 		}
+	}
+	
+	@Override
+	public void addBikeExperienceComment(String pos, String experience, String uid) {
+		// TODO Auto-generated method stub
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			pm.makePersistent(new RackExperience(pos, experience, uid));
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+	
+	@Override
+	public String[] getBikeExperienceComments(String pos) {
+		PersistenceManager pm = getPersistenceManager();
+		
+		String[] experienceComments = null;
+		
+		try
+		{
+			String query = "select from " + RackExperience.class.getName();
+			@SuppressWarnings("unchecked")
+			List<RackExperience> rex = (List<RackExperience>) pm.newQuery(query).execute();
+		//	BikeRackTimeHits brth = (BikeRackTimeHits) pm.newQuery(query).execute();
+			
+			int j = 0;
+			for(int i=0; i < experienceComments.length; i++){
+				if(rex.get(i).getPos().equals(pos)){
+					experienceComments[j] = rex.get(i).getExperience();
+					j++;
+				}
+			}
+			
+
+									  
+		}
+		finally
+		{
+			pm.close();
+		}
+		return experienceComments;
 	}
 	
 	@Override

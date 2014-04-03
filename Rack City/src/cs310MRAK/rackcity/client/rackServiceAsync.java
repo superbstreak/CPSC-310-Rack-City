@@ -13,7 +13,7 @@ public interface rackServiceAsync {
 	void updateRate(String p, double rating, AsyncCallback<Void> callback);
 	void addBikeRackTimeHit(String pos, AsyncCallback<Void> callback);
 	void updateBikeRackTimeHit(String pos, int timeHits, String whichOne, AsyncCallback<Void> callback);
-
+	void addBikeExperienceComment(String pos, String experience, String uid, AsyncCallback<Void> callback);
 	
 	// getters
 	void getAddress(String p, AsyncCallback<String> callback);
@@ -22,6 +22,7 @@ public interface rackServiceAsync {
 	void getCS(String p, AsyncCallback<Double> callback);
 	void getRate(String p, AsyncCallback<Double> callback);
 	void getRackTimeHits(String p, AsyncCallback<String> callback);
+	void getBikeExperienceComments(String pos, AsyncCallback<String[]> callback);
 	
 	// parser
 	void getRacks(AsyncCallback<ArrayList<String[]>> callback);
