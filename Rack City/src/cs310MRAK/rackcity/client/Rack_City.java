@@ -1920,6 +1920,7 @@ public class Rack_City implements EntryPoint {
 				if (result == false)
 				{
 					AddUserInfo(id, name, email, gender, isPlus, propic, favBike, bikeName, bikeColor);
+					onProfileViewClick();
 				}
 				else if (result == true)
 				{
@@ -2390,17 +2391,6 @@ public class Rack_City implements EntryPoint {
 		Window.alert(s);
 	}
 
-	private void deBugMessenger()
-	{
-		String output = "Your Friends: \n";
-		for (int i = 0; i < userFriends.size(); i++)
-		{
-			String[] tmp = userFriends.get(i);
-			output = output + "\nName: " + tmp[0] +" id: "+tmp[1];
-		}
-		messenger(output);
-	}
-
 	private void assignFriendRating(int arrayRACK, String fid)
 	{
 		// get the position, where to add the friend data
@@ -2493,10 +2483,9 @@ public class Rack_City implements EntryPoint {
 											userFriends.add(person);
 										}
 									}
-									deBugMessenger();
-									// TESTING
 									parseFav(userName, userId);
 								}
+								sortUserHistory(userHistory);
 							}
 							else if (response.getStatusCode() == 400)
 							{
