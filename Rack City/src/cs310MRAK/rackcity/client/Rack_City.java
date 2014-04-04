@@ -2380,7 +2380,7 @@ public class Rack_City implements EntryPoint {
 											userIsPlus = js.get("isPlusUser").isBoolean().booleanValue();
 
 											createUserLabel();
-											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL, "", "", "");
+											checkUserInfo(userId, userName, userEmail, userGender, userIsPlus, userImageURL, favBike, bikeName, bikeColor);
 											getUserFriends();
 										}
 									}
