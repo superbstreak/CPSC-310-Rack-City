@@ -209,6 +209,8 @@ public class Rack_City implements EntryPoint {
 	
 	private void onSearchViewClick(){
 		
+		sortUserHistory(userHistory);
+		
 		if(currentDatasheetItem != null){
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 			currentDatasheetItem = null;
@@ -1370,7 +1372,6 @@ public class Rack_City implements EntryPoint {
 				if (radius == 2) radiusCombo = 2;
 				
 				saveSearchHistory(address, radiusCombo, (int)(crimeScore + 1), (int)(rating + 1));
-				sortUserHistory(userHistory);
 				userHistory.add(0, new UserSearchHistoryInstance("0", userId, address, radiusCombo, (int)crimeScore, (int) rating));
 				addMarker(currentAddress, 1);
 
@@ -1405,6 +1406,7 @@ public class Rack_City implements EntryPoint {
 						addMarker(crime.getCoordinate(), 3);
 					}
 				}
+				sortUserHistory(userHistory);
 			}
 		});
 	}
