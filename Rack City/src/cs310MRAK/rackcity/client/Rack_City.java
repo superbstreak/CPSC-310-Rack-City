@@ -1565,6 +1565,15 @@ public class Rack_City implements EntryPoint {
 							}
 							else whatWeWantToShow = "0 chance that this rack is occupied";
 							
+							for(int i = 0; i < rackClickPanel.getWidgetCount(); i++){
+								String lblTmp = rackClickPanel.getWidget(i).toString();
+								
+								if(lblTmp.contains("that this rack is occupied")){
+									rackClickPanel.getWidget(i).removeFromParent();
+									break;
+								}
+							}
+							
 							Label timeHits = new Label(whatWeWantToShow);
 							rackClickPanel.add(timeHits, 170, 130);
 							timeHits.setSize("150px", "54px");
@@ -1574,6 +1583,7 @@ public class Rack_City implements EntryPoint {
 
 							LatLng pos2 = rack.getCoordinate();
 							rService.getRackTimeHits(pos2.toString(), callback);
+							
 				}
 			}
 		});
