@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.core.client.Callback;
 //======================== ^ G+ ============================
 import com.google.gwt.core.client.EntryPoint;
@@ -37,7 +38,6 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -46,7 +46,6 @@ import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TabBar;
-import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -382,17 +381,24 @@ public class Rack_City implements EntryPoint {
 		Label lblProfile = new Label("Profile Page");
 		userProfilePanel.add(lblProfile, 10, 10);
 		
-		/*
-		private String favBike = "";
-		private String bikeName = "";
-		private String bikeColor = "";
-		*/
+		
+		Image profileImage = new Image();
+		profileImage.setSize("30px", "30px");
+		profileImage.setUrl(userImageURL);
+		userProfilePanel.add(profileImage, 30, 40);
+
+		Label lblProfileImg = new Label("Image URL:");
+		userProfilePanel.add(lblProfileImg, 200, 20);
+		
+		final TextBox profileImageTextBox = new TextBox();
+		profileImageTextBox.setText(userImageURL);
+		userProfilePanel.add(profileImageTextBox, 200, 45);
 		
 		
 		Label lblFavBike = new Label("Your Favorite Bike:");
 		userProfilePanel.add(lblFavBike, 200, 90);
 		
-		TextBox favoriteBikeTextBox = new TextBox();
+		final TextBox favoriteBikeTextBox = new TextBox();
 		favoriteBikeTextBox.setText(favBike);
 		userProfilePanel.add(favoriteBikeTextBox, 200, 115);
 		
@@ -400,7 +406,7 @@ public class Rack_City implements EntryPoint {
 		Label lblBikeName = new Label("Bike Name:");
 		userProfilePanel.add(lblBikeName, 200, 155);
 		
-		TextBox bikeNameTextBox = new TextBox();
+		final TextBox bikeNameTextBox = new TextBox();
 		bikeNameTextBox.setText(bikeName);
 		userProfilePanel.add(bikeNameTextBox, 200, 180);
 		
@@ -408,9 +414,27 @@ public class Rack_City implements EntryPoint {
 		Label lblBikeColour = new Label("Bike Colour:");
 		userProfilePanel.add(lblBikeColour, 200, 225);
 		
-		TextBox bikeColourTextBox = new TextBox();
+		final TextBox bikeColourTextBox = new TextBox();
 		bikeColourTextBox.setText(bikeColor);
 		userProfilePanel.add(bikeColourTextBox, 200, 250);
+		
+		Button submitChanges = new Button("submitChanges");
+		submitChanges.addClickHandler( new ClickHandler(){ 
+            public void onClick( ClickEvent event ) { 
+            	favBike = favoriteBikeTextBox.getText();
+            	bikeName = bikeNameTextBox.getText();
+            	bikeColor = bikeColourTextBox.getText();
+            	userImageURL = profileImageTextBox.getText();
+            	
+            	AddUserInfo(userId, userName, userEmail, userGender, userIsPlus, profileImageTextBox.getText(), favoriteBikeTextBox.getText(), 
+            			bikeNameTextBox.getText(), bikeColourTextBox.getText());
+            	
+            	Window.alert("Changes Made!");
+            	onProfileViewClick();
+            }
+        });
+		submitChanges.setText("Submit Changes");
+		userProfilePanel.add(submitChanges, 230, 320);
 		
 		
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(userProfilePanel);
@@ -1412,7 +1436,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		reportCrimeButton.setText("Report Crime");
-		rackClickPanel.add(reportCrimeButton, 80, 450);
+		rackClickPanel.add(reportCrimeButton, 145, 450);
 		
 		
 		final Button checkInButton = new Button("checkInButton");
@@ -1493,57 +1517,38 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		checkInButton.setText("Check-In");
-		rackClickPanel.add(checkInButton, 80, 400);
+		rackClickPanel.add(checkInButton, 170, 400);
 
 		
-		
-
-		//Reverse Geocodes the rack location into an address for the user to see
-		Geocoder latLongAddress = new Geocoder();
-		latLongAddress.getLocations(rack.getCoordinate(), new LocationCallback() {
-			@Override
-			public void onFailure(int statusCode) {
-
-			}
-
-			@Override
-			public void onSuccess(JsArray<Placemark> locations) {
-				Label rackAddress = new Label(locations.get(0).getAddress());
-				rackAddress.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-				rackClickPanel.add(rackAddress, 0, 0);
-				rackAddress.setSize("250px", "54px");
-			}
-		});
+		Label rackAddress = new Label("Address: " + rack.getAddress());
+		rackAddress.setStyleName("gwt-Rack-Label-Style");
+		rackAddress.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		rackClickPanel.add(rackAddress, 0, 0);
+		rackAddress.setSize("250px", "54px");
 
 		//Add code to get # of stolen bikes for a particular rack
 		Label rackStolenBikesLabel = new Label("# of Stolen Bikes in this Location: " + rack.getNumberStolenBikes());
-		rackStolenBikesLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		rackClickPanel.add(rackStolenBikesLabel, 0, 108);
+		rackClickPanel.add(rackStolenBikesLabel, 0, 20);
 		rackStolenBikesLabel.setSize("250px", "54px");
 
 		//Add code to get rating for a particular rack
 		Label rackRatingLabel = new Label("Bike Rack Rating (out of 5): " + rack.getRating());
-		rackRatingLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(rackRatingLabel, 0, 162);
 		rackRatingLabel.setSize("250px", "54px");
 
 		Label crimeRatingLabel = new Label("Bike Rack Crime Score (out of 5): " + rack.getCrimeScore());
-		crimeRatingLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(crimeRatingLabel, 0, 216);
 		crimeRatingLabel.setSize("250px", "54px");
 
 		Label rackCountRatingLabel = new Label("Bike Rack Count: " + rack.getRackCount());
-		rackCountRatingLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(rackCountRatingLabel, 0, 270);
 		rackCountRatingLabel.setSize("250px", "54px");
 
 		Label distanceLabel = new Label("Distance from you (km): " + round(calcLatLngDistance(rack.getCoordinate()), 2));
-		distanceLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(distanceLabel, 0, 324);
 		distanceLabel.setSize("250px", "54px");
 		
 		Label timeHits = new Label("Rack time hits: " + this.currentRackTimeHits);
-		timeHits.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		rackClickPanel.add(timeHits, 0, 358);
 		timeHits.setSize("250px", "54px");
 		// &!&!&!&
