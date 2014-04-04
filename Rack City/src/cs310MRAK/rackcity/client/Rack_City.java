@@ -873,9 +873,7 @@ public class Rack_City implements EntryPoint {
 	}
 	
 	private void searchButtonClick(SuggestBox txtbxAddress, ListBox radiusCombo, ListBox crimeCombo, ListBox ratingCombo, final AbsolutePanel userInputPanel){
-		saveSearchHistory(txtbxAddress, radiusCombo, crimeCombo, ratingCombo);
-		userHistory.add(0, new UserSearchHistoryInstance("0", userId, txtbxAddress.getText(), (int) Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), 
-				Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex()))));
+		
 
 		googleMap.clearOverlays();
 		currentRackList = null;
@@ -902,22 +900,22 @@ public class Rack_City implements EntryPoint {
 
 	/**
 	 * Saves search history for specific search (called when search button is pressed)
-	 * @param txtbxAddress
+	 * @param address
 	 * @param radiusCombo
-	 * @param crimeCombo
-	 * @param ratingCombo
+	 * @param d
+	 * @param e
 	 */
-	private void saveSearchHistory(SuggestBox txtbxAddress, ListBox radiusCombo, ListBox crimeCombo, ListBox ratingCombo){
+	private void saveSearchHistory(String address, int radiusCombo, int cs, int r){
 		if(!(userEmail.isEmpty() && userId.isEmpty())){
 			// String userID, String searchAddress, String radius, String crimeScore
 			String userID = userId;
-			String searchAddress = txtbxAddress.getText();
-			int radius = radiusCombo.getSelectedIndex();
+			String searchAddress = address;
+			int radius = radiusCombo;
 			if (radius == 1) radius = 0;
 			else if (radius == 2) radius = 1;
 			else  if (radius == 3) radius = 2;
-			int crimeScore = crimeCombo.getSelectedIndex() - 1;
-			int rateVal = ratingCombo.getSelectedIndex() - 1;
+			int crimeScore = cs - 1;
+			int rateVal = r - 1;
 			AddUserSearchHistory(userID, searchAddress, radius, crimeScore, rateVal);
 		}
 	}
@@ -1243,6 +1241,33 @@ public class Rack_City implements EntryPoint {
 						messenger("Refetch Currently disabled due to busy traffic");
 						printerdebug();		
 
+
+						// =================================== ***** ======================
+						// ------------------ RACKEXPERIENCE ---------------
+						// we'll use this when we get the textbox to add rack experiences // 
+//						if (rService == null) 
+//						{
+//							rService = GWT.create(rackService.class);
+//						}
+//						AsyncCallback<Void> callback = new AsyncCallback<Void>()
+//								{
+//							public void onFailure(Throwable error)
+//							{
+//								Window.alert("Server Error! (RackExperience)");
+//								handleError(error);
+//							}
+//							@Override
+//							public void onSuccess(Void result) {
+//									Window.alert("Server Success! You added a rack experience.");
+//							}
+//								};
+//								rService.addBikeExperienceComment(LatLng.newInstance(49.284192, -123.110048).toString(),"This is the best bike rack ever!", "105344220509568726102", callback);
+//								rService.addBikeExperienceComment(LatLng.newInstance(49.284176, -123.106037).toString(),"I do not like this bike rack!", "116016420567291713038", callback);
+//								rService.addBikeExperienceComment(LatLng.newInstance(49.284192, -123.110048).toString(),"So I just had some delicious blueberry yogurt this morning.", "105344220509568726102", callback);
+//								rService.addBikeExperienceComment(LatLng.newInstance(49.284192, -123.110048).toString(),"Sup dude.", "102502510324439815963", callback);	
+						// ------------------------------------------------------------------------
+						// =================================== ***** ======================
+						
 						getUserSearchHistory(userId);
 						//addBikeRackTimeHit("49.284176, -123.106037");
 						//addtolist();
@@ -1350,7 +1375,14 @@ public class Rack_City implements EntryPoint {
 				googleMap.setCenter(currentAddress);
 				googleMap.setZoomLevel(14);
 				displayRadius(currentAddress, radius);
-
+				
+				int radiusCombo = 0;
+				if (radius == 0.5) radiusCombo = 0;
+				if (radius == 1) radiusCombo = 1;
+				if (radius == 2) radiusCombo = 2;
+				
+				saveSearchHistory(address, radiusCombo, (int)(crimeScore + 1), (int)(rating + 1));
+				userHistory.add(0, new UserSearchHistoryInstance("0", userId, address, radiusCombo, (int)crimeScore, (int) rating));
 				addMarker(currentAddress, 1);
 
 				/*
@@ -1585,7 +1617,6 @@ public class Rack_City implements EntryPoint {
 		final Button addFavButton = new Button("checkInButton");
 		addFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//TODO ADD TO FAVORITES FUNCTIONALITY
 				if (!userId.equals(""))
 				{
 					Boolean checkalready = false;
@@ -1949,7 +1980,6 @@ public class Rack_City implements EntryPoint {
 				int timeindex = (hour*100*100)+(minute*100)+second;
 				// =================== convert year to digit ================
 				int  year = Integer.parseInt(index[5]);
-				
 				// ============= FINAL INDEX VALUE FOR SORT =================
 				int finindex = (year*100*100*100*100*100)+(mon*100*100*100*100)+(date*100*100*100)+timeindex;
 				String inx = String.valueOf(finindex);
@@ -1977,6 +2007,7 @@ public class Rack_City implements EntryPoint {
 			}
 		}
 	}
+	
 
 	// ===================== SERVER ASYNC CALLS  ==========================
 
@@ -2133,7 +2164,6 @@ public class Rack_City implements EntryPoint {
 
 			@Override
 			public void onSuccess(ArrayList<UserInfo> result) {
-				// TODO Auto-generated method stub
 				assignUserInfo(result);		
 			}});
 	}
