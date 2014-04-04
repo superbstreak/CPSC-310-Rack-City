@@ -1744,11 +1744,12 @@ public class Rack_City implements EntryPoint {
 				if(userRatingCombo.getSelectedIndex() > 0){
 					//TODO implement set rating functionality
 					
-					int rate = Integer.valueOf(userRatingCombo.getItemText((userRatingCombo.getSelectedIndex())));
+					int rate = Integer.valueOf((userRatingCombo.getSelectedIndex() - 1));
 					
 					if (!userId.equals(""))
 					{
 						submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+						clickRackDisplayPanel(rack);
 					}
 					else
 					{
@@ -2644,7 +2645,7 @@ public class Rack_City implements EntryPoint {
 			}
 			public void onSuccess(Void ignore)
 			{
-				Window.alert("Success. (ADD-RATE)");
+				Window.alert("Successfully Rated!");
 				getALLRatingATpos (uid, addr, pos);
 			}
 				};
