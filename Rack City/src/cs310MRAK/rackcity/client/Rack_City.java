@@ -50,6 +50,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -129,9 +130,9 @@ public class Rack_City implements EntryPoint {
 	private ArrayList< ArrayList<String[]>> favRacksCommon = new ArrayList< ArrayList<String[]>>();
 	private String currentRackPos = "";
 	private String currentRackTimeHits = "";
-	String favBike = "";
-	String bikeName = "";
-	String bikeColor = "";
+	private String favBike = "";
+	private String bikeName = "";
+	private String bikeColor = "";
 	private ArrayList<UserSearchHistoryInstance> userHistory = new ArrayList<UserSearchHistoryInstance>();
 
 	// Server stuff
@@ -177,7 +178,7 @@ public class Rack_City implements EntryPoint {
 		rootPanel = RootPanel.get();
 		rootPanel.setSize("1300px", "700px");
 		dockPanel = new DockPanel();
-		rootPanel.add(dockPanel, 10, 150);
+		rootPanel.add(dockPanel, 10, 125);
 		dockPanel.setSize("1210px", "500px");
 
 		createAppTitle();
@@ -189,7 +190,7 @@ public class Rack_City implements EntryPoint {
 
 	private void createAppTitle(){
 		AbsolutePanel appTitlePanel = new AbsolutePanel();
-		appTitlePanel.setSize("1300px", "150px");
+		appTitlePanel.setSize("1300px", "125px");
 
 		Label appTitleLbl = new Label("Rack City");
 		appTitleLbl.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -198,8 +199,8 @@ public class Rack_City implements EntryPoint {
 		appTitlePanel.add(appTitleLbl, 500, 0);
 		
 		MenuBar menuBar = new MenuBar();
-		menuBar.addStyleName("gwt-MenuBar");
-		menuBar.setSize("400px", "35px");
+		menuBar.addStyleName("gwt-MenuBar-Rackcity");
+		menuBar.setSize("500px", "33px");
 		
 		MenuItem mapView = new MenuItem("Map View", new ScheduledCommand() {
 		    @Override
@@ -207,7 +208,7 @@ public class Rack_City implements EntryPoint {
 		    	onMapViewClick();
 		    }
 		});
-		mapView.setSize("66px", "20px");
+		mapView.setSize("70px", "20px");
 		mapView.addStyleName("gwt-MenuItem");
 		menuBar.addItem(mapView);
 		
@@ -217,7 +218,7 @@ public class Rack_City implements EntryPoint {
 		    	onDatasheetViewClick();
 		    }
 		});
-		dataSheetView.setSize("107px", "20px");
+		dataSheetView.setSize("112px", "20px");
 		menuBar.addItem(dataSheetView);
 		
 		MenuItem favView = new MenuItem("Favorites View", new ScheduledCommand() {
@@ -226,15 +227,87 @@ public class Rack_City implements EntryPoint {
 		    	onFavoritesViewClick();
 		    }
 		});
-		favView.setSize("100px", "20px");
+		favView.setSize("105px", "20px");
 		menuBar.addItem(favView);
 		
-		appTitlePanel.add(menuBar,10,100);
+		MenuItem profileView = new MenuItem("View Profile", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onProfileViewClick();
+		    }
+		});
+		profileView.setSize("105px", "20px");
+		menuBar.addItem(profileView);
+		
+		appTitlePanel.add(menuBar,10,75);
 		rootPanel.add(appTitlePanel,0,0);
 
 	}
 	
+	private void onProfileViewClick(){
+		
+		if(userId.equals("")){
+			Window.alert("You are not logged in. Please login.");
+			return;
+		}
+		
+		hideHideLocationButtons();
+		
+		if(currentDatasheetItem != null){
+			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+			currentDatasheetItem = null;
+		}
+		
+		if(currentMarker != null){
+			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+			currentMarker = null;
+		}
+		
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
+		
+		AbsolutePanel userProfilePanel = new AbsolutePanel();
+		userProfilePanel.setSize("700px", "500px");
+		
+		Label lblProfile = new Label("Profile Page");
+		userProfilePanel.add(lblProfile, 10, 10);
+		
+		/*
+		private String favBike = "";
+		private String bikeName = "";
+		private String bikeColor = "";
+		*/
+		
+		
+		Label lblFavBike = new Label("Your Favorite Bike:");
+		userProfilePanel.add(lblFavBike, 200, 90);
+		
+		TextBox favoriteBikeTextBox = new TextBox();
+		favoriteBikeTextBox.setText(favBike);
+		userProfilePanel.add(favoriteBikeTextBox, 200, 115);
+		
+		
+		Label lblBikeName = new Label("Bike Name:");
+		userProfilePanel.add(lblBikeName, 200, 155);
+		
+		TextBox bikeNameTextBox = new TextBox();
+		bikeNameTextBox.setText(bikeName);
+		userProfilePanel.add(bikeNameTextBox, 200, 180);
+		
+		
+		Label lblBikeColour = new Label("Bike Colour:");
+		userProfilePanel.add(lblBikeColour, 200, 225);
+		
+		TextBox bikeColourTextBox = new TextBox();
+		bikeColourTextBox.setText(bikeColor);
+		userProfilePanel.add(bikeColourTextBox, 200, 250);
+		
+		
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(userProfilePanel);
+	}
+	
 	private void onMapViewClick(){
+		
+		showHideLocationButtons();
 		
 		if(currentDatasheetItem != null){
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
@@ -258,7 +331,6 @@ public class Rack_City implements EntryPoint {
 
 		if(currentMarker != null){
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-			((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
 			currentMarker = null;
 		}
 
@@ -268,16 +340,20 @@ public class Rack_City implements EntryPoint {
 			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 
 			createDataGrid();
-		}else
+		}else{
 			Window.alert("No Bike Racks to display in Datasheet View! Please search again.");
+		}
+		
+		hideHideLocationButtons();
 	}
 	
 	private void onFavoritesViewClick(){
+		
 		if(userId.equals("")){
 			Window.alert("You are not logged in. Please login.");
 			return;
 		}
-
+		
 		if(currentMarker != null){
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 			((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
@@ -291,6 +367,34 @@ public class Rack_City implements EntryPoint {
 			createFavoritesGrid();
 		}else
 			Window.alert("You have no favorites!");
+		
+		hideHideLocationButtons();
+	}
+	
+	private void hideHideLocationButtons(){
+		
+		AbsolutePanel userPanel = ((AbsolutePanel) ((HorizontalPanel) dockPanel.getWidget(0)).getWidget(0));
+		
+		for(int i = 0; i < userPanel.getWidgetCount(); i++){
+			Widget tmpW = userPanel.getWidget(i);
+			
+			if(tmpW.toString().contains("Crime Locations") || tmpW.toString().contains("Rack Locations")){
+				tmpW.setVisible(false);
+			}
+		}
+	}
+	
+	private void showHideLocationButtons(){
+		
+		AbsolutePanel userPanel = ((AbsolutePanel) ((HorizontalPanel) dockPanel.getWidget(0)).getWidget(0));
+		
+		for(int i = 0; i < userPanel.getWidgetCount(); i++){
+			Widget tmpW = userPanel.getWidget(i);
+			
+			if(tmpW.toString().contains("Crime Locations") || tmpW.toString().contains("Rack Locations")){
+				tmpW.setVisible(true);
+			}
+		}
 	}
 	
 	private void createFavoritesGrid(){
@@ -478,9 +582,9 @@ public class Rack_City implements EntryPoint {
 				double compare = calcLatLngDistance(rack1.getCoordinate()) - calcLatLngDistance(rack2.getCoordinate());
 
 				if(compare < 0){
-					return 1;
-				}else if(compare > 0){
 					return -1;
+				}else if(compare > 0){
+					return 1;
 				}else{
 					return 0;
 				}
@@ -624,6 +728,8 @@ public class Rack_City implements EntryPoint {
 									((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 									((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
 								}
+								
+								onMapViewClick();
 
 								addMapOverlay(txtbxAddress.getText(), 
 										Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())),
@@ -722,25 +828,42 @@ public class Rack_City implements EntryPoint {
 	 * Displays show crime button when search is pressed
 	 * @param userInputPanel
 	 */
-	private void showCrimeButton(AbsolutePanel userInputPanel){
+	private void showCrimeButton(final AbsolutePanel userInputPanel){
 		Button showCrimeButton = new Button("showCrimeButton");
+		showCrimeButton.setText("Hide Crime Locations");
 		showCrimeButton.setSize("180px", "30px");
-		if (isCrimeShown) {
-			showCrimeButton.setText("Hide Crime Locations");
-		}
-		else if (!isCrimeShown) {
-			showCrimeButton.setText("Show Crime Locations");
-		}
 		showCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isCrimeShown) {
-					currentCrimeList.clear();
 					isCrimeShown = false;
+					
+					googleMap.clearOverlays();
+					
+					final SuggestBox txtbxAddress = (SuggestBox) userInputPanel.getWidget(0);
+					final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(3);
+					final Button showCrimeButton = (Button) userInputPanel.getWidget(10);
+					
+					addMapOverlay(txtbxAddress.getText(), 
+							Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), -1, -1);
+					
+					showCrimeButton.setText("Show Crime Locations");
 				}
 				else if (!isCrimeShown) {
-					for (Crime crime : savedCrimeList) {
-						currentCrimeList.add(crime);
-					}
+					googleMap.clearOverlays();
+					
+					final SuggestBox txtbxAddress = (SuggestBox) userInputPanel.getWidget(0);
+					final ListBox radiusCombo = (ListBox) userInputPanel.getWidget(3);
+					final ListBox crimeCombo = (ListBox) userInputPanel.getWidget(6);
+					final ListBox ratingCombo = (ListBox) userInputPanel.getWidget(8);
+					final Button showCrimeButton = (Button) userInputPanel.getWidget(10);
+					
+					addMapOverlay(txtbxAddress.getText(), 
+							Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())),
+							Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
+							Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
+					
+					showCrimeButton.setText("Hide Crime Locations");
+					
 					isCrimeShown = true;
 				}
 			}
@@ -758,7 +881,6 @@ public class Rack_City implements EntryPoint {
 		showRackButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isRackShown) {
-					currentRackList.clear();
 					isRackShown = false;
 					
 					googleMap.clearOverlays();
@@ -848,7 +970,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loginButton.setText("Login");
-		titleViewPanel.add(loginButton, 585, 5);
+		titleViewPanel.add(loginButton, 580, 5);
 	}
 
 	/**
@@ -869,7 +991,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loggedInButton.setText("Logout");
-		titleViewPanel.add(loggedInButton, 580, 5);
+		titleViewPanel.add(loggedInButton, 575, 5);
 	}
 
 	/**
@@ -1040,26 +1162,25 @@ public class Rack_City implements EntryPoint {
 					filters = new Filter();
 				}
 				
-				currentCrimeList = filters.getFilteredCrimeList(currentAddress, radius);
 				savedCrimeList = filters.getFilteredCrimeList(currentAddress, radius);
-				currentRackList = filters.getFilteredRackList(currentAddress, radius, rating, crimeScore);
 				savedRackList = filters.getFilteredRackList(currentAddress, radius, rating, crimeScore);
 				
-				if (!isCrimeShown) {
-					currentCrimeList.clear();
+				if(currentRackList == null || currentRackList.isEmpty()){
+					currentRackList = filters.getFilteredRackList(currentAddress, radius, rating, crimeScore);
 				}
 				
-				if (!isRackShown) {
-					currentRackList.clear();
+				if(currentCrimeList == null || currentCrimeList.isEmpty()){
+					currentCrimeList = filters.getFilteredCrimeList(currentAddress, radius);
 				}
-				if(!currentRackList.isEmpty()){
+				
+				if(!currentRackList.isEmpty() && isRackShown){
 					for (BikeRack rack : currentRackList) {
 						//System.out.println("Rack Coordinate: " + rack.getCoordinate());
 						addMarker(rack.getCoordinate(), 2);
 					}
 				}
 
-				if(!currentCrimeList.isEmpty()){
+				if(!currentCrimeList.isEmpty() && isCrimeShown){
 					for (Crime crime : currentCrimeList) {
 						//System.out.println("Crime Coordinate: " + crime.getCoordinate());
 						addMarker(crime.getCoordinate(), 3);
