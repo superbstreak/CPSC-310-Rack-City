@@ -551,7 +551,7 @@ public class Rack_City implements EntryPoint {
 				
 				if(!(temp = favRacksCommon.get(rackCount)).isEmpty()){
 					for(String[] friends : temp){
-						listOfFriends.concat(friends[0] + " ");
+						listOfFriends = listOfFriends + friends[0] + " ";
 					}
 				}
 				
@@ -1645,7 +1645,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		removeFavButton.setText("Remove from Favorites");
-		rackClickPanel.add(removeFavButton, 200, 365);
+		rackClickPanel.add(removeFavButton, 180, 365);
 		
 		
 		Label rackAddress = new Label("Address: " + rack.getAddress());
@@ -1769,6 +1769,7 @@ public class Rack_City implements EntryPoint {
 						// ------------------------------------------------------------------------
 						// =================================== ***** ======================
 	     	        	
+						Window.alert("Experience Submitted!");
 	     	        	popup.removeFromParent();
 	     	        }
 	             });
@@ -1806,7 +1807,7 @@ public class Rack_City implements EntryPoint {
 	             AbsolutePanel userExpPanel = new AbsolutePanel();
 	             userExpPanel.setSize("400px", "300px");
 	             
-	             Label shareExperienceLbl = new Label("Other User Experiences:");
+	             Label shareExperienceLbl = new Label("All User Experiences:");
 	             userExpPanel.add(shareExperienceLbl, 10, 10);
 	             
 	             final TextArea userExperienceTextBox = new TextArea();
