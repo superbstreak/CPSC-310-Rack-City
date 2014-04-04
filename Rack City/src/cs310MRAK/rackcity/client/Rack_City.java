@@ -1588,7 +1588,6 @@ public class Rack_City implements EntryPoint {
 		final Button addFavButton = new Button("checkInButton");
 		addFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//TODO ADD TO FAVORITES FUNCTIONALITY
 				if (!userId.equals(""))
 				{
 					Boolean checkalready = false;
@@ -1868,7 +1867,6 @@ public class Rack_City implements EntryPoint {
 				int timeindex = (hour*100*100)+(minute*100)+second;
 				// =================== convert year to digit ================
 				int  year = Integer.parseInt(index[5]);
-				
 				// ============= FINAL INDEX VALUE FOR SORT =================
 				int finindex = (year*100*100*100*100*100)+(mon*100*100*100*100)+(date*100*100*100)+timeindex;
 				String inx = String.valueOf(finindex);
@@ -2053,7 +2051,6 @@ public class Rack_City implements EntryPoint {
 
 			@Override
 			public void onSuccess(ArrayList<UserInfo> result) {
-				// TODO Auto-generated method stub
 				assignUserInfo(result);		
 			}});
 	}
