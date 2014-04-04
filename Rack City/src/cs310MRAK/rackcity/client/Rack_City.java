@@ -36,6 +36,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -256,11 +257,6 @@ public class Rack_City implements EntryPoint {
 	
 	private void onSearchViewClick(){
 		
-		if(userId.equals("")){
-			Window.alert("You are not logged in. Please login.");
-			return;
-		}
-		
 		if(currentDatasheetItem != null){
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 			currentDatasheetItem = null;
@@ -271,15 +267,8 @@ public class Rack_City implements EntryPoint {
 			currentMarker = null;
 		}
 		
-		if(!userHistory.isEmpty()){
-			
-			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
-			createSearchDataGrid();
-			
-		}else{
-			Window.alert("You have no search history!");
-			return;
-		}
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
+		createSearchDataGrid();
 		
 		hideHideLocationButtons();
 	}
@@ -298,7 +287,35 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		searchDataGrid.addColumn(searchCol, "Search Address");
-		searchDataGrid.setColumnWidth(searchCol, 100, Unit.PCT);
+		searchDataGrid.setColumnWidth(searchCol, 25, Unit.PCT);
+		
+		TextColumn<UserSearchHistoryInstance> radiusCol = new TextColumn<UserSearchHistoryInstance>() {
+			@Override
+			public String getValue(UserSearchHistoryInstance hist) {
+				return Integer.toString(hist.getRadius());
+			}
+		};
+		searchDataGrid.addColumn(radiusCol, "Search Radius");
+		searchDataGrid.setColumnWidth(radiusCol, 25, Unit.PCT);
+		
+		
+		TextColumn<UserSearchHistoryInstance> crimeCol = new TextColumn<UserSearchHistoryInstance>() {
+			@Override
+			public String getValue(UserSearchHistoryInstance hist) {
+				return Integer.toString(hist.getCrimeScore());
+			}
+		};
+		searchDataGrid.addColumn(crimeCol, "Search Crime");
+		searchDataGrid.setColumnWidth(crimeCol, 25, Unit.PCT);
+		
+		TextColumn<UserSearchHistoryInstance> ratingCol = new TextColumn<UserSearchHistoryInstance>() {
+			@Override
+			public String getValue(UserSearchHistoryInstance hist) {
+				return Integer.toString(hist.getRating());
+			}
+		};
+		searchDataGrid.addColumn(ratingCol, "Search Rating");
+		searchDataGrid.setColumnWidth(ratingCol, 25, Unit.PCT);
 
 
 		ListDataProvider<UserSearchHistoryInstance> dataProvider = new ListDataProvider<UserSearchHistoryInstance>();
@@ -309,6 +326,20 @@ public class Rack_City implements EntryPoint {
 			tmpSearchlist.add(hist);
 		}
 
+		final NoSelectionModel<UserSearchHistoryInstance> selectionModel = new NoSelectionModel<UserSearchHistoryInstance>();
+	    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+	                @Override
+	                public void onSelectionChange(SelectionChangeEvent event) {
+	                	
+	                	AbsolutePanel userPanel = ((AbsolutePanel) ((HorizontalPanel) dockPanel.getWidget(0)).getWidget(0));
+	                	((SuggestBox) userPanel.getWidget(0)).setText(selectionModel.getLastSelectedObject().getSearchAddress());
+	                	((ListBox) userPanel.getWidget(3)).setItemSelected(selectionModel.getLastSelectedObject().getCrimeScore()-1, true);
+	                	((ListBox) userPanel.getWidget(6)).setItemSelected(selectionModel.getLastSelectedObject().getCrimeScore()-1, true);
+	                	((ListBox) userPanel.getWidget(8)).setItemSelected(selectionModel.getLastSelectedObject().getCrimeScore()-1, true);
+	                }
+	            });
+	    searchDataGrid.setSelectionModel(selectionModel);
+		
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(searchDataGrid);
 	}
 	
@@ -539,7 +570,7 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void createAddressBox(final AbsolutePanel userInputPanel){
 		final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-
+		
 		updateSuggestBox(oracle);
 
 		final SuggestBox suggestBox = new SuggestBox(oracle);
@@ -560,11 +591,11 @@ public class Rack_City implements EntryPoint {
 	}
 
 	private void updateSuggestBox(MultiWordSuggestOracle oracle){
-		
-		
+		oracle.clear();
 		
 		if(!userHistory.isEmpty()){
 			for(UserSearchHistoryInstance hist : userHistory){
+				
 				oracle.add(hist.getSearchAddress());
 			}
 		}
@@ -787,6 +818,8 @@ public class Rack_City implements EntryPoint {
 
 								// task 45
 								saveSearchHistory(txtbxAddress, radiusCombo, crimeCombo, ratingCombo);
+								userHistory.add(0, new UserSearchHistoryInstance("0", userId, txtbxAddress.getText(), Integer.parseInt(radiusCombo.getValue(radiusCombo.getSelectedIndex())), 
+										Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex()))));
 
 								googleMap.clearOverlays();
 								currentRackList = null;
@@ -843,10 +876,6 @@ public class Rack_City implements EntryPoint {
 			int crimeScore = crimeCombo.getSelectedIndex() - 1;
 			int rateVal = ratingCombo.getSelectedIndex() - 1;
 			AddUserSearchHistory(userID, searchAddress, radius, crimeScore, rateVal);
-		}
-		if(userEmail.isEmpty() && userId.isEmpty()){
-			messenger("Please login to save your precious search history! :P");
-
 		}
 	}
 
