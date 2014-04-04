@@ -3,6 +3,7 @@ package cs310MRAK.rackcity.client;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -1728,13 +1729,75 @@ public class Rack_City implements EntryPoint {
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
 	}
+	
+
+	private void sortUserHistory(ArrayList<UserSearchHistoryInstance> uhist)
+	{
+		ArrayList<UserSearchHistoryInstance> sortedHist = new ArrayList<UserSearchHistoryInstance>();
+		ArrayList<Integer> unsortedindexlist = new ArrayList<Integer>();
+		ArrayList<Integer> indexlist = new ArrayList<Integer>();
+		if (uhist.size() != 0)
+		{
+			//TODO
+			for (int i = 0; i < uhist.size(); i++)
+			{
+				String[] index = uhist.get(i).getDate().split(" ");
+				
+				// =================== convert month to digit ================
+				String month = index[1];
+				int mon = 1;
+				if (month.equals("JAN")) mon = 1;
+				if (month.equals("FEB")) mon = 2;
+				if (month.equals("MAR")) mon = 3;
+				if (month.equals("APR")) mon = 4;
+				
+				if (month.equals("MAY")) mon = 5;
+				if (month.equals("JUN")) mon = 6;
+				if (month.equals("JUL")) mon = 7;
+				if (month.equals("AUG")) mon = 8;
+				
+				if (month.equals("SEP")) mon = 9;
+				if (month.equals("OCT")) mon = 10;
+				if (month.equals("NOV")) mon = 11;
+				if (month.equals("DEC")) mon = 12;
+				// =================== convert date to digit ================
+				int  date = Integer.parseInt(index[2]);
+				// =================== convert time to digit ================
+				String  time = index[3];
+				String[] t = time.split(":");
+				int hour = Integer.parseInt(t[0]);
+				int minute = Integer.parseInt(t[1]);
+				int second = Integer.parseInt(t[2]);
+				int timeindex = (hour*100*100)+(minute*100)+second;
+				// =================== convert year to digit ================
+				int  year = Integer.parseInt(index[5]);
+				
+				// ============= FINAL INDEX VALUE FOR SORT =================
+				int finindex = (year*100*100*100*100*100)+(mon*100*100*100*100)+(date*100*100*100)+timeindex;
+				unsortedindexlist.add(finindex);
+				indexlist.add(finindex);
+			}
+			Collections.sort(unsortedindexlist);
+			for (int s = 0; s < uhist.size(); s++)
+			{
+				for (int x = 0; x <uhist.size(); x++)
+				{
+					if (unsortedindexlist.get(s) == indexlist.get(x))
+					{
+						sortedHist.add(x, uhist.get(s));
+					}
+				}
+			}
+			userHistory = sortedHist;
+		}
+	}
 
 	// ===================== SERVER ASYNC CALLS  ==========================
 
 	/**
 	 *  Called when user add a rack to favorite
 	 */ //!!!!!
-	private void Add2Fav (String uid, String address, LatLng pos)
+	private void Add2Fav(String uid, String address, LatLng pos)
 	{
 		String newP = pos.toString();
 		if (fService == null) 
@@ -1938,23 +2001,11 @@ public class Rack_City implements EntryPoint {
 				public void onSuccess(
 						ArrayList<UserSearchHistoryInstance> result) {
 						if (result != null)
+						{
 							userHistory = result;
+						}
 				}
 					});
-		}
-	}
-
-	private void sortUserHistory(ArrayList<UserSearchHistoryInstance> uhist)
-	{
-		ArrayList<UserSearchHistoryInstance> sortedHistTop20 = new ArrayList<UserSearchHistoryInstance>();
-		if (uhist.size() != 0)
-		{
-			//TODO
-			for (int i = 0; i < uhist.size(); i++)
-			{
-				messenger(uhist.get(i).getDate());
-			}
-			
 		}
 	}
 	
