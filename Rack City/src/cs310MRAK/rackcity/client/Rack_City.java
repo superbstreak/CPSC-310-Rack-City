@@ -22,6 +22,8 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.Request;
@@ -1475,66 +1477,110 @@ public class Rack_City implements EntryPoint {
 		 * clicked on.
 		 * 
 		 */
-		if (rService == null) 
-		{
-			rService = GWT.create(rackService.class);
-		}
-		AsyncCallback<String> callback = new AsyncCallback<String>()
-				{
-			public void onFailure(Throwable error)
-			{
-				Window.alert("Server Error! (getBikeRackTimeHits)");
-				handleError(error);
-			}
+		
+		Label timeArriveLabel = new Label("Time to Arrive:");
+		rackClickPanel.add(timeArriveLabel, 0, 300);
+		timeArriveLabel.setSize("130px", "54px");
+		
+		final ListBox timeArrivalBox = new ListBox();
+		timeArrivalBox.addChangeHandler(new ChangeHandler(){
 			@Override
-			public void onSuccess(String result) {
-				//Window.alert("Server Success! (getBikeRackTimeHits): " + result);
-				// -*-*-*-*
-				currentRackTimeHits = result;
-				String problem = result;
-				
-				String problemWithoutLeftBrack = problem.replace("[", "");
-				String problemWithoutRightAndLeftBranch = problemWithoutLeftBrack.replace("]", "");
-				String problemAlsoWithoutSpace = problemWithoutRightAndLeftBranch.replace(" ", "");
-				
-				String[] problemArray = problemAlsoWithoutSpace.split(",");
-				
-				int sum = 0;
-				for(int i=0; i < problemArray.length; i++){
-					             sum = sum + Integer.parseInt(problemArray[i]);
-				}
-				
-				String whatWeWantToShow = "";
-				if(sum != 0){
-				String[] problemArrayIntoPercentages = problemArray;
-				for(int i=0; i < problemArrayIntoPercentages.length; i++){
-					double temp = Double.parseDouble(problemArrayIntoPercentages[i]);
-					temp = temp/(double)sum;
+			public void onChange(ChangeEvent event){
+				int selectedIndex = timeArrivalBox.getSelectedIndex();
+				if (selectedIndex > 0){
+					Window.alert("Something got selected " + timeArrivalBox.getValue(selectedIndex));
 					
-					problemArrayIntoPercentages[i] = ""+temp;
-				}
-				
-				
-				
-				Date date = new Date();
-				int hourInt = date.getHours();		
-				
-				
-				String w = problemArrayIntoPercentages[hourInt % 24];
-				whatWeWantToShow = w+" chance that this rack is occupied.";   // RIGHT HERE IS THE MAGIC
-				}
-				else whatWeWantToShow = "0 chance that this rack is occupied";
-				
-				Label timeHits = new Label(whatWeWantToShow);
-				rackClickPanel.add(timeHits, 170, 130);
-				timeHits.setSize("150px", "54px");
+					if (rService == null) 
+					{
+						rService = GWT.create(rackService.class);
+					}
+					AsyncCallback<String> callback = new AsyncCallback<String>()
+							{
+						public void onFailure(Throwable error)
+						{
+							Window.alert("Server Error! (getBikeRackTimeHits)");
+							handleError(error);
+						}
+						@Override
+						public void onSuccess(String result) {
+							//Window.alert("Server Success! (getBikeRackTimeHits): " + result);
+							// -*-*-*-*
+							currentRackTimeHits = result;
+							String problem = result;
+							
+							String problemWithoutLeftBrack = problem.replace("[", "");
+							String problemWithoutRightAndLeftBranch = problemWithoutLeftBrack.replace("]", "");
+							String problemAlsoWithoutSpace = problemWithoutRightAndLeftBranch.replace(" ", "");
+							
+							String[] problemArray = problemAlsoWithoutSpace.split(",");
+							
+							int sum = 0;
+							for(int i=0; i < problemArray.length; i++){
+								             sum = sum + Integer.parseInt(problemArray[i]);
+							}
+							
+							String whatWeWantToShow = "";
+							if(sum != 0){
+							String[] problemArrayIntoPercentages = problemArray;
+							for(int i=0; i < problemArrayIntoPercentages.length; i++){
+								double temp = Double.parseDouble(problemArrayIntoPercentages[i]);
+								temp = temp/(double)sum;
+								
+								problemArrayIntoPercentages[i] = ""+temp;
+							}
+							
+							
+							
+							Date date = new Date();
+							int hourInt = date.getHours();		
+							
+							
+							String w = problemArrayIntoPercentages[hourInt % 24];
+							whatWeWantToShow = w+" chance that this rack is occupied.";   // RIGHT HERE IS THE MAGIC
+							}
+							else whatWeWantToShow = "0 chance that this rack is occupied";
+							
+							Label timeHits = new Label(whatWeWantToShow);
+							rackClickPanel.add(timeHits, 170, 130);
+							timeHits.setSize("150px", "54px");
 
+						}
+							};
+
+							LatLng pos2 = rack.getCoordinate();
+							rService.getRackTimeHits(pos2.toString(), callback);
+				}
 			}
-				};
-
-				LatLng pos2 = rack.getCoordinate();
-				
-				rService.getRackTimeHits(pos2.toString(), callback);
+		});
+		
+		timeArrivalBox.addItem("");
+		timeArrivalBox.addItem("00:00");
+		timeArrivalBox.addItem("01:00");
+		timeArrivalBox.addItem("02:00");
+		timeArrivalBox.addItem("03:00");
+		timeArrivalBox.addItem("04:00");
+		timeArrivalBox.addItem("05:00");
+		timeArrivalBox.addItem("06:00");
+		timeArrivalBox.addItem("07:00");
+		timeArrivalBox.addItem("08:00");
+		timeArrivalBox.addItem("09:00");
+		timeArrivalBox.addItem("10:00");
+		timeArrivalBox.addItem("11:00");
+		timeArrivalBox.addItem("12:00");
+		timeArrivalBox.addItem("13:00");
+		timeArrivalBox.addItem("14:00");
+		timeArrivalBox.addItem("15:00");
+		timeArrivalBox.addItem("16:00");
+		timeArrivalBox.addItem("17:00");
+		timeArrivalBox.addItem("18:00");
+		timeArrivalBox.addItem("19:00");
+		timeArrivalBox.addItem("20:00");
+		timeArrivalBox.addItem("21:00");
+		timeArrivalBox.addItem("22:00");
+		timeArrivalBox.addItem("23:00");
+		rackClickPanel.add(timeArrivalBox, 0, 320);
+		timeArrivalBox.setSize("140px", "22px");
+		
 
 		final Button reportCrimeButton = new Button("reportCrimeButton");
 		reportCrimeButton.addClickHandler(new ClickHandler() {
