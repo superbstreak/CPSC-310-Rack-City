@@ -25,7 +25,7 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 
 		URL url = null;
 		try {
-			url = new URL("https://dl.dropboxusercontent.com/u/280882377/Book1.xml");
+			url = new URL(urlz);
 		} catch (MalformedURLException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -49,7 +49,7 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 		String inputLine;
 		try {
 			while ((inputLine = in.readLine()) != null) {
-				System.out.println(inputLine);
+				//System.out.println(inputLine);
 				sb.append(inputLine);
 			}
 		} catch (IOException e) {
