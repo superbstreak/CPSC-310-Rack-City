@@ -1537,7 +1537,27 @@ public class Rack_City implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				//TODO ADD TO FAVORITES FUNCTIONALITY
 				if (!userId.equals(""))
-					Add2Fav(userId, rack.getAddress(), rack.getCoordinate());
+				{
+					Boolean checkalready = false;
+					for (int i = 0; i < favRacks.size(); i++)
+					{
+						if (favRacks.get(i).getAddress().equals(rack.getAddress()))
+						{
+							checkalready = true;
+						}
+					}
+					if (checkalready == true)
+					{
+						messenger("You've already favorited this rack!");
+					}
+					else if (checkalready == false)
+					{
+						Add2Fav(userId, rack.getAddress(), rack.getCoordinate());
+						favRacks.add(rack);
+						messenger("Added Your Favorite!");
+					}					
+				}
+					
 			}
 		});
 		addFavButton.setText("Add to Favorites");
