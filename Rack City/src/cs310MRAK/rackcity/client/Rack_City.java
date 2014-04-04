@@ -576,16 +576,6 @@ public class Rack_City implements EntryPoint {
 			tmpFavlist.add(rack);
 		}
 		
-		favoritesDataGrid.addRangeChangeHandler(new RangeChangeEvent.Handler() {
-		      @Override
-		      public void onRangeChange(RangeChangeEvent event) {
-		    	  Range range = event.getNewRange();
-		    	  
-		    	  Window.alert("Range Start: " + range.getStart() + "");
-		    	  Window.alert("Range Length: " + range.getLength() + "");
-            }
-		});
-		
 		
 		final NoSelectionModel<BikeRack> selectionModel = new NoSelectionModel<BikeRack>();
 	    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -602,14 +592,14 @@ public class Rack_City implements EntryPoint {
 	    showFavOnMap.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				for (BikeRack rack : favRacks){
-					addMarker(rack.getCoordinate(), 1);
+					addMarker(rack.getCoordinate(), 4);
 				}
 			}
 	    });
 	    showFavOnMap.setText("Show on Map");
-	    gridPanel.add(favoritesDataGrid, 500, 350);
+	    gridPanel.add(showFavOnMap, 500, 350);
 		
-		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(gridPanel);
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(gridPanel,0,0);
 	}
 
 	/**
@@ -1222,7 +1212,7 @@ public class Rack_City implements EntryPoint {
 	 * Creates a text field with the username when logged in
 	 */
 	private void createUserLabel(){
-		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
+		final AbsolutePanel titleViewPanel = (AbsolutePanel) rootPanel.getWidget(1);
 
 		Label userLabel = new Label(userName + ", you are currently logged in.");
 		userLabel.setSize("350px", "10px");
@@ -1683,11 +1673,23 @@ public class Rack_City implements EntryPoint {
 		removeFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO implement this functionality here
+				removeFav(rack);
+				
+				int rackCount = 0;
+				for(BikeRack rck : favRacks){
+					if(rck.equals(rack)){
+						return;
+					}
+					rackCount++;
+				}
+				
+				favRacks.remove(rack);
+				favRacksCommon.remove(rackCount);
 				
 			}
 		});
 		removeFavButton.setText("Remove from Favorites");
-		rackClickPanel.add(removeFavButton, 180, 365);
+		rackClickPanel.add(removeFavButton, 180, 360);
 		
 		
 		Label rackAddress = new Label("Address: " + rack.getAddress());
@@ -3007,7 +3009,10 @@ public class Rack_City implements EntryPoint {
 			RatingsubTotal += Integer.parseInt(person[2]);
 			friendcount += 1;
 		}
-		output = RatingsubTotal/friendcount;
+		
+		if(friendcount > 0){
+			output = RatingsubTotal/friendcount;
+		}
 
 		return output;
 	}
