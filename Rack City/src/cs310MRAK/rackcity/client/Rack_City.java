@@ -216,10 +216,10 @@ public class Rack_City implements EntryPoint {
 			currentDatasheetItem = null;
 		}
 		
-		if(currentMarker != null){
+		try{
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 			currentMarker = null;
-		}
+		}catch(IndexOutOfBoundsException e){}
 		
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 		createSearchDataGrid();
@@ -326,10 +326,10 @@ public class Rack_City implements EntryPoint {
 			currentDatasheetItem = null;
 		}
 		
-		if(currentMarker != null){
+		try{
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 			currentMarker = null;
-		}
+		}catch(IndexOutOfBoundsException e){}
 		
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 		
@@ -422,10 +422,10 @@ public class Rack_City implements EntryPoint {
 			return;
 		}
 
-		if(currentMarker != null){
+		try{
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 			currentMarker = null;
-		}
+		}catch(IndexOutOfBoundsException e){}
 
 		if(currentRackList != null && !currentRackList.isEmpty()){
 
@@ -447,10 +447,11 @@ public class Rack_City implements EntryPoint {
 			return;
 		}
 		
-		if(currentMarker != null){
+		try{
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
 			currentMarker = null;
-		}
+		}catch(IndexOutOfBoundsException e){}
+			
 
 		if(!favRacks.isEmpty()){
 
@@ -557,7 +558,7 @@ public class Rack_City implements EntryPoint {
 				
 				if(!(temp = favRacksCommon.get(rackCount)).isEmpty()){
 					for(String[] friends : temp){
-						listOfFriends = listOfFriends + friends[0] + " ";
+						listOfFriends = listOfFriends + friends[0] + ", ";
 					}
 				}
 				
@@ -594,6 +595,8 @@ public class Rack_City implements EntryPoint {
 				for (BikeRack rack : favRacks){
 					addMarker(rack.getCoordinate(), 4);
 				}
+				
+				onMapViewClick();
 			}
 	    });
 	    showFavOnMap.setText("Show on Map");
@@ -899,10 +902,10 @@ public class Rack_City implements EntryPoint {
 		savedRackList = null;
 		currentAddress = null;
 
-		if(currentMarker != null){
-			currentMarker = null;
+		try{
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-		}
+			currentMarker = null;
+		}catch(IndexOutOfBoundsException e){}
 		
 		onMapViewClick();
 
@@ -1392,6 +1395,9 @@ public class Rack_City implements EntryPoint {
 				if (radius == 0.5) radiusCombo = 0;
 				if (radius == 1) radiusCombo = 1;
 				if (radius == 2) radiusCombo = 2;
+				
+				Window.alert(Integer.toString(radiusCombo));
+				
 				userHistory.add(0, new UserSearchHistoryInstance("0", userId, address, radiusCombo, (int)crimeScore, (int) rating));
 				
 				currentAddress = point;
@@ -1673,18 +1679,20 @@ public class Rack_City implements EntryPoint {
 		removeFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO implement this functionality here
-				removeFav(rack);
 				
 				int rackCount = 0;
 				for(BikeRack rck : favRacks){
-					if(rck.equals(rack)){
-						return;
+					if(latlngCompare(rck.getCoordinate(), rack.getCoordinate())){
+						break;
 					}
 					rackCount++;
 				}
-				
-				favRacks.remove(rack);
+					
+				favRacks.remove(rackCount);
 				favRacksCommon.remove(rackCount);
+				removeFav(rack);
+				
+				onFavoritesViewClick();
 				
 			}
 		});
@@ -1743,7 +1751,6 @@ public class Rack_City implements EntryPoint {
 				
 				if(userRatingCombo.getSelectedIndex() > 0){
 					//TODO implement set rating functionality
-					
 					
 					userRatingCombo.setItemSelected(0, true);//call this when you are done
 				}
@@ -1813,8 +1820,8 @@ public class Rack_City implements EntryPoint {
 						// ------------------------------------------------------------------------
 						// =================================== ***** ======================
 	     	        	
-						Window.alert("Experience Submitted!");
 	     	        	popup.removeFromParent();
+	     	        	clickRackDisplayPanel(rack);
 	     	        }
 	             });
 	             submitShareExperience.setText("Submit Experience");
@@ -1965,8 +1972,8 @@ public class Rack_City implements EntryPoint {
 		}
 		else if (type == 4){
 			MarkerOptions markerOptions = MarkerOptions.newInstance();
-			Icon icn = Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png");
-			icn.setIconAnchor(Point.newInstance(6, 20));
+			Icon icn = Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_white.png");
+			icn.setIconAnchor(Point.newInstance(12, 35));
 			markerOptions.setIcon(icn);
 			Marker mark = new Marker(pos, markerOptions);
 			googleMap.addOverlay(mark);
