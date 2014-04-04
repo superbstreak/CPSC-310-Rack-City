@@ -989,7 +989,7 @@ public class Rack_City implements EntryPoint {
 	private void showCrimeButton(final AbsolutePanel userInputPanel){
 		Button showCrimeButton = new Button("showCrimeButton");
 		showCrimeButton.setText("Show/Hide Crime Locations");
-		showCrimeButton.setSize("180px", "30px");
+		showCrimeButton.setSize("188px", "30px");
 		showCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isCrimeShown) {
@@ -1026,7 +1026,7 @@ public class Rack_City implements EntryPoint {
 				}
 			}
 		});
-		userInputPanel.add(showCrimeButton, 10, 328);
+		userInputPanel.add(showCrimeButton, 6, 328);
 	}
 	/**
 	 * Displays show rack button when search is pressed
@@ -1035,7 +1035,7 @@ public class Rack_City implements EntryPoint {
 	private void showRackButton(final AbsolutePanel userInputPanel){
 		Button showRackButton = new Button("showRackButton");
 		showRackButton.setText("Show/Hide Rack Locations");
-		showRackButton.setSize("180px", "30px");
+		showRackButton.setSize("188px", "30px");
 		showRackButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isRackShown) {
@@ -1072,7 +1072,7 @@ public class Rack_City implements EntryPoint {
 				}
 			}
 		});
-		userInputPanel.add(showRackButton, 10, 368);
+		userInputPanel.add(showRackButton, 6, 368);
 	}
 
 	/**
