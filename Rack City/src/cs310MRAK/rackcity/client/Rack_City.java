@@ -1239,6 +1239,33 @@ public class Rack_City implements EntryPoint {
 						messenger("Refetch Currently disabled due to busy traffic");
 						printerdebug();		
 
+
+						// =================================== ***** ======================
+						// ------------------ RACKEXPERIENCE ---------------
+						// we'll use this when we get the textbox to add rack experiences // 
+//						if (rService == null) 
+//						{
+//							rService = GWT.create(rackService.class);
+//						}
+//						AsyncCallback<Void> callback = new AsyncCallback<Void>()
+//								{
+//							public void onFailure(Throwable error)
+//							{
+//								Window.alert("Server Error! (RackExperience)");
+//								handleError(error);
+//							}
+//							@Override
+//							public void onSuccess(Void result) {
+//									Window.alert("Server Success! You added a rack experience.");
+//							}
+//								};
+//								rService.addBikeExperienceComment(LatLng.newInstance(49.284192, -123.110048).toString(),"This is the best bike rack ever!", "105344220509568726102", callback);
+//								rService.addBikeExperienceComment(LatLng.newInstance(49.284176, -123.106037).toString(),"I do not like this bike rack!", "116016420567291713038", callback);
+//								rService.addBikeExperienceComment(LatLng.newInstance(49.284192, -123.110048).toString(),"So I just had some delicious blueberry yogurt this morning.", "105344220509568726102", callback);
+//								rService.addBikeExperienceComment(LatLng.newInstance(49.284192, -123.110048).toString(),"Sup dude.", "102502510324439815963", callback);	
+						// ------------------------------------------------------------------------
+						// =================================== ***** ======================
+						
 						getUserSearchHistory(userId);
 						//addBikeRackTimeHit("49.284176, -123.106037");
 						//addtolist();
