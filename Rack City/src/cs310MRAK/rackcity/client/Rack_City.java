@@ -1877,7 +1877,7 @@ public class Rack_City implements EntryPoint {
 				oneStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 1);
+					submituserRating (userId, rack, 1);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1892,7 +1892,7 @@ public class Rack_City implements EntryPoint {
 				twoStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 2);
+					submituserRating (userId, rack, 2);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1907,7 +1907,7 @@ public class Rack_City implements EntryPoint {
 				threeStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 3);
+					submituserRating (userId, rack, 3);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1922,7 +1922,7 @@ public class Rack_City implements EntryPoint {
 				fourStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 4);
+					submituserRating (userId, rack, 4);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1937,7 +1937,7 @@ public class Rack_City implements EntryPoint {
 				fiveStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 5);
+					submituserRating (userId, rack, 5);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1956,21 +1956,45 @@ public class Rack_City implements EntryPoint {
 			noRating.setValue(true);
 		}
 		
-		getMyRatings(userId, rack);
-		
-		if(myRate == 0){
-			noRating.setValue(true);
-		}else if(myRate == 1){
-			oneStar.setValue(true);
-		}else if(myRate == 2){
-			twoStar.setValue(true);
-		}else if(myRate == 3){
-			threeStar.setValue(true);
-		}else if(myRate == 4){
-			fourStar.setValue(true);
-		}else if(myRate == 5){
-			fiveStar.setValue(true);
+		// parse friend rating ASYNC CALL		
+		if (uService == null)
+		{
+			uService = GWT.create(userService.class);
 		}
+		
+		uService.getStarRating(userId, rack.getAddress(), rack.getCoordinate().toString(), 3, new AsyncCallback<ArrayList<rackStarRatings>>()
+				{
+
+		public void onFailure(Throwable error)
+		{
+			Window.alert("Server Error! (PAR-STAR-3)");
+			handleError(error);
+		}
+
+		@Override
+		public void onSuccess(ArrayList<rackStarRatings> result) 
+		{
+			if (!(result.isEmpty() || result == null)){
+				int myRate = result.get(0).getRating();
+				if(myRate == 0){
+					noRating.setValue(true);
+				}else if(myRate == 1){
+					oneStar.setValue(true);
+				}else if(myRate == 2){
+					twoStar.setValue(true);
+				}else if(myRate == 3){
+					threeStar.setValue(true);
+				}else if(myRate == 4){
+					fourStar.setValue(true);
+				}else if(myRate == 5){
+					fiveStar.setValue(true);
+				}
+			}
+				
+		}
+			});
+		
+		
 		
 		
 		Label shareExperienceLbl = new Label("Share your experience:");
@@ -2669,6 +2693,28 @@ public class Rack_City implements EntryPoint {
 					rService.updateRate(newp, 5, callback);
 		}	
 	}
+	
+	private void rackOps(final BikeRack rack){
+		String newp = rack.getCoordinate().toString();
+		if (rService == null) {
+			rService = GWT.create(rackService.class);
+		}
+		AsyncCallback<Void> callback = new AsyncCallback<Void>()
+				{
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (UPD-RACK)");
+				handleError(error);
+			}
+			public void onSuccess(Void ignore)
+			{
+				clickRackDisplayPanel(rack);
+			}
+				};
+				rService.updateStolen(newp, 0, callback);
+				rService.updateCS(newp, 0, callback);
+				rService.updateRate(newp, 5, callback);
+	}
 
 	/**
 	 * Call crimeOps (Admin only): 
@@ -2840,7 +2886,7 @@ public class Rack_City implements EntryPoint {
 		parseCrime();
 	}
 
-	private void submituserRating (final String uid, final String addr, final String pos, int rating)
+	private void submituserRating (final String uid, final BikeRack rack, int rating)
 	{
 		if (uService == null)
 		{
@@ -2858,21 +2904,21 @@ public class Rack_City implements EntryPoint {
 			public void onSuccess(Void ignore)
 			{
 				Window.alert("Successfully Rated!");
-				getALLRatingATpos (uid, addr, pos);
+				getALLRatingATpos (uid, rack);
 			}
 				};
-				uService.addStarRating(uid, addr, pos, rating, ratingCallback);
+				uService.addStarRating(uid, rack.getAddress(), rack.getScoordinate(), rating, ratingCallback);
 	}
 
 	// type 2: get all user rating on this address
-	private void getALLRatingATpos(String uid, final String addr, final String pos)
+	private void getALLRatingATpos(String uid, final BikeRack rack)
 	{
 		if (uService == null)
 		{
 			uService = GWT.create(userService.class);
 		}
 
-		uService.getStarRating(uid, addr, pos, 2, new AsyncCallback<ArrayList<rackStarRatings>>()
+		uService.getStarRating(uid, rack.getAddress(), rack.getScoordinate(), 2, new AsyncCallback<ArrayList<rackStarRatings>>()
 				{
 
 			@Override
@@ -2885,45 +2931,12 @@ public class Rack_City implements EntryPoint {
 			public void onSuccess(ArrayList<rackStarRatings> result) {
 				if (result != null)
 				{
-					calculateNewAvg(addr, pos, result);
+					calculateNewAvg(rack, result);
 				}
 			}
 				});
 	}
 	
-	private void getMyRatings(String uid, BikeRack rack)
-	{
-		// parse friend rating ASYNC CALL		
-		if (uService == null)
-		{
-			uService = GWT.create(userService.class);
-		}
-		
-		myRate = 0;
-		// type 3: get this user's rating for THIS RACK ONLY
-		uService.getStarRating(uid, rack.getAddress(), rack.getCoordinate().toString(), 3, new AsyncCallback<ArrayList<rackStarRatings>>()
-				{
-
-			public void onFailure(Throwable error)
-			{
-				Window.alert("Server Error! (PAR-STAR-3)");
-				handleError(error);
-			}
-
-			@Override
-			public void onSuccess(ArrayList<rackStarRatings> result) 
-			{
-				if (!(result.isEmpty() || result == null))
-					assignMyRatings(result);
-			}
-				});
-	}
-	
-	private void assignMyRatings(ArrayList<rackStarRatings> result)
-	{
-		myRate = result.get(0).getRating();
-	}
-
 	private void getFriendRatings(String fid, String addr, String pos, final String[] person)
 	{
 		// parse friend rating ASYNC CALL		
@@ -3307,7 +3320,7 @@ public class Rack_City implements EntryPoint {
 		return output;
 	}
 
-	public void calculateNewAvg(String address, String position, ArrayList<rackStarRatings> todorating)
+	public void calculateNewAvg(BikeRack rack, ArrayList<rackStarRatings> todorating)
 	{
 		int occurance = 0;
 		int subtotal = 0;
@@ -3320,23 +3333,8 @@ public class Rack_City implements EntryPoint {
 		output = subtotal/occurance;
 
 		// update local!
-		int i = 0;
-		while (i < listofracks.size())
-		{
-			if (listofracks.get(i).getAddress().equals(address) && listofracks.get(i).getCoordinate().equals(position))
-			{
-				if (output != listofracks.get(i).getRating())
-				{
-					BikeRack br = listofracks.get(i);
-					listofracks.get(i).setRating(output);
-					// server update calls
-					rackOps(br.getAddress(), br.getCoordinate(), br.getRackCount(), br.getNumberStolenBikes(), br.getCrimeScore(), output, 2);
-				}
-
-				break;
-			}
-			i++;
-		}		
+		rackOps(rack);
+		
 	}
 
 	public static ArrayList<Crime> getCrimeData()
