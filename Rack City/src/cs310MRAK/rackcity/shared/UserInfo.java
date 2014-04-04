@@ -1,5 +1,6 @@
 package cs310MRAK.rackcity.shared;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -9,7 +10,13 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class UserInfo{
+public class UserInfo implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7716652380384771953L;
+	
 	
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
 	@PrimaryKey
@@ -31,12 +38,10 @@ public class UserInfo{
 	private String bikeName;
 	@Persistent
 	private String bikeColor;
-	@Persistent
-	private Date createDate;
 	
 	//a good way to use constructor
 	public UserInfo() {
-			this.createDate = new Date();
+		
 		}
 	 
 	public UserInfo(String id, String name, String email, String gender, Boolean isplus, String url, String favbike, String bikename, String bikecolor)

@@ -1,5 +1,6 @@
 package cs310MRAK.rackcity.shared;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -11,8 +12,12 @@ import javax.jdo.annotations.PrimaryKey;
 
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class UserSearchHistoryInstance {
+public class UserSearchHistoryInstance implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2903290062213497404L;
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
 		
 		@PrimaryKey
@@ -23,7 +28,7 @@ public class UserSearchHistoryInstance {
 		@Persistent
 		private String searchAddress; // "vancouver"
 		@Persistent
-		private Date createDate;
+		private String createDate;
 		@Persistent
 		private int radius; // "2"
 		@Persistent
@@ -34,7 +39,7 @@ public class UserSearchHistoryInstance {
 		
 		//a good way to use constructor
 			public UserSearchHistoryInstance() {
-				this.createDate = new Date();
+				this.createDate = new Date().toString();
 			}
 		 
 		 

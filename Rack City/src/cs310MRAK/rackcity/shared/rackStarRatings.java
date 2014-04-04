@@ -1,5 +1,6 @@
 package cs310MRAK.rackcity.shared;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -9,8 +10,12 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class rackStarRatings {
+public class rackStarRatings implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2846960548092459846L;
 	// latlng are not serialized, all convert to string, require convert back. by splitting comma and A[0] = lat, A[1] = lon
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -23,12 +28,9 @@ public class rackStarRatings {
 	private String Position;
 	@Persistent
 	private int rating;
-	@Persistent
-	private Date createDate;
 	
 	//a good way to use constructor
 		public rackStarRatings() {
-			this.createDate = new Date();
 		}
 	 
 	
