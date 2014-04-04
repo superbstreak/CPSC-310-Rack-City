@@ -1817,7 +1817,8 @@ public class Rack_City implements EntryPoint {
 							}
 							@Override
 							public void onSuccess(Void result) {
-									Window.alert("Server Success! You added a rack experience.");
+									//
+								//Window.alert("Server Success! You added a rack experience.");
 							}
 								};
 								rService.addBikeExperienceComment(positionOfExperienceString,userExperienceTextBox.getText(), userId, callback);
