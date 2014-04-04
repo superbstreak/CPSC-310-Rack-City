@@ -1792,7 +1792,7 @@ public class Rack_City implements EntryPoint {
 	/**
 	 *  Called when user add a rack to favorite
 	 */ //!!!!!
-	private void Add2Fav (String uid, String address, LatLng pos)
+	private void Add2Fav(String uid, String address, LatLng pos)
 	{
 		String newP = pos.toString();
 		if (fService == null) 
@@ -1998,7 +1998,6 @@ public class Rack_City implements EntryPoint {
 						if (result != null)
 						{
 							userHistory = result;
-							sortUserHistory(userHistory);
 						}
 				}
 					});
