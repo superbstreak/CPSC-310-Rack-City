@@ -1877,8 +1877,6 @@ public class Rack_City implements EntryPoint {
 		
 		getMyRatings(userId, rack);
 		
-		Window.alert(myRate + "");
-		
 		if(myRate == 0){
 			noRating.setValue(true);
 		}else if(myRate == 1){
@@ -3244,7 +3242,7 @@ public class Rack_City implements EntryPoint {
 		int i = 0;
 		while (i < listofracks.size())
 		{
-			if (listofracks.get(i).getAddress().equals(address) && listofracks.get(i).getCoordinate().toString().equals(position))
+			if (listofracks.get(i).getAddress().equals(address) && listofracks.get(i).getCoordinate().equals(position))
 			{
 				if (output != listofracks.get(i).getRating())
 				{
