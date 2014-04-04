@@ -1,6 +1,7 @@
 package cs310MRAK.rackcity.client;
 
 import java.util.ArrayList;
+
 import 	com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface RackFavouritesServiceAsync {
@@ -11,5 +12,5 @@ public interface RackFavouritesServiceAsync {
 	void getFavorite(String uid, AsyncCallback<ArrayList<String[]>> callback);
 	
 
-	void removeFavorite(String uid, String cooridinate, AsyncCallback<Void> callback);
+	void removeFavorite(String uid, String cooridinate, String address ,  AsyncCallback<Void> callback);
 }

@@ -18,6 +18,6 @@ public interface RackFavouritesService extends RemoteService {
 	public ArrayList<String[]> getFavorite(String uid);
 	
 
-	public void removeFavorite(String uid, String cooridinate);
+	public void removeFavorite(String uid, String cooridinate, String address);
 	
 }

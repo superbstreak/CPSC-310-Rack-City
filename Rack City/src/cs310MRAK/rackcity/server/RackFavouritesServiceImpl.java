@@ -62,7 +62,7 @@ public class RackFavouritesServiceImpl extends RemoteServiceServlet implements R
 	}
 
 	@Override
-	public void removeFavorite(String uid, String cooridinate) 
+	public void removeFavorite(String uid, String cooridinate , String address) 
 	{
 		// TODO Auto-generated method stub
 		PersistenceManager pm = getPersistenceManager();
@@ -70,9 +70,10 @@ public class RackFavouritesServiceImpl extends RemoteServiceServlet implements R
 			String query = "select from " +FavoriteRack.class.getName();
 			@SuppressWarnings("unchecked")
 			List<FavoriteRack> FavoriteRacks = (List<FavoriteRack>) pm.newQuery(query).execute();
+			String UAid = address.concat(uid);
 			for (FavoriteRack r: FavoriteRacks)
 			{
-				if (r.getUid().equals(uid) && r.getPosition().equals(cooridinate))
+				if (r.getUidAddress().equals(UAid))
 				{
 					pm.deletePersistent(r);
 				}
