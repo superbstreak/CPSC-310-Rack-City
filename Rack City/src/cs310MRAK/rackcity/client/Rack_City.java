@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TabBar;
@@ -1724,44 +1725,80 @@ public class Rack_City implements EntryPoint {
 		// &!&!&!&
 		
 		
-		Label userRatingLbl = new Label("Set Rack Rating:");
+		Label userRatingLbl = new Label("Rack Rating:");
 		rackClickPanel.add(userRatingLbl, 0, 180);
 		
-		final ListBox userRatingCombo = new ListBox(); //9
-		userRatingCombo.addItem("");
-		userRatingCombo.addItem("0");
-		userRatingCombo.addItem("1");
-		userRatingCombo.addItem("2");
-		userRatingCombo.addItem("3");
-		userRatingCombo.addItem("4");
-		userRatingCombo.addItem("5");
+		RadioButton noRating = new RadioButton("No Rating");
+		noRating.setTabIndex(-1);
+		noRating.setEnabled(false);
+		rackClickPanel.add(noRating, 0, 180);
 		
-		userRatingCombo.addClickHandler(new ClickHandler() {
+		noRating.setValue(true);
+		
+		final RadioButton oneStar = new RadioButton("1 Stars");
+		oneStar.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				int rate = oneStar.getTabIndex();
 				
-				if(userRatingCombo.getSelectedIndex() > 0){
-					//TODO implement set rating functionality
-					
-					int rate = Integer.valueOf((userRatingCombo.getSelectedIndex() - 1));
-					
-					if (!userId.equals(""))
-					{
-						submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
-						clickRackDisplayPanel(rack);
-					}
-					else
-					{
-						messenger("Please Login To Use This Feature!");
-					}
-					
-					userRatingCombo.setItemSelected(0, true);//call this when you are done
+				if (!userId.equals("")){
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					clickRackDisplayPanel(rack);
 				}
+				else{messenger("Please Login To Use This Feature!");}
 			}
 		});
 		
-		rackClickPanel.add(userRatingCombo, 0, 200);
-		userRatingCombo.setSize("100px", "22px");
+		final RadioButton twoStar = new RadioButton("2 Stars");
+		twoStar.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				int rate = twoStar.getTabIndex();
+				
+				if (!userId.equals("")){
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					clickRackDisplayPanel(rack);
+				}
+				else{messenger("Please Login To Use This Feature!");}
+			}
+		});
 		
+		final RadioButton threeStar = new RadioButton("3 Stars");
+		threeStar.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				int rate = threeStar.getTabIndex();
+				
+				if (!userId.equals("")){
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					clickRackDisplayPanel(rack);
+				}
+				else{messenger("Please Login To Use This Feature!");}
+			}
+		});
+		
+		final RadioButton fourStar = new RadioButton("4 Stars");
+		fourStar.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				int rate = fourStar.getTabIndex();
+				
+				if (!userId.equals("")){
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					clickRackDisplayPanel(rack);
+				}
+				else{messenger("Please Login To Use This Feature!");}
+			}
+		});
+		
+		final RadioButton fiveStar = new RadioButton("5 Stars");
+		fiveStar.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				int rate = fiveStar.getTabIndex();
+				
+				if (!userId.equals("")){
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					clickRackDisplayPanel(rack);
+				}
+				else{messenger("Please Login To Use This Feature!");}
+			}
+		});
 		
 		Label shareExperienceLbl = new Label("Share your experience:");
 		rackClickPanel.add(shareExperienceLbl, 170, 180);
@@ -1841,7 +1878,7 @@ public class Rack_City implements EntryPoint {
 		
 		
 		Label userExperienceLbl = new Label("View User Experiences:");
-		rackClickPanel.add(userExperienceLbl, 0, 240);
+		rackClickPanel.add(userExperienceLbl, 170, 240);
 		getComment(rack.getCoordinate().toString());
 		Button viewUserExperienceButton = new Button("viewUserExperienceButton");
 		viewUserExperienceButton.addClickHandler(new ClickHandler() {
@@ -1887,7 +1924,7 @@ public class Rack_City implements EntryPoint {
 	       });
 		viewUserExperienceButton.setText("View Experiences");
 		viewUserExperienceButton.setSize("130px", "30px");
-		rackClickPanel.add(viewUserExperienceButton, 0, 260);
+		rackClickPanel.add(viewUserExperienceButton, 150, 260);
 		
 		dockPanel.setVisible(false);
 		dockPanel.setVisible(true);
