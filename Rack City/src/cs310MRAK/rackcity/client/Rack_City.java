@@ -44,9 +44,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TabBar;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -1648,7 +1650,91 @@ public class Rack_City implements EntryPoint {
 		timeHits.setSize("150px", "54px");
 		// &!&!&!&
 		
-
+		
+		Label userRatingLbl = new Label("Set Rack Rating:");
+		rackClickPanel.add(userRatingLbl, 0, 180);
+		
+		final ListBox userRatingCombo = new ListBox(); //9
+		userRatingCombo.addItem("");
+		userRatingCombo.addItem("0");
+		userRatingCombo.addItem("1");
+		userRatingCombo.addItem("2");
+		userRatingCombo.addItem("3");
+		userRatingCombo.addItem("4");
+		userRatingCombo.addItem("5");
+		
+		userRatingCombo.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				
+				if(userRatingCombo.getSelectedIndex() > 0){
+					//TODO implement set rating functionality
+					
+					
+					userRatingCombo.setItemSelected(0, true);//call this when you are done
+				}
+			}
+		});
+		
+		rackClickPanel.add(userRatingCombo, 0, 200);
+		userRatingCombo.setSize("100px", "22px");
+		
+		
+		Label shareExperienceLbl = new Label("Share your experience:");
+		rackClickPanel.add(shareExperienceLbl, 170, 180);
+		
+		Button submitShareExperience = new Button("submitShareExperience");
+		submitShareExperience.addClickHandler(new ClickHandler() {
+	         public void onClick(ClickEvent event) {
+	        	 
+	             final PopupPanel popup = new PopupPanel(true);
+	             popup.setPopupPositionAndShow(new PopupPanel.PositionCallback(){
+	                public void setPosition(int offsetWidth, int offsetHeight) {
+	                   int left = (Window.getClientWidth() - offsetWidth) / 3;
+	                   int top = (Window.getClientHeight() - offsetHeight) / 3;
+	                   popup.setPopupPosition(left, top);
+	                }
+	             });
+	             
+	             AbsolutePanel userExpPanel = new AbsolutePanel();
+	             userExpPanel.setSize("400px", "300px");
+	             
+	             Label shareExperienceLbl = new Label("Share your experience:");
+	             userExpPanel.add(shareExperienceLbl, 10, 10);
+	             
+	             final TextArea userExperienceTextBox = new TextArea();
+	             userExperienceTextBox.setSize("300px", "200px");
+	             userExpPanel.add(userExperienceTextBox, 30, 30);
+	             
+	             Button submitShareExperience = new Button("submitShareExperience");
+	             submitShareExperience.addClickHandler(new ClickHandler() {
+	     	         public void onClick(ClickEvent event) {
+	     	        	userExperienceTextBox.getText(); //gets text from the current popup
+	     	        	//TODO Implement new user experience
+	     	        	
+	     	        	
+	     	        	popup.removeFromParent();
+	     	        }
+	             });
+	             submitShareExperience.setText("Submit Experience");
+	             userExpPanel.add(submitShareExperience, 250, 270);
+	             
+	             popup.setWidget(userExpPanel);
+	             
+	          }
+	       });
+		submitShareExperience.setText("Submit Experience");
+		submitShareExperience.setSize("40", "10");
+		rackClickPanel.add(submitShareExperience, 170, 200);
+		
+		
+		
+		Label userExperienceLbl = new Label("User Experiences:");
+		rackClickPanel.add(userExperienceLbl, 0, 240);
+		
+		final TextBox userExperienceTextBox = new TextBox();
+		userExperienceTextBox.setSize("190px", "15px");
+		rackClickPanel.add(userExperienceTextBox, 0, 260);
+		
 		dockPanel.setVisible(false);
 		dockPanel.setVisible(true);
 	
