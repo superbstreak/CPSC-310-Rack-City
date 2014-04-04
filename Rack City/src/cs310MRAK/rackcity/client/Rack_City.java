@@ -145,6 +145,7 @@ public class Rack_City implements EntryPoint {
 	private userServiceAsync uService = GWT.create(userService.class);
 	private RackFavouritesServiceAsync fService = GWT.create(RackFavouritesService.class);
 	private int initialsync = 0;
+	private String rackEXP = "";
 	/**
 	 * This is the entry point method.
 	 */
@@ -1847,8 +1848,8 @@ public class Rack_City implements EntryPoint {
 		Button viewUserExperienceButton = new Button("viewUserExperienceButton");
 		viewUserExperienceButton.addClickHandler(new ClickHandler() {
 	         public void onClick(ClickEvent event) {
-	         	
-	         	
+	        	 getComment(rack.getCoordinate().toString());
+	         	 
 	        	 
 	             final PopupPanel popup = new PopupPanel(true);
 	             popup.setPopupPositionAndShow(new PopupPanel.PositionCallback(){
@@ -1866,7 +1867,7 @@ public class Rack_City implements EntryPoint {
 	             userExpPanel.add(shareExperienceLbl, 10, 10);
 	             
 	             final TextArea userExperienceTextBox = new TextArea();
-	             userExperienceTextBox.setText("TODO IMPLEMENT TEXT FROM SERVER");
+	             userExperienceTextBox.setText(rackEXP);	//TODO
 	             userExperienceTextBox.setReadOnly(true);
 	             userExperienceTextBox.setSize("300px", "200px");
 	             userExpPanel.add(userExperienceTextBox, 30, 30);
@@ -2678,7 +2679,7 @@ public class Rack_City implements EntryPoint {
 			}
 				});
 	}
-
+	
 
 	private void getFriendRatings(String fid, String addr, String pos, final String[] person)
 	{
@@ -2713,6 +2714,39 @@ public class Rack_City implements EntryPoint {
 				}
 			}
 				});
+	}
+	
+	private void getComment(String position)
+	{
+		if (rService == null) {
+			rService = GWT.create(rackService.class);
+		}
+
+		rService.getBikeExperienceComments(position, new AsyncCallback<String[]>()
+				{
+
+					@Override
+					public void onFailure(Throwable caught) {
+						messenger("Error (PAR-EXP)");
+						
+					}
+
+					@Override
+					public void onSuccess(String[] result) {
+						assignExp(result);						
+					}
+			
+				});
+	}
+	
+	private void assignExp(String[] comments)
+	{
+		String output = "";
+		for(int i = 0; i < comments.length; i++)
+		{
+			output += "\n "+ comments[i];
+		}
+		rackEXP = output;
 	}
 
 	// ===================== SERVER ASYNC CALLS ENDS ==========================
