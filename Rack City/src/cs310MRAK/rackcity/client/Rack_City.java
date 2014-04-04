@@ -473,7 +473,7 @@ public class Rack_City implements EntryPoint {
 			
 
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
-
+		getUserFriends();
 		createFavoritesGrid();
 		
 		hideHideLocationButtons();
@@ -2110,7 +2110,7 @@ public class Rack_City implements EntryPoint {
 	          }
 	       });
 		viewUserExperienceButton.setText("View Experiences");
-		viewUserExperienceButton.setSize("130px", "30px");
+		viewUserExperienceButton.setSize("150px", "30px");
 		rackClickPanel.add(viewUserExperienceButton, 150, 260);
 		
 		dockPanel.setVisible(false);
