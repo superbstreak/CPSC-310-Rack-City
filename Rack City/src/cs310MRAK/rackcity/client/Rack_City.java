@@ -2487,6 +2487,7 @@ public class Rack_City implements EntryPoint {
 									// TESTING
 									parseFav(userName, userId);
 								}
+								sortUserHistory(userHistory);
 							}
 							else if (response.getStatusCode() == 400)
 							{
