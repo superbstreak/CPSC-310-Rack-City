@@ -17,16 +17,33 @@ public class ParserTests {
 		newRackService.adminConnection();
 		StringBuffer sbTest = newRackService.sb;
 		
+		int initialSBSize = sbTest.length();
+		
 		assertTrue(p.getXMLRackList().size() == 0);
 		
 		p.parseBikeRacks(sbTest);
 		
+		int secondSBSize = sbTest.length();
+		
 		assertTrue(p.getXMLRackList().size() > 0);
+		
+		assertFalse(initialSBSize == secondSBSize);
 		
 		int parseSizeA = p.getXMLRackList().size();
 		
 		System.out.println(Integer.toString(parseSizeA));
 		
+		p.parseBikeRacks(sbTest);
+		
+		int finalSBSize = sbTest.length();
+		
+		assertEquals(secondSBSize, finalSBSize);
+		
+		assertFalse(p.getXMLRackList().size() > parseSizeA);
+		
+		int parseSizeB = p.getXMLRackList().size();
+		
+		System.out.println(Integer.toString(parseSizeB));
 	}
 
 }
