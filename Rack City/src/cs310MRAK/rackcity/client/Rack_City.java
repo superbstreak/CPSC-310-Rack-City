@@ -570,26 +570,6 @@ public class Rack_City implements EntryPoint {
 			tmpFavlist.add(rack);
 		}
 
-		ListHandler<BikeRack> sortHandler = new ListHandler<BikeRack>(tmpFavlist);
-
-		sortHandler.setComparator(ratingCol, new Comparator<BikeRack>() {
-			@Override
-			public int compare(BikeRack o1, BikeRack o2) {
-				
-				double rating1 = o1.getRating();
-				double rating2 = o2.getRating();
-				
-				if(rating1 > rating2){
-					return 1;
-				}else if(rating1 < rating2){
-					return -1;
-				}
-				
-				return 0;
-			}
-		});
-
-		favoritesDataGrid.addColumnSortHandler(sortHandler);	
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(favoritesDataGrid);
 	}
 
@@ -1761,34 +1741,8 @@ public class Rack_City implements EntryPoint {
 	             Button submitShareExperience = new Button("submitShareExperience");
 	             submitShareExperience.addClickHandler(new ClickHandler() {
 	     	         public void onClick(ClickEvent event) {
-	     	        	userExperienceTextBox.getText(); //gets text from the current popup
 	     	        	//TODO Implement new user experience
-	     	        	
-	     	        	
-	     	        	popup.removeFromParent();
-	     	        }
-	             });
-	             submitShareExperience.setText("Submit Experience");
-	             userExpPanel.add(submitShareExperience, 250, 260);
-	             
-	             popup.setWidget(userExpPanel);
-	             
-	          }
-	       });
-		submitShareExperience.setText("Submit Experience");
-		submitShareExperience.setSize("140px", "30px");
-		rackClickPanel.add(submitShareExperience, 170, 200);
-		
-		
-		
-		Label userExperienceLbl = new Label("View User Experiences:");
-		rackClickPanel.add(userExperienceLbl, 0, 240);
-		
-		Button viewUserExperienceButton = new Button("viewUserExperienceButton");
-		viewUserExperienceButton.addClickHandler(new ClickHandler() {
-	         public void onClick(ClickEvent event) {
-	         	
-	         	// =================================== ***** ======================
+	     	        // =================================== ***** ======================
 						// ------------------ RACKEXPERIENCE ---------------
 	     	        	LatLng positionOfExperience = rack.getCoordinate();
 	     	        	String positionOfExperienceString = positionOfExperience.toString();
@@ -1814,6 +1768,31 @@ public class Rack_City implements EntryPoint {
 							
 						// ------------------------------------------------------------------------
 						// =================================== ***** ======================
+	     	        	
+	     	        	popup.removeFromParent();
+	     	        }
+	             });
+	             submitShareExperience.setText("Submit Experience");
+	             userExpPanel.add(submitShareExperience, 250, 260);
+	             
+	             popup.setWidget(userExpPanel);
+	             
+	          }
+	       });
+		submitShareExperience.setText("Submit Experience");
+		submitShareExperience.setSize("140px", "30px");
+		rackClickPanel.add(submitShareExperience, 170, 200);
+		
+		
+		
+		Label userExperienceLbl = new Label("View User Experiences:");
+		rackClickPanel.add(userExperienceLbl, 0, 240);
+		
+		Button viewUserExperienceButton = new Button("viewUserExperienceButton");
+		viewUserExperienceButton.addClickHandler(new ClickHandler() {
+	         public void onClick(ClickEvent event) {
+	         	
+	         	
 	        	 
 	             final PopupPanel popup = new PopupPanel(true);
 	             popup.setPopupPositionAndShow(new PopupPanel.PositionCallback(){
