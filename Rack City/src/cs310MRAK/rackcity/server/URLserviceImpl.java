@@ -18,6 +18,8 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 	 */
 	private static final long serialVersionUID = 7068432272258660457L;
 
+	public static StringBuffer sb = new StringBuffer();
+
 	@Override
 	public void adminConnection() {
 
@@ -43,24 +45,26 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		String inputLine;
 		try {
-			while ((inputLine = in.readLine()) != null)
+			while ((inputLine = in.readLine()) != null) {
 				System.out.println(inputLine);
+				sb.append(inputLine);
+			}
 		} catch (IOException e) {
-		// TODO Auto-generated catch block
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
+
 		try {
 			in.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		//System.out.println("hey what's up");
 	}
 }
