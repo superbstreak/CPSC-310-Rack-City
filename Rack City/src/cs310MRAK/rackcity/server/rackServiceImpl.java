@@ -384,18 +384,16 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 			String query = "select from " + RackExperience.class.getName();
 			@SuppressWarnings("unchecked")
 			List<RackExperience> rex = (List<RackExperience>) pm.newQuery(query).execute();
-		//	BikeRackTimeHits brth = (BikeRackTimeHits) pm.newQuery(query).execute();
 			
-			int j = 0;
-			for(int i=0; i < experienceComments.length; i++){
-				if(rex.get(i).getPos().equals(pos)){
-					experienceComments[j] = rex.get(i).getExperience();
-					j++;
+			experienceComments = new String[rex.size()];
+			for (int i = 0; i < rex.size(); i++)
+			{
+				if (rex.get(i).getPos().equals(pos))
+				{
+					experienceComments[i] = rex.get(i).getExperience();
 				}
-			}
-			
-
-									  
+				
+			}						  
 		}
 		finally
 		{

@@ -145,6 +145,7 @@ public class Rack_City implements EntryPoint {
 	private userServiceAsync uService = GWT.create(userService.class);
 	private RackFavouritesServiceAsync fService = GWT.create(RackFavouritesService.class);
 	private int initialsync = 0;
+	private String rackEXP = "";
 	/**
 	 * This is the entry point method.
 	 */
@@ -161,7 +162,7 @@ public class Rack_City implements EntryPoint {
 			}
 			public void onSuccess(Void ignore)
 			{
-				Window.alert("Success URL");
+				//Window.alert("Success URL");
 			}};
 			ftpService.adminConnection("https://dl.dropboxusercontent.com/u/280882377/Book1.xml",callback);
 
@@ -991,8 +992,8 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void showCrimeButton(final AbsolutePanel userInputPanel){
 		Button showCrimeButton = new Button("showCrimeButton");
-		showCrimeButton.setText("Hide Crime Locations");
-		showCrimeButton.setSize("180px", "30px");
+		showCrimeButton.setText("Show/Hide Crime Locations");
+		showCrimeButton.setSize("188px", "30px");
 		showCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isCrimeShown) {
@@ -1007,7 +1008,7 @@ public class Rack_City implements EntryPoint {
 					addMapOverlay(txtbxAddress.getText(), 
 							Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), -1, -1);
 					
-					showCrimeButton.setText("Show Crime Locations");
+					//showCrimeButton.setText("Show Crime Locations");
 				}
 				else if (!isCrimeShown) {
 					googleMap.clearOverlays();
@@ -1023,13 +1024,13 @@ public class Rack_City implements EntryPoint {
 							Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
 							Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
 					
-					showCrimeButton.setText("Hide Crime Locations");
+					//showCrimeButton.setText("Hide Crime Locations");
 					
 					isCrimeShown = true;
 				}
 			}
 		});
-		userInputPanel.add(showCrimeButton, 10, 328);
+		userInputPanel.add(showCrimeButton, 6, 328);
 	}
 	/**
 	 * Displays show rack button when search is pressed
@@ -1037,8 +1038,8 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void showRackButton(final AbsolutePanel userInputPanel){
 		Button showRackButton = new Button("showRackButton");
-		showRackButton.setText("Hide Rack Locations");
-		showRackButton.setSize("180px", "30px");
+		showRackButton.setText("Show/Hide Rack Locations");
+		showRackButton.setSize("188px", "30px");
 		showRackButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (isRackShown) {
@@ -1053,7 +1054,7 @@ public class Rack_City implements EntryPoint {
 					addMapOverlay(txtbxAddress.getText(), 
 							Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), -1, -1);
 					
-					showRackButton.setText("Show Rack Locations");
+					//showRackButton.setText("Show Rack Locations");
 				}
 				else if (!isRackShown) {
 					googleMap.clearOverlays();
@@ -1069,13 +1070,13 @@ public class Rack_City implements EntryPoint {
 							Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
 							Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
 					
-					showRackButton.setText("Hide Rack Locations");
+					//showRackButton.setText("Hide Rack Locations");
 					
 					isRackShown = true;
 				}
 			}
 		});
-		userInputPanel.add(showRackButton, 10, 368);
+		userInputPanel.add(showRackButton, 6, 368);
 	}
 
 	/**
@@ -1475,7 +1476,7 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(String result) {
-				Window.alert("Server Success! (getBikeRackTimeHits): " + result);
+				//Window.alert("Server Success! (getBikeRackTimeHits): " + result);
 				currentRackTimeHits = result;
 
 			}
@@ -1752,6 +1753,18 @@ public class Rack_City implements EntryPoint {
 				if(userRatingCombo.getSelectedIndex() > 0){
 					//TODO implement set rating functionality
 					
+					int rate = Integer.valueOf((userRatingCombo.getSelectedIndex() - 1));
+					
+					if (!userId.equals(""))
+					{
+						submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+						clickRackDisplayPanel(rack);
+					}
+					else
+					{
+						messenger("Please Login To Use This Feature!");
+					}
+					
 					userRatingCombo.setItemSelected(0, true);//call this when you are done
 				}
 			}
@@ -1812,7 +1825,8 @@ public class Rack_City implements EntryPoint {
 							}
 							@Override
 							public void onSuccess(Void result) {
-									Window.alert("Server Success! You added a rack experience.");
+									//
+								//Window.alert("Server Success! You added a rack experience.");
 							}
 								};
 								rService.addBikeExperienceComment(positionOfExperienceString,userExperienceTextBox.getText(), userId, callback);
@@ -1839,12 +1853,12 @@ public class Rack_City implements EntryPoint {
 		
 		Label userExperienceLbl = new Label("View User Experiences:");
 		rackClickPanel.add(userExperienceLbl, 0, 240);
-		
+		getComment(rack.getCoordinate().toString());
 		Button viewUserExperienceButton = new Button("viewUserExperienceButton");
 		viewUserExperienceButton.addClickHandler(new ClickHandler() {
 	         public void onClick(ClickEvent event) {
-	         	
-	         	
+	        	 
+	         	 
 	        	 
 	             final PopupPanel popup = new PopupPanel(true);
 	             popup.setPopupPositionAndShow(new PopupPanel.PositionCallback(){
@@ -1862,7 +1876,8 @@ public class Rack_City implements EntryPoint {
 	             userExpPanel.add(shareExperienceLbl, 10, 10);
 	             
 	             final TextArea userExperienceTextBox = new TextArea();
-	             userExperienceTextBox.setText("TODO IMPLEMENT TEXT FROM SERVER");
+	             userExperienceTextBox.setText(rackEXP);	//TODO
+	             
 	             userExperienceTextBox.setReadOnly(true);
 	             userExperienceTextBox.setSize("300px", "200px");
 	             userExpPanel.add(userExperienceTextBox, 30, 30);
@@ -2344,7 +2359,7 @@ public class Rack_City implements EntryPoint {
 			}
 			public void onSuccess(Void ignore)
 			{
-				Window.alert("Success (ADD-TIME)");
+				//Window.alert("Success (ADD-TIME)");
 			}
 				};
 
@@ -2401,7 +2416,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success (RMV-RACK)");
+					//Window.alert("Success (RMV-RACK)");
 				}
 					};
 					rService.removeRack(newp, callback);
@@ -2424,7 +2439,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success. (ADD-RACK)");
+					//Window.alert("Success. (ADD-RACK)");
 				}
 					};
 					rService.addRack(a, newp, rn, s, cs, r, callback);
@@ -2445,7 +2460,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success. (UPD-RACK)");
+					//Window.alert("Success. (UPD-RACK)");
 				}
 					};
 					rService.updateStolen(newp, 0, callback);
@@ -2478,7 +2493,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success. (RMV-CRIME");
+					//Window.alert("Success. (RMV-CRIME");
 				}
 					};
 					cService.removeCrime(newp, crimeCallback);
@@ -2499,7 +2514,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success. (UPD-CRIME)");
+					//Window.alert("Success. (UPD-CRIME)");
 				}
 					};
 					cService.addCrime(i, newp, crimeCallback);
@@ -2526,7 +2541,7 @@ public class Rack_City implements EntryPoint {
 			@Override
 			public void onSuccess(ArrayList<String[]> result) {
 				GUIsetup();
-				Window.alert("Success. (PAR-CRIME)");
+				//Window.alert("Success. (PAR-CRIME)");
 				assignCrimeOutput(result);
 			}
 				});
@@ -2548,7 +2563,7 @@ public class Rack_City implements EntryPoint {
 				String addr = temp[0].toString();
 				String LL = temp[1].toString();   // string
 
-				listofcrimes.add(new Crime (addr, LL));
+				listofcrimes.add(new Crime (null, addr, LL));
 			}
 		}
 
@@ -2573,7 +2588,7 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(ArrayList<String[]> result) {
-				Window.alert("Success. (PAR-RACK)");
+				//Window.alert("Success. (PAR-RACK)");
 				assignrackOutput(result);
 			}
 				});
@@ -2641,7 +2656,7 @@ public class Rack_City implements EntryPoint {
 			}
 			public void onSuccess(Void ignore)
 			{
-				Window.alert("Success. (ADD-RATE)");
+				Window.alert("Successfully Rated!");
 				getALLRatingATpos (uid, addr, pos);
 			}
 				};
@@ -2674,7 +2689,7 @@ public class Rack_City implements EntryPoint {
 			}
 				});
 	}
-
+	
 
 	private void getFriendRatings(String fid, String addr, String pos, final String[] person)
 	{
@@ -2709,6 +2724,41 @@ public class Rack_City implements EntryPoint {
 				}
 			}
 				});
+	}
+	
+	private void getComment(String position)
+	{
+		if (rService == null) {
+			rService = GWT.create(rackService.class);
+		}
+		rackEXP = "";
+		rService.getBikeExperienceComments(position, new AsyncCallback<String[]>()
+				{
+
+					@Override
+					public void onFailure(Throwable caught) {
+						messenger("Error (PAR-EXP)");
+						
+					}
+
+					@Override
+					public void onSuccess(String[] result) {
+						if (result != null)
+							assignExp(result);						
+					}
+			
+				});
+	}
+	
+	private void assignExp(String[] comments)
+	{
+		String output = "";
+		for(int i = 0; i < comments.length; i++)
+		{
+			if (comments[i] != null)
+				output += "\n "+ comments[i];
+		}
+		rackEXP = output;
 	}
 
 	// ===================== SERVER ASYNC CALLS ENDS ==========================
