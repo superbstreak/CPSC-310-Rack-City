@@ -1747,24 +1747,63 @@ public class Rack_City implements EntryPoint {
 	     	        }
 	             });
 	             submitShareExperience.setText("Submit Experience");
-	             userExpPanel.add(submitShareExperience, 250, 270);
+	             userExpPanel.add(submitShareExperience, 250, 260);
 	             
 	             popup.setWidget(userExpPanel);
 	             
 	          }
 	       });
 		submitShareExperience.setText("Submit Experience");
-		submitShareExperience.setSize("40", "10");
+		submitShareExperience.setSize("140px", "30px");
 		rackClickPanel.add(submitShareExperience, 170, 200);
 		
 		
 		
-		Label userExperienceLbl = new Label("User Experiences:");
+		Label userExperienceLbl = new Label("View User Experiences:");
 		rackClickPanel.add(userExperienceLbl, 0, 240);
 		
-		final TextBox userExperienceTextBox = new TextBox();
-		userExperienceTextBox.setSize("190px", "15px");
-		rackClickPanel.add(userExperienceTextBox, 0, 260);
+		Button viewUserExperienceButton = new Button("viewUserExperienceButton");
+		viewUserExperienceButton.addClickHandler(new ClickHandler() {
+	         public void onClick(ClickEvent event) {
+	        	 
+	             final PopupPanel popup = new PopupPanel(true);
+	             popup.setPopupPositionAndShow(new PopupPanel.PositionCallback(){
+	                public void setPosition(int offsetWidth, int offsetHeight) {
+	                   int left = (Window.getClientWidth() - offsetWidth) / 3;
+	                   int top = (Window.getClientHeight() - offsetHeight) / 3;
+	                   popup.setPopupPosition(left, top);
+	                }
+	             });
+	             
+	             AbsolutePanel userExpPanel = new AbsolutePanel();
+	             userExpPanel.setSize("400px", "300px");
+	             
+	             Label shareExperienceLbl = new Label("Other User Experiences:");
+	             userExpPanel.add(shareExperienceLbl, 10, 10);
+	             
+	             final TextArea userExperienceTextBox = new TextArea();
+	             userExperienceTextBox.setText("TODO IMPLEMENT TEXT FROM SERVER");
+	             userExperienceTextBox.setReadOnly(true);
+	             userExperienceTextBox.setSize("300px", "200px");
+	             userExpPanel.add(userExperienceTextBox, 30, 30);
+	             
+	             Button submitShareExperience = new Button("submitShareExperience");
+	             submitShareExperience.addClickHandler(new ClickHandler() {
+	     	         public void onClick(ClickEvent event) {
+	     	        	popup.removeFromParent();
+	     	        }
+	             });
+	             submitShareExperience.setText("Close");
+	             userExpPanel.add(submitShareExperience, 250, 260);
+	             
+	             
+	             popup.setWidget(userExpPanel);
+	             
+	          }
+	       });
+		viewUserExperienceButton.setText("View Experiences");
+		viewUserExperienceButton.setSize("130px", "30px");
+		rackClickPanel.add(viewUserExperienceButton, 0, 260);
 		
 		dockPanel.setVisible(false);
 		dockPanel.setVisible(true);
