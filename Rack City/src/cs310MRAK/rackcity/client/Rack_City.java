@@ -73,6 +73,7 @@ import com.google.gwt.maps.client.geocode.LocationCallback;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.Point;
+import com.google.gwt.maps.client.geom.Size;
 import com.google.gwt.maps.client.overlay.Icon;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.MarkerOptions;
@@ -455,15 +456,9 @@ public class Rack_City implements EntryPoint {
 		}catch(IndexOutOfBoundsException e){}
 			
 
-		if(!favRacks.isEmpty()){
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 
-			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
-
-			createFavoritesGrid();
-		}else{
-			Window.alert("You have no favorites!");
-			return;
-		}
+		createFavoritesGrid();
 		
 		hideHideLocationButtons();
 	}
@@ -1394,8 +1389,6 @@ public class Rack_City implements EntryPoint {
 				if (radius == 1) radiusCombo = 1;
 				if (radius == 2) radiusCombo = 2;
 				
-				Window.alert(Integer.toString(radiusCombo));
-				
 				userHistory.add(0, new UserSearchHistoryInstance("0", userId, address, radiusCombo, (int)crimeScore, (int) rating));
 				
 				currentAddress = point;
@@ -1953,6 +1946,7 @@ public class Rack_City implements EntryPoint {
 
 			if (!userImageURL.isEmpty() || userImageURL == null){
 				icn = Icon.newInstance(userImageURL);
+				icn.setIconSize(Size.newInstance(30, 30));
 				icn.setIconAnchor(Point.newInstance(15, 15));
 			}
 			else{
