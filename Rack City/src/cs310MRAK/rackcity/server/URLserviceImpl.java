@@ -27,14 +27,12 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 		try {
 			url = new URL(urlz);
 		} catch (MalformedURLException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 		URLConnection con = null;
 		try {
 			con = url.openConnection();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		BufferedReader in = null;
@@ -42,7 +40,6 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 			in = new BufferedReader(new InputStreamReader(
 					con.getInputStream()));
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -55,7 +52,6 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 				sb.append(inputLine);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -63,7 +59,6 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 		try {
 			in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
