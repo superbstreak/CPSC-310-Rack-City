@@ -474,9 +474,6 @@ public class Rack_City implements EntryPoint {
 			
 
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
-		favRacks = new ArrayList<BikeRack>();
-		favRacksCommon = new ArrayList<ArrayList<String[]>>();
-		getUserFriends();
 		createFavoritesGrid();
 		
 		hideHideLocationButtons();
