@@ -964,7 +964,7 @@ public class Rack_City implements EntryPoint {
 			public void onClick(ClickEvent event) {
 
 				startLoginProcess();
-				getUserSearchHistory(userId);
+				
 				createLoggedInButton(loginButton);
 
 			}
@@ -1044,7 +1044,8 @@ public class Rack_City implements EntryPoint {
 						messenger("Refetch Currently disabled due to busy traffic");
 						printerdebug();		
 
-						addBikeRackTimeHit("49.284176, -123.106037");
+						getUserSearchHistory(userId);
+						//addBikeRackTimeHit("49.284176, -123.106037");
 						//addtolist();
 
 					}
@@ -1827,12 +1828,23 @@ public class Rack_City implements EntryPoint {
 				@Override
 				public void onSuccess(
 						ArrayList<UserSearchHistoryInstance> result) {
-						userHistory = result;
+						if (result != null)
+							userHistory = result;
+						messenger(result.size()+" DEBUG SIZE");
 				}
 					});
 		}
 	}
 
+	private void sortUserHistory(ArrayList<UserSearchHistoryInstance> uhist)
+	{
+		ArrayList<UserSearchHistoryInstance> sortedHistTop20 = new ArrayList<UserSearchHistoryInstance>();
+		if (uhist.size() != 0)
+		{
+			//TODO
+		}
+	}
+	
 	/**
 	 * Call rackOps (Admin only): 
 	 * type == 1: ADD OPERATION. require all parameters
@@ -2277,7 +2289,7 @@ public class Rack_City implements EntryPoint {
 
 									int totalItems = (int) js.get("totalItems").isNumber().doubleValue();
 									JSONArray jsFriends = js.get("items").isArray();
-
+									getUserSearchHistory(userId);
 									for (int i = 0; i < totalItems; i++)
 									{
 										String friendId = jsFriends.get(i).isObject().get("id").isString().stringValue();
