@@ -517,16 +517,6 @@ public class Rack_City implements EntryPoint {
 					rackCount++;
 				}
 				
-				/*
-				ArrayList<String[]> temp;
-				
-				if(!(temp = favRacksCommon.get(rackCount)).isEmpty()){
-					for(String[] friends : temp){
-						
-					}
-				}
-				*/
-				
 				return Double.toString(round(getFRIENDAverageRating (rackCount),2)) + "/5";
 			}
 		};
@@ -537,7 +527,7 @@ public class Rack_City implements EntryPoint {
 		TextColumn<BikeRack> addrCol = new TextColumn<BikeRack>() {
 			@Override
 			public String getValue(BikeRack rack) {
-				return rack.getRating() + "/5";
+				return rack.getAddress();
 			}
 		};
 		favoritesDataGrid.addColumn(addrCol, "Rack Address");
@@ -547,7 +537,25 @@ public class Rack_City implements EntryPoint {
 		TextColumn<BikeRack> friendsCol = new TextColumn<BikeRack>() {
 			@Override
 			public String getValue(BikeRack rack) {
-				return rack.getRating() + "/5";
+				
+				int rackCount = 0;
+				for (BikeRack rk : favRacks) {
+					if(rk.equals(rack)){
+						break;
+					}
+					rackCount++;
+				}
+				
+				ArrayList<String[]> temp;
+				String listOfFriends = "";
+				
+				if(!(temp = favRacksCommon.get(rackCount)).isEmpty()){
+					for(String[] friends : temp){
+						listOfFriends.concat(friends[0] + " ");
+					}
+				}
+				
+				return listOfFriends;
 			}
 		};
 		favoritesDataGrid.addColumn(friendsCol, "Friends Favorites");
@@ -1614,7 +1622,7 @@ public class Rack_City implements EntryPoint {
 		checkInButton.setText("Check-In");
 		rackClickPanel.add(checkInButton, 265, 430);
 		
-		final Button addFavButton = new Button("checkInButton");
+		final Button addFavButton = new Button("addFavButton");
 		addFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!userId.equals(""))
@@ -1647,6 +1655,18 @@ public class Rack_City implements EntryPoint {
 		});
 		addFavButton.setText("Add to Favorites");
 		rackClickPanel.add(addFavButton, 220, 395);
+		
+		
+		final Button removeFavButton = new Button("removeFavButton");
+		removeFavButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				//TODO implement this functionality here
+				
+			}
+		});
+		removeFavButton.setText("Remove from Favorites");
+		rackClickPanel.add(removeFavButton, 200, 365);
+		
 		
 		Label rackAddress = new Label("Address: " + rack.getAddress());
 		rackAddress.setStyleName("gwt-Rack-Label-Style");
