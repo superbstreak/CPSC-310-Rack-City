@@ -41,6 +41,7 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -474,6 +475,8 @@ public class Rack_City implements EntryPoint {
 
 		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 		getUserFriends();
+		favRacks = new ArrayList<BikeRack>();
+		favRacksCommon = new ArrayList<ArrayList<String[]>>();
 		createFavoritesGrid();
 		
 		hideHideLocationButtons();
@@ -1236,10 +1239,10 @@ public class Rack_City implements EntryPoint {
 	 * Destroys the text field with the username in it (called when user logs out)
 	 */
 	private void removeUserLabel(){
-		final AbsolutePanel titleViewPanel = (AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(2)).getWidget(0);
+		final AbsolutePanel titleViewPanel = ((AbsolutePanel) rootPanel.getWidget(1));
 
 		for(int i = 0; i < titleViewPanel.getWidgetCount(); i++){
-			if(titleViewPanel.getWidget(i).toString().contains("gwt-Label")){
+			if(titleViewPanel.getWidget(i).toString().contains("are currently logged in")){
 				titleViewPanel.remove(i);
 				break;
 			}
