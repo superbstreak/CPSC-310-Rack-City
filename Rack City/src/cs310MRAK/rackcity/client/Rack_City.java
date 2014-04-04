@@ -292,6 +292,11 @@ public class Rack_City implements EntryPoint {
 		TextColumn<UserSearchHistoryInstance> radiusCol = new TextColumn<UserSearchHistoryInstance>() {
 			@Override
 			public String getValue(UserSearchHistoryInstance hist) {
+				
+				if(hist.getRadius() == 0){
+					return Double.toString(0.5);
+				}
+				
 				return Integer.toString(hist.getRadius());
 			}
 		};
@@ -332,10 +337,17 @@ public class Rack_City implements EntryPoint {
 	                public void onSelectionChange(SelectionChangeEvent event) {
 	                	
 	                	AbsolutePanel userPanel = ((AbsolutePanel) ((HorizontalPanel) dockPanel.getWidget(0)).getWidget(0));
+	                	
+	                	if(selectionModel.getLastSelectedObject().getRadius() == 0){
+	                		((ListBox) userPanel.getWidget(3)).setItemSelected(1, true);
+	                	}else
+	                		((ListBox) userPanel.getWidget(3)).setItemSelected(selectionModel.getLastSelectedObject().getRadius() + 1, true);
+	                	
 	                	((SuggestBox) userPanel.getWidget(0)).setText(selectionModel.getLastSelectedObject().getSearchAddress());
-	                	((ListBox) userPanel.getWidget(3)).setItemSelected(selectionModel.getLastSelectedObject().getCrimeScore()-1, true);
-	                	((ListBox) userPanel.getWidget(6)).setItemSelected(selectionModel.getLastSelectedObject().getCrimeScore()-1, true);
-	                	((ListBox) userPanel.getWidget(8)).setItemSelected(selectionModel.getLastSelectedObject().getCrimeScore()-1, true);
+	                	((ListBox) userPanel.getWidget(6)).setItemSelected(selectionModel.getLastSelectedObject().getCrimeScore() + 1, true);
+	                	((ListBox) userPanel.getWidget(8)).setItemSelected(selectionModel.getLastSelectedObject().getRating() + 1, true);
+	                	
+	                	//selectionModel.getLastSelectedObject().getCrimeScore()
 	                }
 	            });
 	    searchDataGrid.setSelectionModel(selectionModel);
@@ -818,7 +830,7 @@ public class Rack_City implements EntryPoint {
 
 								// task 45
 								saveSearchHistory(txtbxAddress, radiusCombo, crimeCombo, ratingCombo);
-								userHistory.add(0, new UserSearchHistoryInstance("0", userId, txtbxAddress.getText(), Integer.parseInt(radiusCombo.getValue(radiusCombo.getSelectedIndex())), 
+								userHistory.add(0, new UserSearchHistoryInstance("0", userId, txtbxAddress.getText(), (int) Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), 
 										Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex()))));
 
 								googleMap.clearOverlays();
