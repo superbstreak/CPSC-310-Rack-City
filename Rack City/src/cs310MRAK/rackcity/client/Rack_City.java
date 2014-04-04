@@ -209,7 +209,6 @@ public class Rack_City implements EntryPoint {
 	
 	private void onSearchViewClick(){
 		
-		sortUserHistory(userHistory);
 		
 		if(currentDatasheetItem != null){
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
