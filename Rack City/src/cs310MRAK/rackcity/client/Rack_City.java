@@ -1456,7 +1456,7 @@ public class Rack_City implements EntryPoint {
 		checkInButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO Insert code that handles check in functionality
-
+				
 				if (rService == null) 
 				{
 					rService = GWT.create(rackService.class);
@@ -1556,6 +1556,10 @@ public class Rack_City implements EntryPoint {
 						favRacks.add(rack);
 						messenger("Added Your Favorite!");
 					}					
+				}
+				else
+				{
+					messenger("Please login to use this feature!");
 				}
 					
 			}
