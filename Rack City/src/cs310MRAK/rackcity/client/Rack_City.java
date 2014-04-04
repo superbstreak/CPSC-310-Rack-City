@@ -1733,12 +1733,11 @@ public class Rack_City implements EntryPoint {
 
 	private void sortUserHistory(ArrayList<UserSearchHistoryInstance> uhist)
 	{
-		ArrayList<UserSearchHistoryInstance> sortedHist = new ArrayList<UserSearchHistoryInstance>();
-		ArrayList<Integer> unsortedindexlist = new ArrayList<Integer>();
-		ArrayList<Integer> indexlist = new ArrayList<Integer>();
+		UserSearchHistoryInstance[] sortedHist = new UserSearchHistoryInstance[uhist.size()];
+		ArrayList<String> unsortedindexlist = new ArrayList<String>();
+		ArrayList<String> indexlist = new ArrayList<String>();
 		if (uhist.size() != 0)
 		{
-			//TODO
 			for (int i = 0; i < uhist.size(); i++)
 			{
 				String[] index = uhist.get(i).getDate().split(" ");
@@ -1774,21 +1773,29 @@ public class Rack_City implements EntryPoint {
 				
 				// ============= FINAL INDEX VALUE FOR SORT =================
 				int finindex = (year*100*100*100*100*100)+(mon*100*100*100*100)+(date*100*100*100)+timeindex;
-				unsortedindexlist.add(finindex);
-				indexlist.add(finindex);
+				String inx = String.valueOf(finindex);
+				unsortedindexlist.add(inx);
+				indexlist.add(inx);
 			}
-			Collections.sort(unsortedindexlist);
+			Collections.sort(indexlist);
 			for (int s = 0; s < uhist.size(); s++)
 			{
-				for (int x = 0; x <uhist.size(); x++)
+				int x = 0;
+				while (x < uhist.size())
 				{
-					if (unsortedindexlist.get(s) == indexlist.get(x))
+					if (unsortedindexlist.get(s).equals(indexlist.get(x)))
 					{
-						sortedHist.add(x, uhist.get(s));
+						sortedHist[x] = uhist.get(s);
+						break;
 					}
+					x++;
 				}
 			}
-			userHistory = sortedHist;
+			userHistory = new ArrayList<UserSearchHistoryInstance>();
+			for (int where = indexlist.size() - 1; where >= 0; where--)
+			{
+				userHistory.add(sortedHist[where]);				
+			}
 		}
 	}
 
