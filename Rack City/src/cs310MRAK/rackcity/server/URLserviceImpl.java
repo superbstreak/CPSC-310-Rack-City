@@ -47,9 +47,11 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 		}
 
 		String inputLine;
+		final String link = urlz;
 		try {
+			sb.setLength(0);
 			while ((inputLine = in.readLine()) != null) {
-				//System.out.println(inputLine);
+				System.out.println(inputLine);
 				sb.append(inputLine);
 			}
 		} catch (IOException e) {

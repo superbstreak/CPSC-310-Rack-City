@@ -58,7 +58,7 @@ public class ParserTests {
 		newCrimeService.adminConnection(urlCrime);
 		StringBuffer sbTestCrime = newCrimeService.sb;
 
-		System.out.println(sbTestCrime.toString());
+		//System.out.println(sbTestCrime.toString());
 
 		int initialSBSize = sbTestCrime.length();
 
