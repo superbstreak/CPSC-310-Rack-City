@@ -988,7 +988,7 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void showCrimeButton(final AbsolutePanel userInputPanel){
 		Button showCrimeButton = new Button("showCrimeButton");
-		showCrimeButton.setText("Hide Crime Locations");
+		showCrimeButton.setText("Show/Hide Crime Locations");
 		showCrimeButton.setSize("180px", "30px");
 		showCrimeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -1004,7 +1004,7 @@ public class Rack_City implements EntryPoint {
 					addMapOverlay(txtbxAddress.getText(), 
 							Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), -1, -1);
 					
-					showCrimeButton.setText("Show Crime Locations");
+					//showCrimeButton.setText("Show Crime Locations");
 				}
 				else if (!isCrimeShown) {
 					googleMap.clearOverlays();
@@ -1020,7 +1020,7 @@ public class Rack_City implements EntryPoint {
 							Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
 							Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
 					
-					showCrimeButton.setText("Hide Crime Locations");
+					//showCrimeButton.setText("Hide Crime Locations");
 					
 					isCrimeShown = true;
 				}
@@ -1034,7 +1034,7 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void showRackButton(final AbsolutePanel userInputPanel){
 		Button showRackButton = new Button("showRackButton");
-		showRackButton.setText("Hide Rack Locations");
+		showRackButton.setText("Show/Hide Rack Locations");
 		showRackButton.setSize("180px", "30px");
 		showRackButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -1050,7 +1050,7 @@ public class Rack_City implements EntryPoint {
 					addMapOverlay(txtbxAddress.getText(), 
 							Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), -1, -1);
 					
-					showRackButton.setText("Show Rack Locations");
+					//showRackButton.setText("Show Rack Locations");
 				}
 				else if (!isRackShown) {
 					googleMap.clearOverlays();
@@ -1066,7 +1066,7 @@ public class Rack_City implements EntryPoint {
 							Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
 							Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
 					
-					showRackButton.setText("Hide Rack Locations");
+					//showRackButton.setText("Hide Rack Locations");
 					
 					isRackShown = true;
 				}
