@@ -1736,6 +1736,8 @@ public class Rack_City implements EntryPoint {
 		Button submitShareExperience = new Button("submitShareExperience");
 		submitShareExperience.addClickHandler(new ClickHandler() {
 	         public void onClick(ClickEvent event) {
+	         	
+	         	
 	        	 
 	             final PopupPanel popup = new PopupPanel(true);
 	             popup.setPopupPositionAndShow(new PopupPanel.PositionCallback(){
@@ -1785,6 +1787,33 @@ public class Rack_City implements EntryPoint {
 		Button viewUserExperienceButton = new Button("viewUserExperienceButton");
 		viewUserExperienceButton.addClickHandler(new ClickHandler() {
 	         public void onClick(ClickEvent event) {
+	         	
+	         	// =================================== ***** ======================
+						// ------------------ RACKEXPERIENCE ---------------
+	     	        	LatLng positionOfExperience = rack.getCoordinate();
+	     	        	String positionOfExperienceString = positionOfExperience.toString();
+	     	        	//gets text from the current popup
+	     	        
+						if (rService == null) 
+						{
+							rService = GWT.create(rackService.class);
+						}
+						AsyncCallback<Void> callback = new AsyncCallback<Void>()
+								{
+							public void onFailure(Throwable error)
+							{
+								Window.alert("Server Error! (RackExperience)");
+								handleError(error);
+							}
+							@Override
+							public void onSuccess(Void result) {
+									Window.alert("Server Success! You added a rack experience.");
+							}
+								};
+								rService.addBikeExperienceComment(positionOfExperienceString,userExperienceTextBox.getText(), userId, callback);
+							
+						// ------------------------------------------------------------------------
+						// =================================== ***** ======================
 	        	 
 	             final PopupPanel popup = new PopupPanel(true);
 	             popup.setPopupPositionAndShow(new PopupPanel.PositionCallback(){
