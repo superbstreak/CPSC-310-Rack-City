@@ -177,10 +177,10 @@ public class Rack_City implements EntryPoint {
 	private void GUIsetup(){
 		DOM.removeChild(RootPanel.getBodyElement(), DOM.getElementById("loading"));
 		rootPanel = RootPanel.get();
-		rootPanel.setSize("1300px", "700px");
+		rootPanel.setSize("1350px", "1000px");
 		dockPanel = new DockPanel();
 		rootPanel.add(dockPanel, 10, 125);
-		dockPanel.setSize("1210px", "500px");
+		dockPanel.setSize("1250px", "500px");
 
 		createAppTitle();
 		createUserInputPanel();
@@ -199,58 +199,6 @@ public class Rack_City implements EntryPoint {
 		appTitleLbl.setStyleName("gwt-Title-Label-Style");
 		appTitlePanel.add(appTitleLbl, 500, 0);
 		
-		MenuBar menuBar = new MenuBar();
-		menuBar.addStyleName("gwt-MenuBar-Rackcity");
-		menuBar.setSize("600px", "33px");
-		
-		MenuItem mapView = new MenuItem("Map View", new ScheduledCommand() {
-		    @Override
-		    public void execute() {
-		    	onMapViewClick();
-		    }
-		});
-		mapView.setSize("70px", "20px");
-		mapView.addStyleName("gwt-MenuItem");
-		menuBar.addItem(mapView);
-		
-		MenuItem dataSheetView = new MenuItem("DataSheet View", new ScheduledCommand() {
-		    @Override
-		    public void execute() {
-		    	onDatasheetViewClick();
-		    }
-		});
-		dataSheetView.setSize("112px", "20px");
-		menuBar.addItem(dataSheetView);
-		
-		MenuItem favView = new MenuItem("Favorites View", new ScheduledCommand() {
-		    @Override
-		    public void execute() {
-		    	onFavoritesViewClick();
-		    }
-		});
-		favView.setSize("105px", "20px");
-		menuBar.addItem(favView);
-		
-		MenuItem profileView = new MenuItem("View Profile", new ScheduledCommand() {
-		    @Override
-		    public void execute() {
-		    	onProfileViewClick();
-		    }
-		});
-		profileView.setSize("105px", "20px");
-		menuBar.addItem(profileView);
-		
-		
-		MenuItem searchView = new MenuItem("View Searches", new ScheduledCommand() {
-		    @Override
-		    public void execute() {
-		    	onSearchViewClick();
-		    }
-		});
-		searchView.setSize("105px", "20px");
-		menuBar.addItem(searchView);
-		
-		appTitlePanel.add(menuBar,10,75);
 		rootPanel.add(appTitlePanel,0,0);
 
 	}
@@ -346,6 +294,9 @@ public class Rack_City implements EntryPoint {
 	                	((SuggestBox) userPanel.getWidget(0)).setText(selectionModel.getLastSelectedObject().getSearchAddress());
 	                	((ListBox) userPanel.getWidget(6)).setItemSelected(selectionModel.getLastSelectedObject().getCrimeScore() + 1, true);
 	                	((ListBox) userPanel.getWidget(8)).setItemSelected(selectionModel.getLastSelectedObject().getRating() + 1, true);
+	                	
+	                	searchButtonClick(((SuggestBox) userPanel.getWidget(0)), ((ListBox) userPanel.getWidget(3)),
+	                			((ListBox) userPanel.getWidget(6)), ((ListBox) userPanel.getWidget(8)), userPanel);
 	                	
 	                	//selectionModel.getLastSelectedObject().getCrimeScore()
 	                }
@@ -853,32 +804,7 @@ public class Rack_City implements EntryPoint {
 						if(!crimeCombo.getValue(crimeCombo.getSelectedIndex()).equals("")){
 							if(!ratingCombo.getValue(ratingCombo.getSelectedIndex()).equals("")){
 
-								// task 45
-								saveSearchHistory(txtbxAddress, radiusCombo, crimeCombo, ratingCombo);
-								userHistory.add(0, new UserSearchHistoryInstance("0", userId, txtbxAddress.getText(), (int) Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), 
-										Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex()))));
-
-								googleMap.clearOverlays();
-								currentRackList = null;
-								savedRackList = null;
-								currentCrimeList = null;
-								savedRackList = null;
-								currentAddress = null;
-
-								if(currentMarker != null){
-									currentMarker = null;
-									((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-								}
-								
-								onMapViewClick();
-
-								addMapOverlay(txtbxAddress.getText(), 
-										Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())),
-										Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
-										Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
-
-								showCrimeButton(userInputPanel);
-								showRackButton(userInputPanel);
+								searchButtonClick(txtbxAddress, radiusCombo, crimeCombo, ratingCombo, userInputPanel);
 
 							}else
 								Window.alert("No Rating selected!");
@@ -892,6 +818,34 @@ public class Rack_City implements EntryPoint {
 		});
 		searchButton.setText("Search");
 		userInputPanel.add(searchButton, 118, 276);
+	}
+	
+	private void searchButtonClick(SuggestBox txtbxAddress, ListBox radiusCombo, ListBox crimeCombo, ListBox ratingCombo, final AbsolutePanel userInputPanel){
+		saveSearchHistory(txtbxAddress, radiusCombo, crimeCombo, ratingCombo);
+		userHistory.add(0, new UserSearchHistoryInstance("0", userId, txtbxAddress.getText(), (int) Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())), 
+				Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex()))));
+
+		googleMap.clearOverlays();
+		currentRackList = null;
+		savedRackList = null;
+		currentCrimeList = null;
+		savedRackList = null;
+		currentAddress = null;
+
+		if(currentMarker != null){
+			currentMarker = null;
+			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+		}
+		
+		onMapViewClick();
+
+		addMapOverlay(txtbxAddress.getText(), 
+				Double.parseDouble(radiusCombo.getValue(radiusCombo.getSelectedIndex())),
+				Integer.parseInt(crimeCombo.getValue(crimeCombo.getSelectedIndex())), 
+				Integer.parseInt(ratingCombo.getValue(ratingCombo.getSelectedIndex())));
+
+		showCrimeButton(userInputPanel);
+		showRackButton(userInputPanel);
 	}
 
 	/**
@@ -1076,14 +1030,70 @@ public class Rack_City implements EntryPoint {
 	private void createTitlePanel(){
 		VerticalPanel titlePanel = new VerticalPanel();
 		dockPanel.add(titlePanel, DockPanel.NORTH);
-		titlePanel.setSize("700px", "40px");
+		titlePanel.setSize("1000px", "40px");
 
 		final AbsolutePanel titleViewPanel = new AbsolutePanel();
 		titlePanel.add(titleViewPanel);
-		titleViewPanel.setSize("700px","40px");
+		titleViewPanel.setSize("1000px","40px");
 		
+		createTitleMenu(titleViewPanel);
 		createAdminButton(titleViewPanel);
 		createLoginButton(null);
+	}
+	
+	private void createTitleMenu(AbsolutePanel titleViewPanel){
+		MenuBar menuBar = new MenuBar();
+		menuBar.addStyleName("gwt-MenuBar-Rackcity");
+		menuBar.setSize("600px", "33px");
+		
+		MenuItem mapView = new MenuItem("Map View", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onMapViewClick();
+		    }
+		});
+		mapView.setSize("70px", "20px");
+		mapView.addStyleName("gwt-MenuItem");
+		menuBar.addItem(mapView);
+		
+		MenuItem dataSheetView = new MenuItem("DataSheet View", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onDatasheetViewClick();
+		    }
+		});
+		dataSheetView.setSize("112px", "20px");
+		menuBar.addItem(dataSheetView);
+		
+		MenuItem favView = new MenuItem("Favorites View", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onFavoritesViewClick();
+		    }
+		});
+		favView.setSize("105px", "20px");
+		menuBar.addItem(favView);
+		
+		MenuItem profileView = new MenuItem("View Profile", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onProfileViewClick();
+		    }
+		});
+		profileView.setSize("105px", "20px");
+		menuBar.addItem(profileView);
+		
+		
+		MenuItem searchView = new MenuItem("View Searches", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onSearchViewClick();
+		    }
+		});
+		searchView.setSize("105px", "20px");
+		menuBar.addItem(searchView);
+		
+		titleViewPanel.add(menuBar,10,0);
 	}
 
 	/**
@@ -1107,7 +1117,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loginButton.setText("Login");
-		titleViewPanel.add(loginButton, 580, 5);
+		titleViewPanel.add(loginButton, 680, 5);
 	}
 
 	/**
@@ -1128,7 +1138,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loggedInButton.setText("Logout");
-		titleViewPanel.add(loggedInButton, 575, 5);
+		titleViewPanel.add(loggedInButton, 675, 5);
 	}
 
 	/**
@@ -1204,8 +1214,8 @@ public class Rack_City implements EntryPoint {
 		HorizontalPanel rightRackClickPanel = new HorizontalPanel();
 		dockPanel.add(rightRackClickPanel, DockPanel.EAST);
 		dockPanel.setCellHorizontalAlignment(rightRackClickPanel, HasHorizontalAlignment.ALIGN_RIGHT);
-		dockPanel.setCellVerticalAlignment(rightRackClickPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		rightRackClickPanel.setSize("250px", "500px");
+		dockPanel.setCellVerticalAlignment(rightRackClickPanel, HasVerticalAlignment.ALIGN_TOP);
+		rightRackClickPanel.setSize("340px", "500px");
 	}
 
 	/**
@@ -1369,7 +1379,7 @@ public class Rack_City implements EntryPoint {
 		final AbsolutePanel rackClickPanel = new AbsolutePanel();
 		((HorizontalPanel) dockPanel.getWidget(3)).clear();
 		((HorizontalPanel) dockPanel.getWidget(3)).add(rackClickPanel);
-		rackClickPanel.setSize("250px", "500px");
+		rackClickPanel.setSize("340px", "500px");
 
 		final Button reportCrimeButton = new Button("reportCrimeButton");
 		reportCrimeButton.addClickHandler(new ClickHandler() {
@@ -1437,7 +1447,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		reportCrimeButton.setText("Report Crime");
-		rackClickPanel.add(reportCrimeButton, 145, 450);
+		rackClickPanel.add(reportCrimeButton, 145, 475);
 		
 		
 		final Button checkInButton = new Button("checkInButton");
@@ -1518,40 +1528,40 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		checkInButton.setText("Check-In");
-		rackClickPanel.add(checkInButton, 170, 400);
+		rackClickPanel.add(checkInButton, 170, 450);
 
 		
 		Label rackAddress = new Label("Address: " + rack.getAddress());
 		rackAddress.setStyleName("gwt-Rack-Label-Style");
-		rackAddress.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		rackAddress.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		rackClickPanel.add(rackAddress, 0, 0);
-		rackAddress.setSize("250px", "54px");
+		rackAddress.setSize("340px", "54px");
 
 		//Add code to get # of stolen bikes for a particular rack
 		Label rackStolenBikesLabel = new Label("# of Stolen Bikes in this Location: " + rack.getNumberStolenBikes());
-		rackClickPanel.add(rackStolenBikesLabel, 0, 20);
-		rackStolenBikesLabel.setSize("250px", "54px");
+		rackClickPanel.add(rackStolenBikesLabel, 0, 30);
+		rackStolenBikesLabel.setSize("130px", "54px");
 
 		//Add code to get rating for a particular rack
 		Label rackRatingLabel = new Label("Bike Rack Rating (out of 5): " + rack.getRating());
-		rackClickPanel.add(rackRatingLabel, 0, 162);
-		rackRatingLabel.setSize("250px", "54px");
+		rackClickPanel.add(rackRatingLabel, 170, 30);
+		rackRatingLabel.setSize("120px", "54px");
 
 		Label crimeRatingLabel = new Label("Bike Rack Crime Score (out of 5): " + rack.getCrimeScore());
-		rackClickPanel.add(crimeRatingLabel, 0, 216);
-		crimeRatingLabel.setSize("250px", "54px");
+		rackClickPanel.add(crimeRatingLabel, 0, 90);
+		crimeRatingLabel.setSize("145px", "54px");
 
 		Label rackCountRatingLabel = new Label("Bike Rack Count: " + rack.getRackCount());
-		rackClickPanel.add(rackCountRatingLabel, 0, 270);
-		rackCountRatingLabel.setSize("250px", "54px");
+		rackClickPanel.add(rackCountRatingLabel, 170, 90);
+		rackCountRatingLabel.setSize("130px", "54px");
 
 		Label distanceLabel = new Label("Distance from you (km): " + round(calcLatLngDistance(rack.getCoordinate()), 2));
-		rackClickPanel.add(distanceLabel, 0, 324);
-		distanceLabel.setSize("250px", "54px");
+		rackClickPanel.add(distanceLabel, 0, 150);
+		distanceLabel.setSize("130px", "54px");
 		
 		Label timeHits = new Label("Rack time hits: " + this.currentRackTimeHits);
-		rackClickPanel.add(timeHits, 0, 358);
-		timeHits.setSize("250px", "54px");
+		rackClickPanel.add(timeHits, 170, 150);
+		timeHits.setSize("150px", "54px");
 		// &!&!&!&
 		
 

@@ -13,8 +13,8 @@ h1 {
 	font-size: 2em;
 	font-weight: bold;
 	color: #777777;
-	margin: 40px 0px 70px;
-	text-align: center;
+	text-align: left;
+	margin-left: 400px;
 }
 
 .sendButton {
@@ -44,15 +44,13 @@ h1 {
 	font-size: 2em;
 	font-weight: bold;
 	color: #777777;
-	margin: 40px 0px 70px;
 	text-align: center;
 }
 
 .gwt-Rack-Label-Style {
 	font-size: 1em;
 	font-weight: bold;
-	color: #777777;
-	margin: 40px 0px 70px;
+	color: #000;
 	text-align: center;
 }
 
