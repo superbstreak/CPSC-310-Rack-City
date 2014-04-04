@@ -931,13 +931,9 @@ public class Rack_City implements EntryPoint {
 			// String userID, String searchAddress, String radius, String crimeScore
 			String userID = userId;
 			String searchAddress = address;
-			int radius = radiusCombo;
-			if (radius == 1) radius = 0;
-			else if (radius == 2) radius = 1;
-			else  if (radius == 3) radius = 2;
 			int crimeScore = cs - 1;
 			int rateVal = r - 1;
-			AddUserSearchHistory(userID, searchAddress, radius, crimeScore, rateVal);
+			AddUserSearchHistory(userID, searchAddress, radiusCombo, crimeScore, rateVal);
 		}
 	}
 
