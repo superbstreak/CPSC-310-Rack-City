@@ -2756,7 +2756,7 @@ public class Rack_City implements EntryPoint {
 		for(int i = 0; i < comments.length; i++)
 		{
 			if (comments[i] != null)
-				output += "\n "+ comments[i];
+				output += "\n\n "+ comments[i];
 		}
 		rackEXP = output;
 	}
