@@ -1504,7 +1504,7 @@ public class Rack_City implements EntryPoint {
 		checkInButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO Insert code that handles check in functionality
-
+				
 				if (rService == null) 
 				{
 					rService = GWT.create(rackService.class);
@@ -1584,8 +1584,32 @@ public class Rack_City implements EntryPoint {
 		addFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO ADD TO FAVORITES FUNCTIONALITY
-				
-				
+				if (!userId.equals(""))
+				{
+					Boolean checkalready = false;
+					for (int i = 0; i < favRacks.size(); i++)
+					{
+						if (favRacks.get(i).getAddress().equals(rack.getAddress()))
+						{
+							checkalready = true;
+						}
+					}
+					if (checkalready == true)
+					{
+						messenger("You've already favorited this rack!");
+					}
+					else if (checkalready == false)
+					{
+						Add2Fav(userId, rack.getAddress(), rack.getCoordinate());
+						favRacks.add(rack);
+						messenger("Added Your Favorite!");
+					}					
+				}
+				else
+				{
+					messenger("Please login to use this feature!");
+				}
+					
 			}
 		});
 		addFavButton.setText("Add to Favorites");
