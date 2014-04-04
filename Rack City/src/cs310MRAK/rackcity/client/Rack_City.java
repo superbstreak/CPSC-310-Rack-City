@@ -1673,6 +1673,18 @@ public class Rack_City implements EntryPoint {
 		removeFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO implement this functionality here
+				removeFav(rack);
+				
+				int rackCount = 0;
+				for(BikeRack rck : favRacks){
+					if(rck.equals(rack)){
+						return;
+					}
+					rackCount++;
+				}
+				
+				favRacks.remove(rack);
+				favRacksCommon.remove(rackCount);
 				
 			}
 		});
