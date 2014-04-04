@@ -1910,6 +1910,7 @@ public class Rack_City implements EntryPoint {
 				if (result == false)
 				{
 					AddUserInfo(id, name, email, gender, isPlus, propic, favBike, bikeName, bikeColor);
+					onProfileViewClick();
 				}
 				else if (result == true)
 				{
