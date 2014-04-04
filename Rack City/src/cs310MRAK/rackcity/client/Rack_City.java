@@ -2722,7 +2722,7 @@ public class Rack_City implements EntryPoint {
 		if (rService == null) {
 			rService = GWT.create(rackService.class);
 		}
-
+		rackEXP = "";
 		rService.getBikeExperienceComments(position, new AsyncCallback<String[]>()
 				{
 
@@ -2734,7 +2734,8 @@ public class Rack_City implements EntryPoint {
 
 					@Override
 					public void onSuccess(String[] result) {
-						assignExp(result);						
+						if (result != null)
+							assignExp(result);						
 					}
 			
 				});
