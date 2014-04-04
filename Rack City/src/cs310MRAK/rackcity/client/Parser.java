@@ -9,7 +9,7 @@ public class Parser {
 
 	private List<BikeRack> rackList;
 	private List<Crime> crimesList;
-	
+
 	private List<BikeRack> xmlRackList;
 	private List<Crime> xmlCrimesList;
 
@@ -38,7 +38,7 @@ public class Parser {
 
 		return this.crimesList;
 	}
-	
+
 	public List<BikeRack> getXMLRackList() {
 
 		// this.parseBikeRacks();
@@ -98,10 +98,8 @@ public class Parser {
 	public void parseCrimes(StringBuffer stringOfCrimes) {
 		if(stringOfCrimes.substring(1, 5).equals("?xml")) {
 			stringOfCrimes.delete(0, stringOfCrimes.indexOf("<Records>"));
-			
-			if (stringOfCrimes.substring(stringOfCrimes.indexOf("A=")).contains("YEAR")) {
-				stringOfCrimes.delete(0, (stringOfCrimes.indexOf("</Record>")) + 9);
-			}
+
+			stringOfCrimes.delete(0, (stringOfCrimes.indexOf("</Record>")) + 9);
 
 			if (stringOfCrimes.substring(stringOfCrimes.indexOf("A=")).contains("pullthis")) {
 				stringOfCrimes.delete(0, (stringOfCrimes.indexOf("</Record>")) + 9);
@@ -111,25 +109,25 @@ public class Parser {
 			else {
 				return;
 			}
-			
-			String year = null;
-			String address = null;
-			
-			if (stringOfCrimes.substring(0, 10).contains("<Record>")) {
-				year = stringOfCrimes.substring(stringOfCrimes.indexOf("A=") + 3, stringOfCrimes.indexOf("A=") + 7);
-				address = stringOfCrimes.substring(stringOfCrimes.indexOf("B=") + 3, stringOfCrimes.indexOf("/>") - 5);
-				
-				Crime c = new Crime(year, address, "");
-				this.xmlCrimesList.add(c);
-				
-				stringOfCrimes.delete(0, stringOfCrimes.indexOf("</Record>") + 9);
-
-				parseCrimes(stringOfCrimes);
-			}
-			
-			return;
 		}
 
-	}
+		String year = null;
+		String address = null;
 
+		if (stringOfCrimes.substring(0, 10).contains("<Record>")) {
+			year = stringOfCrimes.substring(stringOfCrimes.indexOf("A=") + 3, stringOfCrimes.indexOf("A=") + 7);
+			address = stringOfCrimes.substring(stringOfCrimes.indexOf("B=") + 3, stringOfCrimes.indexOf("/>") - 5);
+
+			Crime c = new Crime(year, address, "");
+			this.xmlCrimesList.add(c);
+
+			stringOfCrimes.delete(0, stringOfCrimes.indexOf("</Record>") + 9);
+
+			if (xmlCrimesList.size() < 50) {
+				parseCrimes(stringOfCrimes);
+			}
+		}
+
+		return;
+	}
 }
