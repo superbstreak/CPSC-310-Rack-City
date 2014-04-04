@@ -1536,8 +1536,8 @@ public class Rack_City implements EntryPoint {
 		addFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO ADD TO FAVORITES FUNCTIONALITY
-				
-				
+				if (!userId.equals(""))
+					Add2Fav(userId, rack.getAddress(), rack.getCoordinate());
 			}
 		});
 		addFavButton.setText("Add to Favorites");
