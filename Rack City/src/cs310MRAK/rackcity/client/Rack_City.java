@@ -1360,19 +1360,21 @@ public class Rack_City implements EntryPoint {
 
 			@Override
 			public void onSuccess(LatLng point) {
-
-				currentAddress = point;
-				googleMap.setCenter(currentAddress);
-				googleMap.setZoomLevel(14);
-				displayRadius(currentAddress, radius);
 				
 				int radiusCombo = 0;
 				if (radius == 0.5) radiusCombo = 0;
 				if (radius == 1) radiusCombo = 1;
 				if (radius == 2) radiusCombo = 2;
+				userHistory.add(0, new UserSearchHistoryInstance("0", userId, address, radiusCombo, (int)crimeScore, (int) rating));
+				
+				currentAddress = point;
+				googleMap.setCenter(currentAddress);
+				googleMap.setZoomLevel(14);
+				displayRadius(currentAddress, radius);
+				
 				
 				saveSearchHistory(address, radiusCombo, (int)(crimeScore + 1), (int)(rating + 1));
-				userHistory.add(0, new UserSearchHistoryInstance("0", userId, address, radiusCombo, (int)crimeScore, (int) rating));
+				
 				addMarker(currentAddress, 1);
 
 				/*
