@@ -1744,6 +1744,16 @@ public class Rack_City implements EntryPoint {
 				if(userRatingCombo.getSelectedIndex() > 0){
 					//TODO implement set rating functionality
 					
+					int rate = Integer.valueOf(userRatingCombo.getItemText((userRatingCombo.getSelectedIndex())));
+					
+					if (!userId.equals(""))
+					{
+						submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					}
+					else
+					{
+						messenger("Please Login To Use This Feature!");
+					}
 					
 					userRatingCombo.setItemSelected(0, true);//call this when you are done
 				}
