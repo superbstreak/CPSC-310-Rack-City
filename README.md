@@ -1,5 +1,5 @@
 <html>
-	<head>
+	<head>http://www.lucidchart.com/invitations/accept/533efa53-70fc-4bb6-aacf-4a2c0a005f42
 		<title>Bike Rack App: Rack City</title>
 		<p><u>Product link:</u></p>
 		<p>http://cs310rackcity.appspot.com/</p>
