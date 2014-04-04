@@ -388,7 +388,11 @@ public class rackServiceImpl extends RemoteServiceServlet implements rackService
 			experienceComments = new String[rex.size()];
 			for (int i = 0; i < rex.size(); i++)
 			{
-				experienceComments[i] = rex.get(i).getExperience();
+				if (rex.get(i).getPos().equals(pos))
+				{
+					experienceComments[i] = rex.get(i).getExperience();
+				}
+				
 			}						  
 		}
 		finally

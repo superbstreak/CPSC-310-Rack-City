@@ -1868,6 +1868,7 @@ public class Rack_City implements EntryPoint {
 	             
 	             final TextArea userExperienceTextBox = new TextArea();
 	             userExperienceTextBox.setText(rackEXP);	//TODO
+	             
 	             userExperienceTextBox.setReadOnly(true);
 	             userExperienceTextBox.setSize("300px", "200px");
 	             userExpPanel.add(userExperienceTextBox, 30, 30);
