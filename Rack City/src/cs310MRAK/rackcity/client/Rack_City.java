@@ -214,6 +214,10 @@ public class Rack_City implements EntryPoint {
 	
 	private void onSearchViewClick(){
 		
+		if(userId.equals("")){
+			Window.alert("You need to be logged in to see your search history!");
+			return;
+		}
 		
 		if(currentDatasheetItem != null){
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
@@ -245,7 +249,7 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		searchDataGrid.addColumn(searchCol, "Search Address");
-		searchDataGrid.setColumnWidth(searchCol, 25, Unit.PCT);
+		searchDataGrid.setColumnWidth(searchCol, 20, Unit.PCT);
 		
 		TextColumn<UserSearchHistoryInstance> radiusCol = new TextColumn<UserSearchHistoryInstance>() {
 			@Override
@@ -259,7 +263,7 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		searchDataGrid.addColumn(radiusCol, "Search Radius");
-		searchDataGrid.setColumnWidth(radiusCol, 25, Unit.PCT);
+		searchDataGrid.setColumnWidth(radiusCol, 20, Unit.PCT);
 		
 		
 		TextColumn<UserSearchHistoryInstance> crimeCol = new TextColumn<UserSearchHistoryInstance>() {
@@ -269,7 +273,7 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		searchDataGrid.addColumn(crimeCol, "Search Crime");
-		searchDataGrid.setColumnWidth(crimeCol, 25, Unit.PCT);
+		searchDataGrid.setColumnWidth(crimeCol, 20, Unit.PCT);
 		
 		TextColumn<UserSearchHistoryInstance> ratingCol = new TextColumn<UserSearchHistoryInstance>() {
 			@Override
@@ -278,7 +282,16 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		searchDataGrid.addColumn(ratingCol, "Search Rating");
-		searchDataGrid.setColumnWidth(ratingCol, 25, Unit.PCT);
+		searchDataGrid.setColumnWidth(ratingCol, 20, Unit.PCT);
+		
+		TextColumn<UserSearchHistoryInstance> timestampCol = new TextColumn<UserSearchHistoryInstance>() {
+			@Override
+			public String getValue(UserSearchHistoryInstance hist) {
+				return hist.getDate();
+			}
+		};
+		searchDataGrid.addColumn(timestampCol, "Timestamp");
+		searchDataGrid.setColumnWidth(timestampCol, 20, Unit.PCT);
 
 
 		ListDataProvider<UserSearchHistoryInstance> dataProvider = new ListDataProvider<UserSearchHistoryInstance>();
@@ -1729,77 +1742,116 @@ public class Rack_City implements EntryPoint {
 		Label userRatingLbl = new Label("Rack Rating:");
 		rackClickPanel.add(userRatingLbl, 0, 180);
 		
-		RadioButton noRating = new RadioButton("No Rating");
+		final RadioButton noRating = new RadioButton("No Rating");
+		noRating.setText("No Rating");
 		noRating.setTabIndex(-1);
 		noRating.setEnabled(false);
-		rackClickPanel.add(noRating, 0, 180);
-		
-		noRating.setValue(true);
+		rackClickPanel.add(noRating, 0, 195);
 		
 		final RadioButton oneStar = new RadioButton("1 Stars");
+		oneStar.setText("1 Star");
 		oneStar.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				int rate = oneStar.getTabIndex();
+				oneStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 1);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
 			}
 		});
+		rackClickPanel.add(oneStar, 0, 210);
 		
 		final RadioButton twoStar = new RadioButton("2 Stars");
+		twoStar.setText("2 Stars");
 		twoStar.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				int rate = twoStar.getTabIndex();
+				twoStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 2);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
 			}
 		});
+		rackClickPanel.add(twoStar, 0, 225);
 		
 		final RadioButton threeStar = new RadioButton("3 Stars");
+		threeStar.setText("3 Stars");
 		threeStar.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				int rate = threeStar.getTabIndex();
+				threeStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 3);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
 			}
 		});
+		rackClickPanel.add(threeStar, 0, 240);
 		
 		final RadioButton fourStar = new RadioButton("4 Stars");
+		fourStar.setText("4 Stars");
 		fourStar.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				int rate = fourStar.getTabIndex();
+				fourStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 4);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
 			}
 		});
+		rackClickPanel.add(fourStar, 0, 255);
 		
 		final RadioButton fiveStar = new RadioButton("5 Stars");
+		fiveStar.setText("5 Stars");
 		fiveStar.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				int rate = fiveStar.getTabIndex();
+				fiveStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), rate);
+					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 5);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
 			}
 		});
+		rackClickPanel.add(fiveStar, 0, 270);
+		
+		noRating.setValue(false);
+		oneStar.setValue(false);
+		twoStar.setValue(false);
+		threeStar.setValue(false);
+		fourStar.setValue(false);
+		fiveStar.setValue(false);
+		
+		if(userId.equals("")){
+			noRating.setValue(true);
+		}
+		
+		getMyRatings(userId, rack);
+		
+		Window.alert(myRate + "");
+		
+		if(myRate == 0){
+			noRating.setValue(true);
+		}else if(myRate == 1){
+			oneStar.setValue(true);
+		}else if(myRate == 2){
+			twoStar.setValue(true);
+		}else if(myRate == 3){
+			threeStar.setValue(true);
+		}else if(myRate == 4){
+			fourStar.setValue(true);
+		}else if(myRate == 5){
+			fiveStar.setValue(true);
+		}
+		
 		
 		Label shareExperienceLbl = new Label("Share your experience:");
 		rackClickPanel.add(shareExperienceLbl, 170, 180);
