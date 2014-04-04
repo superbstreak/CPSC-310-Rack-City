@@ -1796,7 +1796,7 @@ public class Rack_City implements EntryPoint {
 				oneStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 1);
+					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 1);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1811,7 +1811,7 @@ public class Rack_City implements EntryPoint {
 				twoStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 2);
+					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 2);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1826,7 +1826,7 @@ public class Rack_City implements EntryPoint {
 				threeStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 3);
+					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 3);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1841,7 +1841,7 @@ public class Rack_City implements EntryPoint {
 				fourStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 4);
+					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 4);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
@@ -1856,7 +1856,7 @@ public class Rack_City implements EntryPoint {
 				fiveStar.setValue(false);
 				
 				if (!userId.equals("")){
-					submituserRating (userId, rack.getAddress(), rack.getCoordinate().toString(), 5);
+					submituserRating (userId, rack.getAddress(), rack.getScoordinate(), 5);
 					clickRackDisplayPanel(rack);
 				}
 				else{messenger("Please Login To Use This Feature!");}
