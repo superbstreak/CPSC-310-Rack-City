@@ -2551,7 +2551,7 @@ public class Rack_City implements EntryPoint {
 				String addr = temp[0].toString();
 				String LL = temp[1].toString();   // string
 
-				listofcrimes.add(new Crime (addr, LL));
+				listofcrimes.add(new Crime (null, addr, LL));
 			}
 		}
 
