@@ -1406,7 +1406,6 @@ public class Rack_City implements EntryPoint {
 						addMarker(crime.getCoordinate(), 3);
 					}
 				}
-				sortUserHistory(userHistory);
 			}
 		});
 	}
