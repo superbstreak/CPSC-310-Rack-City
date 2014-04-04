@@ -2155,6 +2155,8 @@ public class Rack_City implements EntryPoint {
 				};
 				fService.addToFavorite(uid, address, newP, callback);
 	}
+	
+	
 
 	private void parseFav (final String name, final String uid)
 	{
@@ -2176,6 +2178,31 @@ public class Rack_City implements EntryPoint {
 				else compareFriendFav(name, uid, result);
 			}
 				});
+	}
+	
+	private void removeFav(BikeRack rack)
+	{
+		if (!userId.equals(""))
+		{
+			String newp = rack.getCoordinate().toString();
+			if (fService == null) {
+				fService = GWT.create(rackService.class);
+			}
+			AsyncCallback<Void> callback = new AsyncCallback<Void>()
+					{
+				public void onFailure(Throwable error)
+				{
+					Window.alert("Server Error! (RMV-FAV)");
+					handleError(error);
+				}
+				public void onSuccess(Void ignore)
+				{
+					Window.alert("Successfully removed from your favorite list!");
+				}
+					};
+				fService.removeFavorite(userId, newp, rack.getAddress(), callback);
+		}
+		
 	}
 
 	private void assignFavresult(ArrayList<String[]> fav)
