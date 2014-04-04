@@ -1729,7 +1729,6 @@ public class Rack_City implements EntryPoint {
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
 	}
-	
 
 	private void sortUserHistory(ArrayList<UserSearchHistoryInstance> uhist)
 	{
