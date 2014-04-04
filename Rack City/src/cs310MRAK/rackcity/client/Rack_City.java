@@ -239,9 +239,75 @@ public class Rack_City implements EntryPoint {
 		profileView.setSize("105px", "20px");
 		menuBar.addItem(profileView);
 		
+		
+		MenuItem searchView = new MenuItem("View Searches", new ScheduledCommand() {
+		    @Override
+		    public void execute() {
+		    	onSearchViewClick();
+		    }
+		});
+		searchView.setSize("105px", "20px");
+		menuBar.addItem(searchView);
+		
 		appTitlePanel.add(menuBar,10,75);
 		rootPanel.add(appTitlePanel,0,0);
 
+	}
+	
+	private void onSearchViewClick(){
+		
+		if(userId.equals("")){
+			Window.alert("You are not logged in. Please login.");
+			return;
+		}
+		
+		if(currentDatasheetItem != null){
+			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+			currentDatasheetItem = null;
+		}
+		
+		if(currentMarker != null){
+			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
+			currentMarker = null;
+		}
+		
+		if(!userHistory.isEmpty()){
+			
+			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
+			createSearchDataGrid();
+			
+		}else
+			Window.alert("You have no search history!");
+		
+		hideHideLocationButtons();
+	}
+	
+	private void createSearchDataGrid(){
+		DataGrid<UserSearchHistoryInstance> searchDataGrid = new DataGrid<UserSearchHistoryInstance>();
+		searchDataGrid.setPageSize(100);
+
+		//need click handler
+		searchDataGrid.setSize("700px", "500px");
+		
+		TextColumn<UserSearchHistoryInstance> searchCol = new TextColumn<UserSearchHistoryInstance>() {
+			@Override
+			public String getValue(UserSearchHistoryInstance hist) {
+				return hist.getSearchAddress();
+			}
+		};
+		searchDataGrid.addColumn(searchCol, "Search Address");
+		searchDataGrid.setColumnWidth(searchCol, 100, Unit.PCT);
+
+
+		ListDataProvider<UserSearchHistoryInstance> dataProvider = new ListDataProvider<UserSearchHistoryInstance>();
+		dataProvider.addDataDisplay(searchDataGrid);
+
+		List<UserSearchHistoryInstance> tmpSearchlist = dataProvider.getList();
+		for (UserSearchHistoryInstance hist : userHistory) {
+			tmpSearchlist.add(hist);
+		}
+
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(searchDataGrid);
 	}
 	
 	private void onProfileViewClick(){
@@ -491,6 +557,9 @@ public class Rack_City implements EntryPoint {
 	}
 
 	private void updateSuggestBox(MultiWordSuggestOracle oracle){
+		
+		
+		
 		if(!userHistory.isEmpty()){
 			for(UserSearchHistoryInstance hist : userHistory){
 				oracle.add(hist.getSearchAddress());
