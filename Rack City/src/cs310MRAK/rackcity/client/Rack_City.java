@@ -1486,7 +1486,7 @@ public class Rack_City implements EntryPoint {
 		timeArrivalBox.addChangeHandler(new ChangeHandler(){
 			@Override
 			public void onChange(ChangeEvent event){
-				int selectedIndex = timeArrivalBox.getSelectedIndex();
+				final int selectedIndex = timeArrivalBox.getSelectedIndex();
 				if (selectedIndex > 0){
 					Window.alert("Something got selected " + timeArrivalBox.getValue(selectedIndex));
 					
@@ -1528,11 +1528,36 @@ public class Rack_City implements EntryPoint {
 								
 								problemArrayIntoPercentages[i] = ""+temp;
 							}
+							int hourInt = 0;
 							
+							timeArrivalBox.getValue(selectedIndex);
+							if(timeArrivalBox.getValue(selectedIndex).equals("00:00")) hourInt = 0;
+							if(timeArrivalBox.getValue(selectedIndex).equals("01:00")) hourInt = 1;
+							if(timeArrivalBox.getValue(selectedIndex).equals("02:00")) hourInt = 2;
+							if(timeArrivalBox.getValue(selectedIndex).equals("03:00")) hourInt = 3;
+							if(timeArrivalBox.getValue(selectedIndex).equals("04:00")) hourInt = 4;
+							if(timeArrivalBox.getValue(selectedIndex).equals("05:00")) hourInt = 5;
+							if(timeArrivalBox.getValue(selectedIndex).equals("06:00")) hourInt = 6;
+							if(timeArrivalBox.getValue(selectedIndex).equals("07:00")) hourInt = 7;
+							if(timeArrivalBox.getValue(selectedIndex).equals("08:00")) hourInt = 8;
+							if(timeArrivalBox.getValue(selectedIndex).equals("09:00")) hourInt = 9;
+							if(timeArrivalBox.getValue(selectedIndex).equals("10:00")) hourInt = 10;
+							if(timeArrivalBox.getValue(selectedIndex).equals("11:00")) hourInt = 11;
+							if(timeArrivalBox.getValue(selectedIndex).equals("12:00")) hourInt = 12;
+							if(timeArrivalBox.getValue(selectedIndex).equals("13:00")) hourInt = 13;
+							if(timeArrivalBox.getValue(selectedIndex).equals("14:00")) hourInt = 14;
+							if(timeArrivalBox.getValue(selectedIndex).equals("15:00")) hourInt = 15;
+							if(timeArrivalBox.getValue(selectedIndex).equals("16:00")) hourInt = 16;
+							if(timeArrivalBox.getValue(selectedIndex).equals("17:00")) hourInt = 17;
+							if(timeArrivalBox.getValue(selectedIndex).equals("18:00")) hourInt = 18;
+							if(timeArrivalBox.getValue(selectedIndex).equals("19:00")) hourInt = 19;
+							if(timeArrivalBox.getValue(selectedIndex).equals("20:00")) hourInt = 20;
+							if(timeArrivalBox.getValue(selectedIndex).equals("21:00")) hourInt = 21;
+							if(timeArrivalBox.getValue(selectedIndex).equals("22:00")) hourInt = 22;
+							if(timeArrivalBox.getValue(selectedIndex).equals("23:00")) hourInt = 23;
 							
-							
-							Date date = new Date();
-							int hourInt = date.getHours();		
+//							Date date = new Date();
+//							int hourInt = date.getHours();		
 							
 							
 							String w = problemArrayIntoPercentages[hourInt % 24];
