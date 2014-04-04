@@ -1844,11 +1844,11 @@ public class Rack_City implements EntryPoint {
 		
 		Label userExperienceLbl = new Label("View User Experiences:");
 		rackClickPanel.add(userExperienceLbl, 0, 240);
-		
+		getComment(rack.getCoordinate().toString());
 		Button viewUserExperienceButton = new Button("viewUserExperienceButton");
 		viewUserExperienceButton.addClickHandler(new ClickHandler() {
 	         public void onClick(ClickEvent event) {
-	        	 getComment(rack.getCoordinate().toString());
+	        	 
 	         	 
 	        	 
 	             final PopupPanel popup = new PopupPanel(true);
@@ -2746,7 +2746,8 @@ public class Rack_City implements EntryPoint {
 		String output = "";
 		for(int i = 0; i < comments.length; i++)
 		{
-			output += "\n "+ comments[i];
+			if (comments[i] != null)
+				output += "\n "+ comments[i];
 		}
 		rackEXP = output;
 	}
