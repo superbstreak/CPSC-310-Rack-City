@@ -200,7 +200,7 @@ public class Rack_City implements EntryPoint {
 		
 		MenuBar menuBar = new MenuBar();
 		menuBar.addStyleName("gwt-MenuBar-Rackcity");
-		menuBar.setSize("500px", "33px");
+		menuBar.setSize("600px", "33px");
 		
 		MenuItem mapView = new MenuItem("Map View", new ScheduledCommand() {
 		    @Override
@@ -276,8 +276,10 @@ public class Rack_City implements EntryPoint {
 			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 			createSearchDataGrid();
 			
-		}else
+		}else{
 			Window.alert("You have no search history!");
+			return;
+		}
 		
 		hideHideLocationButtons();
 	}
@@ -422,7 +424,6 @@ public class Rack_City implements EntryPoint {
 		
 		if(currentMarker != null){
 			((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-			((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
 			currentMarker = null;
 		}
 
@@ -431,8 +432,10 @@ public class Rack_City implements EntryPoint {
 			((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).remove(0);
 
 			createFavoritesGrid();
-		}else
+		}else{
 			Window.alert("You have no favorites!");
+			return;
+		}
 		
 		hideHideLocationButtons();
 	}
@@ -795,7 +798,6 @@ public class Rack_City implements EntryPoint {
 								if(currentMarker != null){
 									currentMarker = null;
 									((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-									((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
 								}
 								
 								onMapViewClick();
@@ -1176,14 +1178,12 @@ public class Rack_City implements EntryPoint {
 							if(currentMarker != null){
 								currentMarker = null;
 								((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-								((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
 							}
 						}
 					}else{
 						if(currentMarker != null){
 							currentMarker = null;
 							((HorizontalPanel) dockPanel.getWidget(3)).remove(0);
-							((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(0);
 						}
 					}
 				}
@@ -1371,10 +1371,6 @@ public class Rack_City implements EntryPoint {
 		});
 		reportCrimeButton.setText("Report Crime");
 		rackClickPanel.add(reportCrimeButton, 80, 450);
-
-		
-		
-		
 		
 		
 		final Button checkInButton = new Button("checkInButton");
@@ -1510,8 +1506,6 @@ public class Rack_City implements EntryPoint {
 		timeHits.setSize("250px", "54px");
 		// &!&!&!&
 		
-
-		((HorizontalPanel) dockPanel.getWidget(3)).setBorderWidth(1);
 
 		dockPanel.setVisible(false);
 		dockPanel.setVisible(true);
