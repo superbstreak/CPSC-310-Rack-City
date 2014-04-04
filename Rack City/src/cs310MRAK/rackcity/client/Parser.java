@@ -119,7 +119,7 @@ public class Parser {
 				year = stringOfCrimes.substring(stringOfCrimes.indexOf("A=") + 3, stringOfCrimes.indexOf("A=") + 7);
 				address = stringOfCrimes.substring(stringOfCrimes.indexOf("B=") + 3, stringOfCrimes.indexOf("/>") - 5);
 				
-				Crime c = new Crime(year, address);
+				Crime c = new Crime(year, address, "");
 				this.xmlCrimesList.add(c);
 				
 				stringOfCrimes.delete(0, stringOfCrimes.indexOf("</Record>") + 9);

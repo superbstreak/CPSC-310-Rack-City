@@ -5,14 +5,20 @@ import com.google.gwt.maps.client.geom.LatLng;
 
 public class Crime {
 
+	public String year;
 	public String address;
 	public String coordinate;
 
 	// TODO: will need to add User object to the constructor as well
 	// TODO: make @persistent
-	public Crime(String address, String coordinate){
+	public Crime(String year, String address, String coordinate){
 		this.address = address;
 		this.coordinate = coordinate;
+		this.year = year;
+	}
+	
+	public String getYear() {
+		return this.year;
 	}
 
 	public String getAddress() {

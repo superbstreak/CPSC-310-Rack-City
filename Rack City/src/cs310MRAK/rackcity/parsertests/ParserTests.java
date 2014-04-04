@@ -4,12 +4,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import cs310MRAK.rackcity.client.BikeRack;
+import cs310MRAK.rackcity.client.Crime;
 import cs310MRAK.rackcity.client.Parser;
 import cs310MRAK.rackcity.server.URLserviceImpl;
 
 public class ParserTests {
 
-	@Test
+	/*@Test
 	public void testParseBikeRacks() {
 		Parser p = new Parser();
 
@@ -32,6 +34,17 @@ public class ParserTests {
 		assertFalse(initialSBSize == secondSBSize);
 
 		int parseSizeA = p.getXMLRackList().size();
+		
+		for (int i = 0; i < p.getXMLRackList().size(); i++) {
+			if (i != 0) {
+				System.out.println("");
+			}
+			BikeRack br = p.getXMLRackList().get(i);
+			
+			System.out.print(Integer.toString(i+1) + ". "
+					+ "Address: " + br.getAddress() + "  "
+					+ "Coordinates: " + br.getScoordinate());
+		}
 
 		System.out.println(Integer.toString(parseSizeA));
 
@@ -46,7 +59,7 @@ public class ParserTests {
 		int parseSizeB = p.getXMLRackList().size();
 
 		System.out.println(Integer.toString(parseSizeB));
-	}
+	}*/
 
 	@Test
 	public void testParseCrimes() {
@@ -73,6 +86,17 @@ public class ParserTests {
 		assertFalse(initialSBSize == secondSBSize);
 
 		int parseSizeA = c.getXMLCrimesList().size();
+		
+		for (int i = 0; i < c.getXMLCrimesList().size(); i++) {
+			if (i != 0) {
+				System.out.println("");
+			}
+			Crime cr = c.getXMLCrimesList().get(i);
+			
+			System.out.print(Integer.toString(i+1) + ". "
+					+ "Year: " + cr.getYear() + "  "
+					+ "Address: " + cr.getAddress());
+		}
 
 		System.out.println(Integer.toString(parseSizeA));
 
