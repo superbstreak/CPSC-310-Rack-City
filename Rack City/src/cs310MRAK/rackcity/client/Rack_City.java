@@ -1893,7 +1893,6 @@ public class Rack_City implements EntryPoint {
 						ArrayList<UserSearchHistoryInstance> result) {
 						if (result != null)
 							userHistory = result;
-						messenger(result.size()+" DEBUG SIZE");
 				}
 					});
 		}
@@ -1905,6 +1904,11 @@ public class Rack_City implements EntryPoint {
 		if (uhist.size() != 0)
 		{
 			//TODO
+			for (int i = 0; i < uhist.size(); i++)
+			{
+				messenger(uhist.get(i).getDate());
+			}
+			
 		}
 	}
 	

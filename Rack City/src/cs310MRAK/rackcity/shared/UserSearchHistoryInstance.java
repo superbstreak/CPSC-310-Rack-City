@@ -53,6 +53,11 @@ public class UserSearchHistoryInstance implements Serializable{
 			this.crimeScore = crimeScore;
 			this.rating = rate;
 		}
+		
+		public String getDate()
+		{
+			return this.createDate;
+		}
 
 		public int getRating()
 		{
