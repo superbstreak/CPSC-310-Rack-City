@@ -21,7 +21,7 @@ public class URLserviceImpl extends RemoteServiceServlet implements URLservice{
 	public static StringBuffer sb = new StringBuffer();
 
 	@Override
-	public void adminConnection() {
+	public void adminConnection(String urlz) {
 
 		URL url = null;
 		try {

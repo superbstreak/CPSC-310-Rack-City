@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("grabData")
 public interface URLservice extends RemoteService{
 
-public void adminConnection();
+
+public void adminConnection(String urlz);
 
 }

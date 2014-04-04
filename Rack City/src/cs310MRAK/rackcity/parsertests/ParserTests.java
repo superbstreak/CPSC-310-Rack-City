@@ -14,7 +14,7 @@ public class ParserTests {
 		Parser p = new Parser();
 		
 		URLserviceImpl newRackService = new URLserviceImpl();
-		newRackService.adminConnection();
+		newRackService.adminConnection("https://dl.dropboxusercontent.com/u/280882377/Book1.xml");
 		StringBuffer sbTest = newRackService.sb;
 		
 		int initialSBSize = sbTest.length();

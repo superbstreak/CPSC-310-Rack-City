@@ -160,7 +160,9 @@ public class Rack_City implements EntryPoint {
 			{
 				Window.alert("Success URL");
 			}};
-			ftpService.adminConnection(callback);
+			ftpService.adminConnection("https://dl.dropboxusercontent.com/u/280882377/Book1.xml",callback);
+
+			ftpService.adminConnection("https://dl.dropboxusercontent.com/u/280882377/crime_2011.xml",callback);
 
 
 			if (initialsync == 0)
