@@ -2336,6 +2336,7 @@ public class Rack_City implements EntryPoint {
 	private void assignUserInfo(ArrayList<UserInfo> result)
 	{
 		UserInfo me = result.get(0);
+		userImageURL = me.getProfilePicURL();
 		favBike = me.getFavBike();
 		bikeName = me.getbikeName();
 		bikeColor = me.getbikeColor();
