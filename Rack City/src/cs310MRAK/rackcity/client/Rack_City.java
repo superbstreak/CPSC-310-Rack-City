@@ -1119,7 +1119,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loginButton.setText("Login");
-		titleViewPanel.add(loginButton, 680, 5);
+		titleViewPanel.add(loginButton, 645, 5);
 	}
 
 	/**
@@ -1140,7 +1140,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loggedInButton.setText("Logout");
-		titleViewPanel.add(loggedInButton, 675, 5);
+		titleViewPanel.add(loggedInButton, 640, 5);
 	}
 
 	/**
@@ -1206,7 +1206,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		adminButton.setText("Admin");
-		titleViewPanel.add(adminButton, 640, 5);
+		titleViewPanel.add(adminButton, 710, 5);
 	}
 
 	/**
@@ -1449,7 +1449,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		reportCrimeButton.setText("Report Crime");
-		rackClickPanel.add(reportCrimeButton, 145, 475);
+		rackClickPanel.add(reportCrimeButton, 240, 465);
 		
 		
 		final Button checkInButton = new Button("checkInButton");
@@ -1530,8 +1530,18 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		checkInButton.setText("Check-In");
-		rackClickPanel.add(checkInButton, 170, 450);
-
+		rackClickPanel.add(checkInButton, 265, 430);
+		
+		final Button addFavButton = new Button("checkInButton");
+		addFavButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				//TODO ADD TO FAVORITES FUNCTIONALITY
+				
+				
+			}
+		});
+		addFavButton.setText("Add to Favorites");
+		rackClickPanel.add(addFavButton, 220, 390);
 		
 		Label rackAddress = new Label("Address: " + rack.getAddress());
 		rackAddress.setStyleName("gwt-Rack-Label-Style");
