@@ -181,7 +181,7 @@ public class Rack_City implements EntryPoint {
 		rootPanel = RootPanel.get();
 		rootPanel.setSize("1350px", "1000px");
 		dockPanel = new DockPanel();
-		rootPanel.add(dockPanel, 10, 125);
+		rootPanel.add(dockPanel, 10, 50);
 		dockPanel.setSize("1250px", "500px");
 
 		createAppTitle();
@@ -193,7 +193,7 @@ public class Rack_City implements EntryPoint {
 
 	private void createAppTitle(){
 		AbsolutePanel appTitlePanel = new AbsolutePanel();
-		appTitlePanel.setSize("1300px", "125px");
+		appTitlePanel.setSize("1300px", "50px");
 
 		Label appTitleLbl = new Label("Rack City");
 		appTitleLbl.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -501,7 +501,55 @@ public class Rack_City implements EntryPoint {
 			}
 		};
 		favoritesDataGrid.addColumn(ratingCol, "Rating");
-		favoritesDataGrid.setColumnWidth(ratingCol, 30, Unit.PCT);
+		favoritesDataGrid.setColumnWidth(ratingCol, 25, Unit.PCT);
+		
+		
+		TextColumn<BikeRack> friendRatingCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				int rackCount = 0;
+				for (BikeRack rk : favRacks) {
+					if(rk.equals(rack)){
+						break;
+					}
+					rackCount++;
+				}
+				
+				/*
+				ArrayList<String[]> temp;
+				
+				if(!(temp = favRacksCommon.get(rackCount)).isEmpty()){
+					for(String[] friends : temp){
+						
+					}
+				}
+				*/
+				
+				return Double.toString(round(getFRIENDAverageRating (rackCount),2)) + "/5";
+			}
+		};
+		favoritesDataGrid.addColumn(friendRatingCol, "Friends Rating");
+		favoritesDataGrid.setColumnWidth(friendRatingCol, 25, Unit.PCT);
+		
+		
+		TextColumn<BikeRack> addrCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				return rack.getRating() + "/5";
+			}
+		};
+		favoritesDataGrid.addColumn(addrCol, "Rack Address");
+		favoritesDataGrid.setColumnWidth(addrCol, 25, Unit.PCT);
+		
+		
+		TextColumn<BikeRack> friendsCol = new TextColumn<BikeRack>() {
+			@Override
+			public String getValue(BikeRack rack) {
+				return rack.getRating() + "/5";
+			}
+		};
+		favoritesDataGrid.addColumn(friendsCol, "Friends Favorites");
+		favoritesDataGrid.setColumnWidth(friendsCol, 25, Unit.PCT);
 
 
 		ListDataProvider<BikeRack> dataProvider = new ListDataProvider<BikeRack>();
@@ -1095,7 +1143,7 @@ public class Rack_City implements EntryPoint {
 		searchView.setSize("105px", "20px");
 		menuBar.addItem(searchView);
 		
-		titleViewPanel.add(menuBar,10,0);
+		titleViewPanel.add(menuBar,0,0);
 	}
 
 	/**
@@ -1119,7 +1167,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		loginButton.setText("Login");
-		titleViewPanel.add(loginButton, 645, 5);
+		titleViewPanel.add(loginButton, 648, 5);
 	}
 
 	/**
@@ -1206,7 +1254,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		adminButton.setText("Admin");
-		titleViewPanel.add(adminButton, 710, 5);
+		titleViewPanel.add(adminButton, 705, 5);
 	}
 
 	/**
@@ -1541,7 +1589,7 @@ public class Rack_City implements EntryPoint {
 			}
 		});
 		addFavButton.setText("Add to Favorites");
-		rackClickPanel.add(addFavButton, 220, 390);
+		rackClickPanel.add(addFavButton, 220, 395);
 		
 		Label rackAddress = new Label("Address: " + rack.getAddress());
 		rackAddress.setStyleName("gwt-Rack-Label-Style");
@@ -1560,19 +1608,19 @@ public class Rack_City implements EntryPoint {
 		rackRatingLabel.setSize("120px", "54px");
 
 		Label crimeRatingLabel = new Label("Bike Rack Crime Score (out of 5): " + rack.getCrimeScore());
-		rackClickPanel.add(crimeRatingLabel, 0, 90);
+		rackClickPanel.add(crimeRatingLabel, 0, 80);
 		crimeRatingLabel.setSize("145px", "54px");
 
 		Label rackCountRatingLabel = new Label("Bike Rack Count: " + rack.getRackCount());
-		rackClickPanel.add(rackCountRatingLabel, 170, 90);
+		rackClickPanel.add(rackCountRatingLabel, 170, 80);
 		rackCountRatingLabel.setSize("130px", "54px");
 
 		Label distanceLabel = new Label("Distance from you (km): " + round(calcLatLngDistance(rack.getCoordinate()), 2));
-		rackClickPanel.add(distanceLabel, 0, 150);
+		rackClickPanel.add(distanceLabel, 0, 130);
 		distanceLabel.setSize("130px", "54px");
 		
 		Label timeHits = new Label("Rack time hits: " + this.currentRackTimeHits);
-		rackClickPanel.add(timeHits, 170, 150);
+		rackClickPanel.add(timeHits, 170, 130);
 		timeHits.setSize("150px", "54px");
 		// &!&!&!&
 		
