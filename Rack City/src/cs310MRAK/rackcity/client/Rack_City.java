@@ -63,6 +63,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.RangeChangeEvent;
+import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
@@ -490,11 +491,15 @@ public class Rack_City implements EntryPoint {
 	}
 	
 	private void createFavoritesGrid(){
+		
+		AbsolutePanel gridPanel = new AbsolutePanel();
+		gridPanel.setSize("700px","500px");
+		
 		DataGrid<BikeRack> favoritesDataGrid = new DataGrid<BikeRack>();
 		favoritesDataGrid.setPageSize(100);
 
 		//need click handler
-		favoritesDataGrid.setSize("700px", "500px");
+		favoritesDataGrid.setSize("700px", "400px");
 		
 		TextColumn<BikeRack> ratingCol = new TextColumn<BikeRack>() {
 			@Override
@@ -569,8 +574,41 @@ public class Rack_City implements EntryPoint {
 		for (BikeRack rack : favRacks) {
 			tmpFavlist.add(rack);
 		}
-
-		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(favoritesDataGrid);
+		
+		favoritesDataGrid.addRangeChangeHandler(new RangeChangeEvent.Handler() {
+		      @Override
+		      public void onRangeChange(RangeChangeEvent event) {
+		    	  Range range = event.getNewRange();
+		    	  
+		    	  Window.alert("Range Start: " + range.getStart() + "");
+		    	  Window.alert("Range Length: " + range.getLength() + "");
+            }
+		});
+		
+		
+		final NoSelectionModel<BikeRack> selectionModel = new NoSelectionModel<BikeRack>();
+	    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+	                @Override
+	                public void onSelectionChange(SelectionChangeEvent event) {
+	                	clickRackDisplayPanel(selectionModel.getLastSelectedObject());
+	                }
+	            });
+	    favoritesDataGrid.setSelectionModel(selectionModel);
+	    
+	    gridPanel.add(favoritesDataGrid, 0, 0);
+	    
+	    Button showFavOnMap = new Button("showFavOnMap");
+	    showFavOnMap.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				for (BikeRack rack : favRacks){
+					addMarker(rack.getCoordinate(), 1);
+				}
+			}
+	    });
+	    showFavOnMap.setText("Show on Map");
+	    gridPanel.add(favoritesDataGrid, 500, 350);
+		
+		((AbsolutePanel) ((VerticalPanel) dockPanel.getWidget(1)).getWidget(0)).add(gridPanel);
 	}
 
 	/**
@@ -1624,6 +1662,7 @@ public class Rack_City implements EntryPoint {
 					{
 						Add2Fav(userId, rack.getAddress(), rack.getCoordinate());
 						favRacks.add(rack);
+						favRacksCommon.add(new ArrayList<String[]>());
 						messenger("Added Your Favorite!");
 					}					
 				}
@@ -1915,6 +1954,14 @@ public class Rack_City implements EntryPoint {
 		{
 			MarkerOptions markerOptions = MarkerOptions.newInstance();
 			Icon icn = Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_red.png");
+			icn.setIconAnchor(Point.newInstance(6, 20));
+			markerOptions.setIcon(icn);
+			Marker mark = new Marker(pos, markerOptions);
+			googleMap.addOverlay(mark);
+		}
+		else if (type == 4){
+			MarkerOptions markerOptions = MarkerOptions.newInstance();
+			Icon icn = Icon.newInstance("http://labs.google.com/ridefinder/images/mm_20_blue.png");
 			icn.setIconAnchor(Point.newInstance(6, 20));
 			markerOptions.setIcon(icn);
 			Marker mark = new Marker(pos, markerOptions);
