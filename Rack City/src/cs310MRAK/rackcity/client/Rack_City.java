@@ -1443,10 +1443,18 @@ public class Rack_City implements EntryPoint {
 	 */
 	private void clickRackDisplayPanel(final BikeRack rack){
 
+		currentRackTimeHits = "";
 
 		if(rack == null){
 			return;
 		}
+		
+		
+		final AbsolutePanel rackClickPanel = new AbsolutePanel();
+		((HorizontalPanel) dockPanel.getWidget(3)).clear();
+		((HorizontalPanel) dockPanel.getWidget(3)).add(rackClickPanel);
+		rackClickPanel.setSize("340px", "500px");
+		
 		
 		/**
 		 * going to have to put the server calls for additional bike rack objects information
@@ -1468,7 +1476,45 @@ public class Rack_City implements EntryPoint {
 			@Override
 			public void onSuccess(String result) {
 				//Window.alert("Server Success! (getBikeRackTimeHits): " + result);
+				// -*-*-*-*
 				currentRackTimeHits = result;
+				String problem = result;
+				
+				String problemWithoutLeftBrack = problem.replace("[", "");
+				String problemWithoutRightAndLeftBranch = problemWithoutLeftBrack.replace("]", "");
+				String problemAlsoWithoutSpace = problemWithoutRightAndLeftBranch.replace(" ", "");
+				
+				String[] problemArray = problemAlsoWithoutSpace.split(",");
+				
+				int sum = 0;
+				for(int i=0; i < problemArray.length; i++){
+					             sum = sum + Integer.parseInt(problemArray[i]);
+				}
+				
+				String whatWeWantToShow = "";
+				if(sum != 0){
+				String[] problemArrayIntoPercentages = problemArray;
+				for(int i=0; i < problemArrayIntoPercentages.length; i++){
+					double temp = Double.parseDouble(problemArrayIntoPercentages[i]);
+					temp = temp/(double)sum;
+					
+					problemArrayIntoPercentages[i] = ""+temp;
+				}
+				
+				
+				
+				Date date = new Date();
+				int hourInt = date.getHours();		
+				
+				
+				String w = problemArrayIntoPercentages[hourInt % 24];
+				whatWeWantToShow = w+" chance that this rack is occupied.";   // RIGHT HERE IS THE MAGIC
+				}
+				else whatWeWantToShow = "0 chance that this rack is occupied";
+				
+				Label timeHits = new Label(whatWeWantToShow);
+				rackClickPanel.add(timeHits, 170, 130);
+				timeHits.setSize("150px", "54px");
 
 			}
 				};
@@ -1476,11 +1522,6 @@ public class Rack_City implements EntryPoint {
 				LatLng pos2 = rack.getCoordinate();
 				
 				rService.getRackTimeHits(pos2.toString(), callback);
-
-		final AbsolutePanel rackClickPanel = new AbsolutePanel();
-		((HorizontalPanel) dockPanel.getWidget(3)).clear();
-		((HorizontalPanel) dockPanel.getWidget(3)).add(rackClickPanel);
-		rackClickPanel.setSize("340px", "500px");
 
 		final Button reportCrimeButton = new Button("reportCrimeButton");
 		reportCrimeButton.addClickHandler(new ClickHandler() {
@@ -1626,6 +1667,8 @@ public class Rack_City implements EntryPoint {
 						
 				//rService.getRackTimeHits("49.284176, -123.106037", callback);
 				rService.updateBikeRackTimeHit(pos2.toString(), timeHitsInput, whichOne, callback);
+			
+			clickRackDisplayPanel(rack);
 			}
 		});
 		checkInButton.setText("Check-In");
@@ -1720,9 +1763,7 @@ public class Rack_City implements EntryPoint {
 		rackClickPanel.add(distanceLabel, 0, 130);
 		distanceLabel.setSize("130px", "54px");
 		
-		Label timeHits = new Label("Rack time hits: " + this.currentRackTimeHits);
-		rackClickPanel.add(timeHits, 170, 130);
-		timeHits.setSize("150px", "54px");
+
 		// &!&!&!&
 		
 		
