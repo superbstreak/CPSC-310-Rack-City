@@ -161,7 +161,7 @@ public class Rack_City implements EntryPoint {
 			}
 			public void onSuccess(Void ignore)
 			{
-				Window.alert("Success URL");
+				//Window.alert("Success URL");
 			}};
 			ftpService.adminConnection("https://dl.dropboxusercontent.com/u/280882377/Book1.xml",callback);
 
@@ -1469,7 +1469,7 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(String result) {
-				Window.alert("Server Success! (getBikeRackTimeHits): " + result);
+				//Window.alert("Server Success! (getBikeRackTimeHits): " + result);
 				currentRackTimeHits = result;
 
 			}
@@ -1673,6 +1673,18 @@ public class Rack_City implements EntryPoint {
 		removeFavButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				//TODO implement this functionality here
+				removeFav(rack);
+				
+				int rackCount = 0;
+				for(BikeRack rck : favRacks){
+					if(rck.equals(rack)){
+						return;
+					}
+					rackCount++;
+				}
+				
+				favRacks.remove(rack);
+				favRacksCommon.remove(rackCount);
 				
 			}
 		});
@@ -2325,7 +2337,7 @@ public class Rack_City implements EntryPoint {
 			}
 			public void onSuccess(Void ignore)
 			{
-				Window.alert("Success (ADD-TIME)");
+				//Window.alert("Success (ADD-TIME)");
 			}
 				};
 
@@ -2382,7 +2394,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success (RMV-RACK)");
+					//Window.alert("Success (RMV-RACK)");
 				}
 					};
 					rService.removeRack(newp, callback);
@@ -2405,7 +2417,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success. (ADD-RACK)");
+					//Window.alert("Success. (ADD-RACK)");
 				}
 					};
 					rService.addRack(a, newp, rn, s, cs, r, callback);
@@ -2426,7 +2438,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success. (UPD-RACK)");
+					//Window.alert("Success. (UPD-RACK)");
 				}
 					};
 					rService.updateStolen(newp, 0, callback);
@@ -2459,7 +2471,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success. (RMV-CRIME");
+					//Window.alert("Success. (RMV-CRIME");
 				}
 					};
 					cService.removeCrime(newp, crimeCallback);
@@ -2480,7 +2492,7 @@ public class Rack_City implements EntryPoint {
 				}
 				public void onSuccess(Void ignore)
 				{
-					Window.alert("Success. (UPD-CRIME)");
+					//Window.alert("Success. (UPD-CRIME)");
 				}
 					};
 					cService.addCrime(i, newp, crimeCallback);
@@ -2507,7 +2519,7 @@ public class Rack_City implements EntryPoint {
 			@Override
 			public void onSuccess(ArrayList<String[]> result) {
 				GUIsetup();
-				Window.alert("Success. (PAR-CRIME)");
+				//Window.alert("Success. (PAR-CRIME)");
 				assignCrimeOutput(result);
 			}
 				});
@@ -2554,7 +2566,7 @@ public class Rack_City implements EntryPoint {
 			}
 			@Override
 			public void onSuccess(ArrayList<String[]> result) {
-				Window.alert("Success. (PAR-RACK)");
+				//Window.alert("Success. (PAR-RACK)");
 				assignrackOutput(result);
 			}
 				});
