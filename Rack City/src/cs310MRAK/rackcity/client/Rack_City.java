@@ -148,6 +148,7 @@ public class Rack_City implements EntryPoint {
 	private RackFavouritesServiceAsync fService = GWT.create(RackFavouritesService.class);
 	private int initialsync = 0;
 	private String rackEXP = "";
+	private int myRate = 0;
 	/**
 	 * This is the entry point method.
 	 */
@@ -2718,6 +2719,38 @@ public class Rack_City implements EntryPoint {
 				});
 	}
 	
+	private void getMyRatings(String uid, BikeRack rack)
+	{
+		// parse friend rating ASYNC CALL		
+		if (uService == null)
+		{
+			uService = GWT.create(userService.class);
+		}
+		
+		myRate = 0;
+		// type 3: get this user's rating for THIS RACK ONLY
+		uService.getStarRating(uid, rack.getAddress(), rack.getCoordinate().toString(), 3, new AsyncCallback<ArrayList<rackStarRatings>>()
+				{
+
+			public void onFailure(Throwable error)
+			{
+				Window.alert("Server Error! (PAR-STAR-3)");
+				handleError(error);
+			}
+
+			@Override
+			public void onSuccess(ArrayList<rackStarRatings> result) 
+			{
+				if (!(result.isEmpty() || result == null))
+					assignMyRatings(result);
+			}
+				});
+	}
+	
+	private void assignMyRatings(ArrayList<rackStarRatings> result)
+	{
+		myRate = result.get(0).getRating();
+	}
 
 	private void getFriendRatings(String fid, String addr, String pos, final String[] person)
 	{
